@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}PATS Test Helper - Buyer - Get publishers{% endblock %}
+
+{% block content %}
+    <h3>Get publisher users for {{ vendor_id }}</h3>
+    <table class="table">
+        <tr>
+            <th>User email</th>
+        </tr>
+        {% for user_email in object_list %}
+        <tr>
+            <td>{{ user_email }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
