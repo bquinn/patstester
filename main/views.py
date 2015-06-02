@@ -1,7 +1,10 @@
+import datetime
 from django.shortcuts import render
 from django.views.generic.list import ListView
+from django.views.generic.edit import FormView
 
 from pats import PATSBuyer, PATSSeller
+from .forms import Buyer_SendOrderForm
 
 MEDIAOCEAN_AGENCY_API_KEY = 'yt6wsdwrauz7mrawha7rua8v'
 AGENCY_ID = '35-IDSDKAD-7'
@@ -51,4 +54,32 @@ class Buyer_GetPublisherUsersView(PATSAPIMixin, ListView):
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_GetPublisherUsersView, self).get_context_data(*args, **kwargs)
         context_data['vendor_id'] = self.kwargs.get('publisher_id', None)
+        return context_data
+
+class Buyer_SendOrderView(PATSAPIMixin, FormView):
+    form_class = Buyer_SendOrderForm
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_SendOrderView, self).get_context_data(*args, **kwargs)
+        return context_data
+
+class Buyer_ListOrdersView(PATSAPIMixin, ListView):
+    def get_queryset(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        vendor_id = self.kwargs.get('publisher_id', None)
+        orders_response = buyer_api.view_orders(buyer_email=AGENCY_USER_ID, start_date=datetime.datetime.today()-datetime.timedelta(30), end_date=datetime.datetime.today())
+        return orders_response
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_ListOrdersView, self).get_context_data(*args, **kwargs)
+        start_date = self.request.GET.get('start_date', None)
+        if not start_date:
+            one_month_ago = datetime.datetime.today()-datetime.timedelta(30)
+            start_date = one_month_ago.strftime("%Y-%m-%d")
+        end_date = self.request.GET.get('end_date', None)
+        if not end_date:
+            today = datetime.datetime.today()
+            end_date = today.strftime("%Y-%m-%d")
+        context_data['start_date'] = start_date
+        context_data['end_date'] = end_date
         return context_data

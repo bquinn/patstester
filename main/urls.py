@@ -2,7 +2,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
 
-from .views import Buyer_GetPublishersView, Buyer_GetPublisherUsersView
+from .views import Buyer_GetPublishersView, Buyer_GetPublisherUsersView, Buyer_SendOrderView, Buyer_ListOrdersView
 
 urlpatterns = [
     url(r'^buyer/metadata/publishers/(?P<publisher_id>[\w\-]+)/users',
@@ -17,22 +17,31 @@ urlpatterns = [
     url(r'^buyer/campaigns',
         TemplateView.as_view(template_name='buyer_campaigns.html'),
         name='buyer_campaigns'),
-    url(r'^/buyer/rfps',
+    url(r'^buyer/rfps',
         TemplateView.as_view(template_name='buyer_rfps.html'),
         name='buyer_rfps'),
-    url(r'^/buyer/product-catalogue',
+    url(r'^buyer/orders/create',
+        Buyer_SendOrderView.as_view(template_name='buyer_orders_create.html'),
+        name='buyer_orders_create'),
+    url(r'^buyer/orders/list',
+        Buyer_ListOrdersView.as_view(template_name='buyer_orders_list.html'),
+        name='buyer_orders_list'),
+    url(r'^buyer/orders',
+        TemplateView.as_view(template_name='buyer_orders.html'),
+        name='buyer_orders'),
+    url(r'^buyer/product-catalogue',
         TemplateView.as_view(template_name='buyer_product_catalogue.html'),
         name='buyer_product_catalogue'),
-    url(r'^/seller/rfps',
+    url(r'^seller/rfps',
         TemplateView.as_view(template_name='seller_rfps.html'),
         name='seller_rfps'),
-    url(r'^/seller/proposals',
+    url(r'^seller/proposals',
         TemplateView.as_view(template_name='seller_proposals.html'),
         name='seller_proposals'),
-    url(r'^/seller/orders',
+    url(r'^seller/orders',
         TemplateView.as_view(template_name='seller_orders.html'),
         name='seller_orders'),
-    url(r'^/seller/product-catalogue',
+    url(r'^seller/product-catalogue',
         TemplateView.as_view(template_name='seller_product_catalogue.html'),
         name='seller_product_catalogue'),
     url(r'^',

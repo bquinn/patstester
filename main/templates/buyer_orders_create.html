@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}PATS Test Helper - Buyer - Orders - Create Order{% endblock %}
+
+{% block content %}
+    <h3>Create Order</h3>
+
+    <form action="{% url 'buyer_orders_create' %}" method="post" class="form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+    </form>
+{% endblock %}

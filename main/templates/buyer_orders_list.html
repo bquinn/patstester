@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}PATS API Test Helper - Buyer - Orders - List orders{% endblock %}
+
+{% block content %}
+    <h3>List orders</h3>
+    <form method="get" action="{% url 'buyer_orders_list' %}">
+    From date: <input type="date" name="start_date" value="{{start_date}}"/>
+    To date: <input type="date" name="end_date" value="{{end_date}}"/>
+    <input type="submit" value="Refresh list"/>
+    </form>
+    <table class="table">
+        <tr>
+            <th>Order ID</th>
+            <th>Order Public ID</th>
+            <th>Agency ID</th>
+            <th>Agency Name</th>
+            <th>Vendor ID</th>
+            <th>Vendor Name</th>
+            <th>Media Type</th>
+            <th>Status</th>
+            <th>Start date</th>
+            <th>End date</th>
+            <th>Major Version</th>
+            <th>Minor Version</th>
+            <th>Order Cost</th>
+            <th>Order Currency code</th>
+            <th>Due Date</th>
+            <th>Author</th>
+            <th>Comments</th>
+            <th>Last activity date</th>
+            <th>Campaign ID</th>
+            <th>Campaign Public ID</th>
+            <th>Campaign Name</th>
+            <th>Client Name</th>
+            <th>Campaign Currency</th>
+            <th>Campaign Start Date</th>
+            <th>Campaign End Date</th>
+        </tr>
+        {% for order in object_list %}
+        <tr>
+            <td>{{ order.orderId }}</td>
+            <td>{{ order.orderPublicId }}</td>
+            <td>{{ order.agencyId }}</td>
+            <td>{{ order.agencyName }}</td>
+            <td>{{ order.vendorId }}</td>
+            <td>{{ order.vendorName }}</td>
+            <td>{{ order.mediaType }}</td>
+            <td>{{ order.status }}</td>
+            <td>{{ order.startDate }}</td>
+            <td>{{ order.endDate }}</td>
+            <td>{{ order.majorVersion }}</td>
+            <td>{{ order.minorVersion }}</td>
+            <td>{{ order.cost.amount }}</td>
+            <td>{{ order.cost.currencyCode }}</td>
+            <td>{{ order.dueDate }}</td>
+            <td>{{ order.author }}</td>
+            <td>{{ order.comments }}</td>
+            <td>{{ order.lastActivity }}</td>
+            <td>{{ order.campaignId }}</td>
+            <td>{{ order.campaignPublicId }}</td>
+            <td>{{ order.campaignName }}</td>
+            <td>{{ order.clientName }}</td>
+            <td>{{ order.campaignCurrency }}</td>
+            <td>{{ order.campaignStartDate }}</td>
+            <td>{{ order.campaignEndDate }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
