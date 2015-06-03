@@ -2,6 +2,8 @@
 
 {% load bootstrap3 %}
 
+{% block bootstrap3_title %}PATS API Test Helper{% endblock %}
+
 {% block bootstrap3_content %}
     <div class="container-fluid">
         <h1>{% block title %}(no title){% endblock %}</h1>
@@ -9,12 +11,12 @@
         {% bootstrap_messages %}
 
         <div class="row">
-          <div class="col-md-4" role="navigation">
+          <div class="col-md-2" role="navigation">
             <ul class="nav nav-pills nav-stacked">
               <li><a href="{% url 'buyer_metadata' %}">Buyer - Metadata</a></li>
               <li><a href="{% url 'buyer_campaigns' %}">Buyer - Campaigns</a></li>
               <li><a href="#">Buyer - RFPs</a></li>
-              <li><a href="#">Buyer - Orders</a></li>
+              <li><a href="{% url 'buyer_orders' %}">Buyer - Orders</a></li>
               <li><a href="#">Buyer - Product Catalogue</a></li>
               <li><a href="#">Seller - RFPs</a></li>
               <li><a href="#">Seller - Proposals</a></li>
@@ -22,7 +24,7 @@
               <li><a href="#">Seller - Product Catalogue</a></li>
             </ul>
           </div>
-          <div class="col-md-8">
+          <div class="col-md-10">
             {% block content %}(no content){% endblock %}
           </div>
         </div>
