@@ -63,23 +63,29 @@ class Buyer_SendOrderView(PATSAPIMixin, FormView):
         context_data = super(Buyer_SendOrderView, self).get_context_data(*args, **kwargs)
         return context_data
 
-class Buyer_ListOrdersView(PATSAPIMixin, ListView):
+class Buyer_ListOrderRevisionsView(PATSAPIMixin, ListView):
+    start_date = None
+    end_date = None
+
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
         vendor_id = self.kwargs.get('publisher_id', None)
-        orders_response = buyer_api.view_orders(buyer_email=AGENCY_USER_ID, start_date=datetime.datetime.today()-datetime.timedelta(30), end_date=datetime.datetime.today())
-        return orders_response
+        self.start_date = self.request.GET.get('start_date', None)
+        if not self.start_date:
+            one_month_ago = datetime.datetime.today()-datetime.timedelta(30)
+            self.start_date = one_month_ago.strftime("%Y-%m-%d")
+        self.end_date = self.request.GET.get('end_date', None)
+        if not self.end_date:
+            self.end_date = datetime.datetime.today().strftime("%Y-%m-%d")
+        order_revisions_response = buyer_api.view_orders(
+            buyer_email=AGENCY_USER_ID,
+            start_date=datetime.datetime.strptime(self.start_date, "%Y-%m-%d"),
+            end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d")
+        )
+        return order_revisions_response
 
     def get_context_data(self, *args, **kwargs):
-        context_data = super(Buyer_ListOrdersView, self).get_context_data(*args, **kwargs)
-        start_date = self.request.GET.get('start_date', None)
-        if not start_date:
-            one_month_ago = datetime.datetime.today()-datetime.timedelta(30)
-            start_date = one_month_ago.strftime("%Y-%m-%d")
-        end_date = self.request.GET.get('end_date', None)
-        if not end_date:
-            today = datetime.datetime.today()
-            end_date = today.strftime("%Y-%m-%d")
-        context_data['start_date'] = start_date
-        context_data['end_date'] = end_date
+        context_data = super(Buyer_ListOrderRevisionsView, self).get_context_data(*args, **kwargs)
+        context_data['start_date'] = self.start_date
+        context_data['end_date'] = self.end_date
         return context_data

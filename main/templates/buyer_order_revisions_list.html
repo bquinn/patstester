@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}PATS API Test Helper - Buyer - Orders - List orders{% endblock %}
+{% block title %}PATS API Test Helper - Buyer - Orders - List order revisions{% endblock %}
 
 {% block content %}
-    <h3>List orders</h3>
-    <form method="get" action="{% url 'buyer_orders_list' %}">
+    <h3>List order revisions</h3>
+    <form method="get" action="{% url 'buyer_order_revisions_list' %}">
     From date: <input type="date" name="start_date" value="{{start_date}}"/>
     To date: <input type="date" name="end_date" value="{{end_date}}"/>
     <input type="submit" value="Refresh list"/>

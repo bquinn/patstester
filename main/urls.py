@@ -2,7 +2,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
 
-from .views import Buyer_GetPublishersView, Buyer_GetPublisherUsersView, Buyer_SendOrderView, Buyer_ListOrdersView
+from .views import Buyer_GetPublishersView, Buyer_GetPublisherUsersView, Buyer_SendOrderView, Buyer_ListOrderRevisionsView
 
 urlpatterns = [
     url(r'^buyer/metadata/publishers/(?P<publisher_id>[\w\-]+)/users',
@@ -23,9 +23,9 @@ urlpatterns = [
     url(r'^buyer/orders/create',
         Buyer_SendOrderView.as_view(template_name='buyer_orders_create.html'),
         name='buyer_orders_create'),
-    url(r'^buyer/orders/list',
-        Buyer_ListOrdersView.as_view(template_name='buyer_orders_list.html'),
-        name='buyer_orders_list'),
+    url(r'^buyer/orders/revisions/list',
+        Buyer_ListOrderRevisionsView.as_view(template_name='buyer_order_revisions_list.html'),
+        name='buyer_order_revisions_list'),
     url(r'^buyer/orders',
         TemplateView.as_view(template_name='buyer_orders.html'),
         name='buyer_orders'),
