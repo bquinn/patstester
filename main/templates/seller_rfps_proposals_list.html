@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}PATS API Test Helper - Seller - RFPs - List RFPs{% endblock %}
+
+{% block content %}
+    <h3>List Proposals for RFP {{ rfp_id }}</h3>
+    <table class="table">
+        <tr>
+            <th>Proposal Public ID</th>
+            <th>Proposal external ID</th>
+            <th>Proposal Version</th>
+            <th>Status</th>
+            <th>Comments</th>
+            <th>Print line items</th>
+            <th>Digital line items</th>
+            <th>Attachments</th>
+        </tr>
+        {% for proposal in object_list %}
+        <tr>
+            <td>{{ proposal.proposalPublicId }}</td>
+            <td>{{ proposal.proposalExternalId }}</td>
+            <td>{{ proposal.proposalVersion }}</td>
+            <td>{{ proposal.status }}</td>
+            <td>{{ proposal.comments }}</td>
+            <td>{% for lineitem in proposal.printLineItems %}
+                    {{ lineitem }}
+                {% endfor %}</td>
+            <td>{% for lineitem in proposal.digitalLineItems %}
+                    {{ lineitem }}
+                {% endfor %}</td>
+            <td>{{ proposal.attachments }}</td>
+        </tr>
+        {% empty %}
+            <tr><td colspan="20">No proposals for this RFP.</td></tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

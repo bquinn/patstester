@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}PATS API Test Helper - Seller - RFPs - List RFPs{% endblock %}
+
+{% block content %}
+    <h3>List RFPs</h3>
+    <form method="get" action="{% url 'seller_rfps_list' %}">
+    From date: <input type="date" name="start_date" value="{{start_date}}"/>
+    To date: <input type="date" name="end_date" value="{{end_date}}"/>
+    <input type="submit" value="Refresh list"/>
+    </form>
+    <table class="table">
+        <tr>
+            <th>RFP Public ID</th>
+            <th>Agency ID</th>
+            <th>Vendor ID</th>
+            <th>Media Type</th>
+            <th>Status</th>
+            <th>Start date</th>
+            <th>End date</th>
+            <th>Order Cost</th>
+            <th>Order Currency code</th>
+            <th>Due Date</th>
+            <th>Buyer Name</th>
+            <th>Buyer Email</th>
+            <th>Comments</th>
+            <th>Campaign Public ID</th>
+            <th>Campaign Name</th>
+            <th>Strategy</th>
+            <th>Requested Products</th>
+            <th>Attachments</th>
+        </tr>
+        {% for rfp in object_list %}
+        <tr>
+            <td>{{ rfp.rfpPublicId }}</td>
+            <td>{{ rfp.agencyPublicId }}</td>
+            <td>{{ rfp.publisherPublicId }}</td>
+            <td>{{ rfp.media }}</td>
+            <td>{{ rfp.status }}</td>
+            <td>{{ rfp.startDate }}</td>
+            <td>{{ rfp.endDate }}</td>
+            <td>{{ rfp.budgets.0.amount }}</td>
+            <td>{{ rfp.budgets.0.currencyCode }}</td>
+            <td>{{ rfp.responseDueDate }}</td>
+            <td>{{ rfp.buyerName }}</td>
+            <td>{{ rfp.buyerEmail }}</td>
+            <td>{{ rfp.comments }}</td>
+            <td>{{ rfp.campaignPublicId }}</td>
+            <td>{{ rfp.campaignName }}</td>
+            <td>{{ rfp.strategy }}</td>
+            <td>{{ rfp.requestedProducts }}</td>
+            <td>{{ rfp.attachments }}</td>
+            <td><a href="{% url 'seller_rfps_proposals_list' rfp.rfpPublicId %}">Show proposals</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

@@ -6,12 +6,14 @@ from django.views.generic.edit import FormView
 from pats import PATSBuyer, PATSSeller
 from .forms import Buyer_SendOrderForm
 
+# buy side
 MEDIAOCEAN_AGENCY_API_KEY = 'yt6wsdwrauz7mrawha7rua8v'
 AGENCY_ID = '35-IDSDKAD-7'
 AGENCY_USER_ID = 'brenddlo@pats3'
-
 TEST_COMPANY_ID = 'PATS3'
 TEST_PERSON_ID = 'brenddlo'
+# sell side
+MEDIAOCEAN_PUBLISHER_API_KEY = 'nz5ta424wv8m2bmg4njbgwya'
 PATS_PUBLISHER_ID = '35-EEBMG4J-4'
 
 class PATSAPIMixin(object):
@@ -26,10 +28,10 @@ class PATSAPIMixin(object):
         return self.pats_buyer
 
     def get_seller_api_handle(self):
-        if not self.pats_seller and self.request.session['api_handle_seller']:
+        if not self.pats_seller and 'api_handle_seller' in self.request.session:
             self.pats_seller = self.request.session['api_handle_seller']
         else:
-            self.pats_seller = PATSSeller(agency_id=AGENCY_ID, api_key=MEDIAOCEAN_AGENCY_API_KEY, debug_mode=True)
+            self.pats_seller = PATSSeller(vendor_id=PATS_PUBLISHER_ID, api_key=MEDIAOCEAN_PUBLISHER_API_KEY, debug_mode=True)
         return self.pats_seller
 
 class Buyer_GetPublishersView(PATSAPIMixin, ListView):
@@ -89,3 +91,41 @@ class Buyer_ListOrderRevisionsView(PATSAPIMixin, ListView):
         context_data['start_date'] = self.start_date
         context_data['end_date'] = self.end_date
         return context_data
+
+class Seller_ListRFPsView(PATSAPIMixin, ListView):
+    start_date = None
+    end_date = None
+
+    def get_queryset(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.start_date = self.request.GET.get('start_date', None)
+        if not self.start_date:
+            one_month_ago = datetime.datetime.today()-datetime.timedelta(30)
+            self.start_date = one_month_ago.strftime("%Y-%m-%d")
+        self.end_date = self.request.GET.get('end_date', None)
+        if not self.end_date:
+            self.end_date = datetime.datetime.today().strftime("%Y-%m-%d")
+        seller_rfps_response = seller_api.view_rfps(
+            start_date=datetime.datetime.strptime(self.start_date, "%Y-%m-%d"),
+            end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d")
+        )
+        return seller_rfps_response
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_ListRFPsView, self).get_context_data(*args, **kwargs)
+        context_data['start_date'] = self.start_date
+        context_data['end_date'] = self.end_date
+        return context_data
+    
+class Seller_ListProposalsView(PATSAPIMixin, ListView):
+    def get_queryset(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.rfp_id = self.kwargs.get('rfp_id', None)
+        seller_proposals_response = seller_api.view_proposals(rfp_id=self.rfp_id)
+        return seller_proposals_response
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_ListProposalsView, self).get_context_data(*args, **kwargs)
+        context_data['rfp_id'] = self.rfp_id
+        return context_data
+
