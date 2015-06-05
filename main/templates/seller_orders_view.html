@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}PATS Test Helper - Seller - Orders - View Order Detail{% endblock %}
+
+{% block content %}
+    <h3>View Order Detail - {{ order_id }} (version 0)</h3>
+
+    <a href="{% url 'seller_orders_history' order_id=order_id %}">View full order history</a>
+
+    <table class="table">
+      <tr>
+        <th>Status</th>
+        <td>{{ object.status }}</td>
+      </tr>
+      <tr>
+        <th>Order ID</th>
+        <td>{{ object.orderId }}</td>
+      </tr>
+      <tr>
+        <th>Comment History</th>
+        <td>
+<table class="table">
+<tr>
+<th>Timestamp</th>
+<th>Version</th>
+<th>Status</th>
+<th>Full name</th>
+<th>Email</th>
+<th>Comment</th>
+<th>Documents</th>
+</tr>
+{% for comment in object.commentHistory %}
+<tr>
+<td>{{ comment.timestamp }}</td>
+<td>{{ comment.version }}</td>
+<td>{{ comment.status }}</td>
+<td>{{ comment.fullName }}</td>
+<td>{{ comment.email }}</td>
+<td>{{ comment.comment }}</td>
+<td>{{ comment.documents }}</td>
+</tr>
+{% endfor %}
+</table>
+</td>
+      </tr>
+      <tr>
+        <th>Agency Name</th>
+        <td>{{ object.agencyName }}</td>
+      </tr>
+      <tr>
+        <th>Terms and Conditions</th>
+        <td>{{ object.termsAndConditions }}</td>
+      </tr>
+      <tr>
+        <th>Campaign ID</th>
+        <td>{{ object.campaignId }}</td>
+      </tr>
+      <tr>
+        <th>Print line items</th>
+        <td>{{ object.printLineItems }}</td>
+      </tr>
+      <tr>
+        <th>Media type</th>
+        <td>{{ object.mediaType }}</td>
+      </tr>
+      <tr>
+        <th>Digital line items</th>
+        <td>
+{% for line in object.digitalLineItems %}
+<table class="table">
+<tr>
+<th>Line item ID</th> <th>Line number</th> <th>Package type</th> <th>Primary placement</th> <th>Group name</th> <th>Name</th> <th>Cost Method</th> <th>Site</th> <th>Custom columns</th> <th>Dimensions</th> <th>Flight start</th> <th>Flight end</th> <th>Section</th> <th>Dimensions position</th> <th>Buy type</th> <th>Buy category</th> <th>Target</th> <th>Unit amount</th> <th>Unit type</th> <th>Rate</th> <th>Cost</th> <th>Comments</th> <th>Served by</th> <th>Creative type</th> <th>Market value</th>
+</tr>
+<tr>
+<td>{{ line.lineItemId }}</td> <td>{{ line.lineNumber }}</td> <td>{{ line.packageType }}</td> <td>{{ line.primaryPlacement }}</td> <td>{{ line.groupName }}</td> <td>{{ line.name }}</td> <td>{{ line.costMethod }}</td> <td>{{ line.site }}</td> <td>{{ line.customColumns }}</td> <td>{{ line.dimensions }}</td> <td>{{ line.flightStart }}</td> <td>{{ line.flightEnd }}</td> <td>{{ line.section }}</td> <td>{{ line.dimensionsPosition }}</td> <td>{{ line.buyType }}</td> <td>{{ line.buyCategory }}</td> <td>{{ line.target }}</td> <td>{{ line.unitAmount }}</td> <td>{{ line.unitType }}</td> <td>{{ line.rate }}</td> <td>{{ line.cost }}</td> <td>{{ line.comments }}</td> <td>{{ line.servedBy }}</td> <td>{{ line.creativeType }}</td> <td>{{ line.marketValue }}</td>
+</tr>
+{% endfor %}
+</table>
+</td>
+      </tr>
+      <tr>
+        <th>Version</th>
+        <td>{{ object.version }}</td>
+      </tr>
+      <tr>
+        <th>Agency campaign ref no</th>
+        <td>{{ object.agencyCampaignReferenceNo }}</td>
+      </tr>
+      <tr>
+        <th>Campaign Name</th>
+        <td>{{ object.campaignName }}</td>
+      </tr>
+      <tr>
+        <th>Vendor Name</th>
+        <td>{{ object.vendorName }}</td>
+      </tr>
+      <tr>
+        <th>Client Name</th>
+        <td>{{ object.clientName }}</td>
+      </tr>
+    </table>
+{% endblock %}

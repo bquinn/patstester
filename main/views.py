@@ -2,6 +2,7 @@ import datetime
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
+from django.views.generic.detail import DetailView
 
 from pats import PATSBuyer, PATSSeller
 from .forms import Buyer_SendOrderForm
@@ -58,6 +59,20 @@ class Buyer_GetPublisherUsersView(PATSAPIMixin, ListView):
         context_data['vendor_id'] = self.kwargs.get('publisher_id', None)
         return context_data
 
+class Buyer_OrderDetailView(PATSAPIMixin, DetailView):
+    order_id = None
+
+    def get_object(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.order_id = self.kwargs.get('order_id', None)
+        order_detail_response = buyer_api.view_order_detail(buyer_email=TEST_PERSON_ID, order_public_id=self.order_id)
+        return order_detail_response
+        
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_OrderDetailView, self).get_context_data(*args, **kwargs)
+        context_data['order_id'] = self.order_id
+        return context_data
+
 class Buyer_SendOrderView(PATSAPIMixin, FormView):
     form_class = Buyer_SendOrderForm
 
@@ -79,7 +94,7 @@ class Buyer_ListOrderRevisionsView(PATSAPIMixin, ListView):
         self.end_date = self.request.GET.get('end_date', None)
         if not self.end_date:
             self.end_date = datetime.datetime.today().strftime("%Y-%m-%d")
-        order_revisions_response = buyer_api.view_orders(
+        order_revisions_response = buyer_api.view_order_revisions(
             buyer_email=AGENCY_USER_ID,
             start_date=datetime.datetime.strptime(self.start_date, "%Y-%m-%d"),
             end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d")
@@ -129,3 +144,57 @@ class Seller_ListProposalsView(PATSAPIMixin, ListView):
         context_data['rfp_id'] = self.rfp_id
         return context_data
 
+class Seller_ListOrdersView(PATSAPIMixin, ListView):
+    start_date = None
+    end_date = None
+
+    def get_queryset(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.start_date = self.request.GET.get('start_date', None)
+        if not self.start_date:
+            one_month_ago = datetime.datetime.today()-datetime.timedelta(30)
+            self.start_date = one_month_ago.strftime("%Y-%m-%d")
+        self.end_date = self.request.GET.get('end_date', None)
+        if not self.end_date:
+            self.end_date = datetime.datetime.today().strftime("%Y-%m-%d")
+        order_revisions_response = seller_api.view_orders(
+            start_date=datetime.datetime.strptime(self.start_date, "%Y-%m-%d"),
+            end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d")
+        )
+        return order_revisions_response
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_ListOrdersView, self).get_context_data(*args, **kwargs)
+        context_data['start_date'] = self.start_date
+        context_data['end_date'] = self.end_date
+        return context_data
+
+class Seller_OrderDetailView(PATSAPIMixin, DetailView):
+    order_id = None
+
+    def get_object(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.order_id = self.kwargs.get('order_id', None)
+        # TODO version is hardcoded for now
+        order_detail_response = seller_api.view_order_detail(order_id=self.order_id, version=0)
+        return order_detail_response
+        
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_OrderDetailView, self).get_context_data(*args, **kwargs)
+        context_data['order_id'] = self.order_id
+        return context_data
+    
+class Seller_OrderHistoryView(PATSAPIMixin, ListView):
+    order_id = None
+
+    def get_queryset(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.order_id = self.kwargs.get('order_id', None)
+        order_history_response = seller_api.view_order_history(order_id=self.order_id)
+        return order_history_response
+        
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_OrderHistoryView, self).get_context_data(*args, **kwargs)
+        context_data['order_id'] = self.order_id
+        return context_data
+    

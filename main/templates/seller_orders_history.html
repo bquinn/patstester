@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}PATS API Test Helper - Seller - List Orders{% endblock %}
+
+{% block content %}
+    <h3>Order history - Order {{ order_id }}</h3>
+
+    <form method="get" action="{% url 'seller_orders_list' %}">
+    From date: <input type="date" name="start_date" value="{{start_date}}"/>
+    To date: <input type="date" name="end_date" value="{{end_date}}"/>
+    <input type="submit" value="Refresh list"/>
+    </form>
+    <table class="table">
+        <tr>
+            <th>Order ID</th>
+            <th>Version</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Vendor ID</th>
+            <th>Agency ID</th>
+            <th>Client Name</th>
+            <th>Campaign ID</th>
+        </tr>
+        {% for order in object_list %}
+{{ order }}
+        <tr>
+            <td><a href="{% url 'seller_orders_view' order_id=order.orderId %}">{{ order.orderId }}</a></td>
+            <td>{{ order.version }}</td>
+            <td>{{ order.type }}</td>
+            <td>{{ order.status }}</td>
+            <td>{{ order.vendorId }}</td>
+            <td>{{ order.agencyId }}</td>
+            <td>{{ order.clientName }}</td>
+            <td>{{ order.campaignId }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

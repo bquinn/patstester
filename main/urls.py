@@ -3,8 +3,10 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 
 from .views import (
-    Buyer_GetPublishersView, Buyer_GetPublisherUsersView, Buyer_SendOrderView, Buyer_ListOrderRevisionsView,
-    Seller_ListRFPsView, Seller_ListProposalsView
+    Buyer_GetPublishersView, Buyer_GetPublisherUsersView,
+    Buyer_OrderDetailView, Buyer_SendOrderView, Buyer_ListOrderRevisionsView,
+    Seller_ListRFPsView, Seller_ListProposalsView,
+    Seller_ListOrdersView, Seller_OrderDetailView, Seller_OrderHistoryView
 )
 
 urlpatterns = [
@@ -29,6 +31,9 @@ urlpatterns = [
     url(r'^buyer/orders/revisions',
         Buyer_ListOrderRevisionsView.as_view(template_name='buyer_order_revisions_list.html'),
         name='buyer_order_revisions_list'),
+    url(r'^buyer/orders/(?P<order_id>[\w\-]+)',
+        Buyer_OrderDetailView.as_view(template_name='buyer_orders_view.html'),
+        name='buyer_orders_view'),
     url(r'^buyer/orders',
         TemplateView.as_view(template_name='buyer_orders.html'),
         name='buyer_orders'),
@@ -47,9 +52,15 @@ urlpatterns = [
     url(r'^seller/proposals',
         TemplateView.as_view(template_name='seller_proposals.html'),
         name='seller_proposals'),
+    url(r'^seller/orders/(?P<order_id>[\w\-]+)/history',
+        Seller_OrderHistoryView.as_view(template_name='seller_orders_history.html'),
+        name='seller_orders_history'),
+    url(r'^seller/orders/(?P<order_id>[\w\-]+)',
+        Seller_OrderDetailView.as_view(template_name='seller_orders_view.html'),
+        name='seller_orders_view'),
     url(r'^seller/orders',
-        TemplateView.as_view(template_name='seller_orders.html'),
-        name='seller_orders'),
+        Seller_ListOrdersView.as_view(template_name='seller_orders_list.html'),
+        name='seller_orders_list'),
     url(r'^seller/product-catalogue',
         TemplateView.as_view(template_name='seller_product_catalogue.html'),
         name='seller_product_catalogue'),
