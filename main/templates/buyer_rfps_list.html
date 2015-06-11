@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}PATS API Test Helper - Seller - RFPs - List RFPs{% endblock %}
+
+{% block content %}
+    <h3>List RFPs</h3>
+    <form method="get" action="{% url 'buyer_rfps_list' %}">
+    <table class="table">
+    <tr><td>Advertiser name</td><td><input type="text" name="advertiser_name" value="{{search_advertiser_name}}"/></td></tr>
+    <tr><td>Campaign URN</td><td> <input type="text" name="campaign_urn" value="{{search_campaign_urn}}"/></td></tr>
+    <tr><td>From date</td><td> <input type="date" name="rfp_start_date" value="{{search_rfp_start_date}}"/></td></tr>
+    <tr><td>To date</td><td> <input type="date" name="rfp_end_date" value="{{search_rfp_end_date}}"/></td></tr>
+    <tr><td>Respond by date</td><td> <input type="date" name="response_due_date" value="{{search_response_due_date}}"/></td></tr>
+    <tr><td>Status</td><td><input type="text" name="status" value="{{search_status}}"/></td></tr>
+    </table>
+    <input type="submit" value="Refresh list"/>
+    </form>
+    <table class="table">
+        <tr>
+            <th>RFP Public ID</th>
+            <th>RFP ID</th>
+            <th>Agency ID</th>
+            <th>Vendor ID</th>
+            <th>Media Type</th>
+            <th>Status</th>
+            <th>Start date</th>
+            <th>End date</th>
+            <th>Budgets</th>
+            <th>Due Date</th>
+            <th>Buyer Name</th>
+            <th>Buyer Email</th>
+            <th>Comments</th>
+            <th>Campaign Public ID</th>
+            <th>Campaign Name</th>
+            <th>Strategy</th>
+            <th>Publisher recipients</th>
+            <th>Agency user</th>
+            <th>Requested Products</th>
+            <th>Flighting?</th>
+            <th>Attachments</th>
+        </tr>
+        {% for rfp_group in object_list %}
+        <tr><td colspan="22">Campaign info: {{ rfp_group.campaignRfpDto }}</td></tr>
+        {% for rfp in rfp_group.cmRfpDtoList %}
+        <tr>
+            <td><a href="{% url 'buyer_rfps_view' rfp.rfpPublicId %}">{{ rfp.rfpPublicId }}</a></td>
+            <td>{{ rfp.rfpId }}</td>
+            <td>{{ rfp.agencyPublicId }}</td>
+            <td>{{ rfp.publisherPublicId }}</td>
+            <td>{{ rfp.media }}</td>
+            <td>{{ rfp.status }}</td>
+            <td>{{ rfp.startDate }}</td>
+            <td>{{ rfp.endDate }}</td>
+            <td>{{ rfp.budgets }}</td>
+            <td>{{ rfp.responseDueDate }}</td>
+            <td>{{ rfp.buyerName }}</td>
+            <td>{{ rfp.buyerEmail }}</td>
+            <td>{{ rfp.comments }}</td>
+            <td>{{ rfp.campaignPublicId }}</td>
+            <td>{{ rfp.campaignName }}</td>
+            <td>{{ rfp.strategy }}</td>
+            <td>{{ rfp.publisherRecipients }}</td>
+            <td>{{ rfp.agencyUserId }}</td>
+            <td>{{ rfp.requestedProducts }}</td>
+            <td>{{ rfp.includeMonthlyFlighting }}</td>
+            <td>{{ rfp.attachments }}</td>
+        </tr>
+            {% if rfp.proposals %}
+            <tr><td></td><td colspan="21">Proposals: {{ rfp.proposals }}</td></tr>
+            {% endif %}
+        {% endfor %}
+        {% endfor %}
+    </table>
+
+{% endblock %}

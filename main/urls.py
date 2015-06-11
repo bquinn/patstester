@@ -3,7 +3,8 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 
 from .views import (
-    Buyer_GetPublishersView, Buyer_GetPublisherUsersView,
+    Buyer_GetPublishersView, Buyer_GetPublisherUsersView, Buyer_GetAgenciesView,
+    Buyer_RFPDetailView, Buyer_RFPSearchView,
     Buyer_OrderDetailView, Buyer_SendOrderView, Buyer_ListOrderRevisionsView,
     Seller_ListRFPsView, Seller_ListProposalsView,
     Seller_ListOrdersView, Seller_OrderDetailView, Seller_OrderHistoryView
@@ -11,20 +12,30 @@ from .views import (
 
 urlpatterns = [
     url(r'^buyer/metadata/publishers/(?P<publisher_id>[\w\-]+)/users',
-        Buyer_GetPublisherUsersView.as_view(template_name='buyer_metadata_get_publisher_users.html'),
-        name='buyer_metadata_get_publisher_users'),
+        Buyer_GetPublisherUsersView.as_view(template_name='buyer_metadata_publisher_users.html'),
+        name='buyer_metadata_publisher_users'),
     url(r'^buyer/metadata/publishers',
-        Buyer_GetPublishersView.as_view(template_name='buyer_metadata_get_publishers.html'),
-        name='buyer_metadata_get_publishers'),
+        Buyer_GetPublishersView.as_view(template_name='buyer_metadata_publishers.html'),
+        name='buyer_metadata_publishers'),
+    url(r'^buyer/metadata/agencies/(?P<agency_id>[\w\-]+)?',
+        Buyer_GetAgenciesView.as_view(template_name='buyer_metadata_agencies.html'),
+        name='buyer_metadata_agencies'),
     url(r'^buyer/metadata',
         TemplateView.as_view(template_name='buyer_metadata.html'),
         name='buyer_metadata'),
     url(r'^buyer/campaigns',
         TemplateView.as_view(template_name='buyer_campaigns.html'),
         name='buyer_campaigns'),
+    url(r'^buyer/rfps/search/(?P<searchquery>[\w]+)?',
+        Buyer_RFPSearchView.as_view(template_name='buyer_rfps_search.html'),
+        name='buyer_rfps_search'),
+    url(r'^buyer/rfps/(?P<rfp_id>[\w\-]+)',
+        Buyer_RFPDetailView.as_view(template_name='buyer_rfps_view.html'),
+        name='buyer_rfps_view'),
+    # this has lots of params but they're all in the query string
     url(r'^buyer/rfps',
-        TemplateView.as_view(template_name='buyer_rfps.html'),
-        name='buyer_rfps'),
+        Buyer_RFPSearchView.as_view(template_name='buyer_rfps_list.html'),
+        name='buyer_rfps_list'),
     url(r'^buyer/orders/create',
         Buyer_SendOrderView.as_view(template_name='buyer_orders_create.html'),
         name='buyer_orders_create'),

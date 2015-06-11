@@ -13,7 +13,7 @@
         <tr>
             <td>{{ publisher.vendorId }}</td>
             <td>{{ publisher.vendorName }}</td>
-            <td><a href="{% url 'buyer_metadata_get_publisher_users' publisher_id=publisher.vendorId %}">Show users</a></td>
+            <td><a href="{% url 'buyer_metadata_publisher_users' publisher_id=publisher.vendorId %}">Show users</a></td>
         </tr>
         {% endfor %}
     </table>

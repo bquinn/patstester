@@ -47,16 +47,86 @@ class Buyer_GetPublishersView(PATSAPIMixin, ListView):
         return context_data
 
 class Buyer_GetPublisherUsersView(PATSAPIMixin, ListView):
+    vendor_id = None
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
-        vendor_id = self.kwargs.get('publisher_id', None)
-        publisher_users_response = buyer_api.get_users_for_seller(user_id=AGENCY_USER_ID, vendor_id=vendor_id)
+        self.vendor_id = self.kwargs.get('publisher_id', None)
+        publisher_users_response = buyer_api.get_users_for_seller(user_id=AGENCY_USER_ID, vendor_id=self.vendor_id)
         # publisher emails list is actually the "payload" component of the dict
         return publisher_users_response['payload']['emails']
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_GetPublisherUsersView, self).get_context_data(*args, **kwargs)
-        context_data['vendor_id'] = self.kwargs.get('publisher_id', None)
+        context_data['vendor_id'] = self.vendor_id
+        return context_data
+
+class Buyer_GetAgenciesView(PATSAPIMixin, ListView):
+    agency_id = None
+    search_name = None
+    search_updated_date = None
+
+    def get_queryset(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.agency_id = self.kwargs.get('agency_id', None)
+        self.search_name = self.request.GET.get('name', None)
+        self.search_updated_date = self.request.GET.get('last_updated_date', None)
+        agencies_response = buyer_api.get_buyers(user_id=AGENCY_USER_ID, agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
+        return agencies_response['payload']
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_GetAgenciesView, self).get_context_data(*args, **kwargs)
+        context_data['agency_id'] = self.agency_id
+        context_data['name'] = self.search_name or ''
+        context_data['last_updated_date'] = self.search_updated_date or ''
+        return context_data
+
+class Buyer_RFPDetailView(PATSAPIMixin, DetailView):
+    def get_object(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.rfp_id = self.kwargs.get('rfp_id', None)
+        rfp_detail_response = buyer_api.view_rfp_detail(sender_user_id=AGENCY_USER_ID, rfp_id=self.rfp_id)
+        return rfp_detail_response
+    
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_RFPDetailView, self).get_context_data(*args, **kwargs)
+        context_data['rfp_id'] = self.rfp_id
+        return context_data
+
+class Buyer_RFPSearchView(PATSAPIMixin, ListView):
+    search_advertiser_name = None
+    search_rfp_start_date = None
+    search_rfp_end_date = None
+    search_campaign_urn = None
+    search_response_due_date = None
+    search_status = None
+
+    def get_queryset(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.search_advertiser_name = self.request.GET.get('advertiser_name', None)
+        self.search_rfp_start_date = self.request.GET.get('rfp_start_date', None)
+        self.search_rfp_end_date = self.request.GET.get('rfp_end_date', None)
+        self.search_campaign_urn = self.request.GET.get('campaign_urn', None)
+        self.search_response_due_date = self.request.GET.get('response_due_date', None)
+        self.search_status = self.request.GET.get('status', None)
+        rfp_list = buyer_api.search_rfps(
+            user_id=AGENCY_USER_ID,
+            advertiser_name=self.search_advertiser_name,
+            rfp_start_date=self.search_rfp_start_date,
+            rfp_end_date=self.search_rfp_end_date,
+            campaign_urn=self.search_campaign_urn,
+            response_due_date=self.search_response_due_date,
+            status=self.search_status
+        )
+        return rfp_list
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_RFPSearchView, self).get_context_data(*args, **kwargs)
+        context_data['search_advertiser_name'] = self.search_advertiser_name or ''
+        context_data['search_rfp_start_date'] = self.search_rfp_start_date
+        context_data['search_rfp_end_date'] = self.search_rfp_end_date
+        context_data['search_campaign_urn'] = self.search_campaign_urn or ''
+        context_data['search_response_due_date'] = self.search_response_due_date
+        context_data['search_status'] = self.search_status or ''
         return context_data
 
 class Buyer_OrderDetailView(PATSAPIMixin, DetailView):
