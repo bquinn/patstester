@@ -21,7 +21,7 @@
         </tr>
         {% for order in object_list %}
         <tr>
-            <td><a href="{% url 'seller_orders_view' order_id=order.orderId %}">{{ order.orderId }}</a></td>
+            <td><a href="{% url 'seller_orders_view' order_id=order.orderId version=order.version %}">{{ order.orderId }}</a></td>
             <td>{{ order.version }}</td>
             <td>{{ order.type }}</td>
             <td>{{ order.status }}</td>

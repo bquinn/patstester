@@ -1,4 +1,6 @@
 import datetime
+from django.core.urlresolvers import reverse_lazy
+from django.contrib import messages
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
@@ -145,9 +147,17 @@ class Buyer_OrderDetailView(PATSAPIMixin, DetailView):
 
 class Buyer_SendOrderView(PATSAPIMixin, FormView):
     form_class = Buyer_SendOrderForm
+    agency_id = AGENCY_ID
+    success_url = reverse_lazy('buyer_orders_create')
+
+    def form_valid(self, form):
+        buyer_api = self.get_buyer_api_handle()
+        messages.success(self.request, 'Order successfully sent. (Not really)')
+        return super(Buyer_SendOrderView, self).form_valid(form)
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_SendOrderView, self).get_context_data(*args, **kwargs)
+        context_data['agency_id'] = self.agency_id
         return context_data
 
 class Buyer_ListOrderRevisionsView(PATSAPIMixin, ListView):

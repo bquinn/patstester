@@ -15,7 +15,7 @@
             <td>{{ publisher.vendorId }}</td>
             <td>{{ publisher.vendorName }}</td>
             <td><a href="{% url 'buyer_metadata_publisher_users' publisher_id=publisher.vendorId %}">Show users</a></td>
-            <td><a href="{% url 'buyer_product_catalogue' publisher_id=publisher.vendorId %}">Show products</a></td>
+            <td><a href="{% url 'buyer_product_catalogue_list' publisher_id=publisher.vendorId %}">Show products</a></td>
         </tr>
         {% endfor %}
     </table>

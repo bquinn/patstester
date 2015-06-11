@@ -6,8 +6,10 @@
 {% block content %}
     <h3>Create Order</h3>
 
-    <form action="{% url 'buyer_orders_create' %}" method="post" class="form">
+    <form action="{% url 'buyer_orders_create' %}" method="post" role="form">
         {% csrf_token %}
+        {% bootstrap_form_errors form type='non_fields' %}
         {% bootstrap_form form %}
+        {% buttons submit='Submit' reset="Cancel" %}{% endbuttons %}
     </form>
 {% endblock %}
