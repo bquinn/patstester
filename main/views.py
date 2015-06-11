@@ -75,7 +75,7 @@ class Buyer_GetAgenciesView(PATSAPIMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_GetAgenciesView, self).get_context_data(*args, **kwargs)
-        context_data['agency_id'] = self.agency_id
+        context_data['agency_id'] = self.agency_id or ''
         context_data['name'] = self.search_name or ''
         context_data['last_updated_date'] = self.search_updated_date or ''
         return context_data
