@@ -67,7 +67,7 @@ class Buyer_GetAgenciesView(PATSAPIMixin, ListView):
 
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
-        self.agency_id = self.kwargs.get('agency_id', None)
+        self.agency_id = self.request.GET.get('agency_id', self.kwargs.get('agency_id', None))
         self.search_name = self.request.GET.get('name', None)
         self.search_updated_date = self.request.GET.get('last_updated_date', None)
         agencies_response = buyer_api.get_buyers(user_id=AGENCY_USER_ID, agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
