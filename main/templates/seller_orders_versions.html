@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}PATS API Test Helper - Seller - List Order versions{% endblock %}
+
+{% block content %}
+    <h3>Order history - Order {{ order_id }}</h3>
+
+    <table class="table">
+        <tr>
+            <th>Vendor Name</th>
+            <th>Agency Name</th>
+            <th>Campaign ID</th>
+            <th>Agency campaign ref</th>
+            <th>Campaign name</th>
+            <th>Client name</th>
+            <th>Order ID</th>
+            <th>Order version</th>
+            <th>Order type</th>
+            <th>Order status</th>
+            <th>Media type</th>
+            <th>Flight start</th>
+            <th>Flight end</th>
+            <th>Author</th>
+            <th>Comment</th>
+            <th>Due by</th>
+            <th>Cost</th>
+            <th>Currency</th>
+            <th>Ts &amp; Cs</th>
+        </tr>
+        {% for order in object_list %}
+        <tr>
+            <td>{{ order.vendorName }}</td>
+            <td>{{ order.agencyName }}</td>
+            <td>{{ order.campaignId }}</td>
+            <td>{{ order.agencyCampaignReferenceNo }}</td>
+            <td>{{ order.campaignName }}</td>
+            <td>{{ order.clientName }}</td>
+            <td>{{ order.orderId }}</td>
+            <td><a href="{% url 'seller_orders_view' order_id=order.orderId version=order.version %}">{{ order.version }}</a></td>
+            <td>{{ order.type }}</td>
+            <td>{{ order.status }}</td>
+            <td>{{ order.mediaType }}</td>
+            <td>{{ order.flightStart }}</td>
+            <td>{{ order.flightEnd }}</td>
+            <td>{{ order.author }}</td>
+            <td>{{ order.comment }}</td>
+            <td>{{ order.dueBy }}</td>
+            <td>{{ order.cost.amount }}</td>
+            <td>{{ order.cost.currencyCode }}</td>
+            <td>{{ order.termsAndConditions }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

@@ -177,6 +177,18 @@ class Buyer_ListOrderRevisionsView(PATSAPIMixin, ListView):
         context_data['end_date'] = self.end_date
         return context_data
 
+class Buyer_ListProductsView(PATSAPIMixin, ListView):
+    def get_queryset(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.vendor_id = self.kwargs.get('publisher_id', None)
+        product_catalogue_response = buyer_api.list_products(vendor_id=self.vendor_id, user_id=AGENCY_USER_ID)
+        return product_catalogue_response['products']
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_ListProductsView, self).get_context_data(*args, **kwargs)
+        context_data['vendor_id'] = self.vendor_id
+        return context_data
+
 class Seller_ListRFPsView(PATSAPIMixin, ListView):
     start_date = None
     end_date = None
@@ -241,17 +253,20 @@ class Seller_ListOrdersView(PATSAPIMixin, ListView):
 
 class Seller_OrderDetailView(PATSAPIMixin, DetailView):
     order_id = None
+    version = None
 
     def get_object(self, **kwargs):
         seller_api = self.get_seller_api_handle()
         self.order_id = self.kwargs.get('order_id', None)
-        # TODO version is hardcoded for now
-        order_detail_response = seller_api.view_order_detail(order_id=self.order_id, version=0)
+        # version defaults to 0
+        self.version = self.kwargs.get('version', 0)
+        order_detail_response = seller_api.view_order_detail(order_id=self.order_id, version=self.version)
         return order_detail_response
         
     def get_context_data(self, *args, **kwargs):
         context_data = super(Seller_OrderDetailView, self).get_context_data(*args, **kwargs)
         context_data['order_id'] = self.order_id
+        context_data['version'] = self.version
         return context_data
     
 class Seller_OrderHistoryView(PATSAPIMixin, ListView):
