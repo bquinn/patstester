@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}PATS API Test Helper - Buyer - Product Catalogue{% endblock %}
+
+{% block content %}
+    <h3>List Products for {{ vendor_id }}</h3>
+    <table class="table">
+        <tr>
+            <th>Vendor ID</th>
+            <th>Product Public ID</th>
+            <th>Product ID</th>
+            <th>Product name</th>
+            <th>Product URL</th>
+            <th>Status (ie Active)</th>
+            <th>Media Type</th>
+            <th>Media Subtype</th>
+            <th>Product description</th>
+            <th>Publication name</th>
+            <th>Section</th>
+            <th>Subsection(s)</th>
+            <th>Logo</th>
+            <th>Cycle</th>
+            <th>Circulation</th>
+            <th>Start date</th>
+            <th>End date</th>
+            <th>Rate card URL</th>
+            <th>Media kit URL</th>
+            <th>Accepts colour</th>
+            <th>Contact name</th>
+            <th>Contact email</th>
+            <th>Contact phone</th>
+            <th>Category</th>
+            <th>Regions</th>
+            <th>Available positions</th>
+            <th>Publisher days</th>
+            <th>Sizes</th>
+            <th>Is non standard?</th>
+            <th>Products (for packages)</th>
+        </tr>
+        {% for product in object_list %}
+        <tr>
+            <td> {{ product.vendorPublicId }}</a></td>
+            <td> {{ product.productPublicId }}</a></td>
+            <td> {{ product.standardAttributes.productId }}</a></td>
+            <td> {{ product.standardAttributes.productName }}</a></td>
+            <td> {{ product.standardAttributes.productURL }}</a></td>
+            <td> {{ product.standardAttributes.status }}</a></td>
+            <td> {{ product.standardAttributes.mediaType }}</a></td>
+            <td> {{ product.standardAttributes.subMediaType }}</a></td>
+            <td> {{ product.standardAttributes.productDescription }}</a></td>
+            <td> {{ product.standardAttributes.publicationName }}</a></td>
+            <td> {{ product.standardAttributes.productSection }}</a></td>
+            <td> {{ product.standardAttributes.productSubSection }}</a></td>
+            <td> {{ product.standardAttributes.productLogo }}</a></td>
+            <td> {{ product.standardAttributes.cycle }}</a></td>
+            <td> {{ product.standardAttributes.circulation }}</a></td>
+            <td> {{ product.standardAttributes.startDate }}</a></td>
+            <td> {{ product.standardAttributes.endDate }}</a></td>
+            <td> {{ product.standardAttributes.rateCardURL }}</a></td>
+            <td> {{ product.standardAttributes.mediaKitURL }}</a></td>
+            <td> {{ product.standardAttributes.acceptsColor }}</a></td>
+            <td> {{ product.standardAttributes.contactName }}</a></td>
+            <td> {{ product.standardAttributes.contactEmail }}</a></td>
+            <td> {{ product.standardAttributes.contactPhone }}</a></td>
+            <td> {{ product.standardAttributes.category }}</a></td>
+            <td> {{ product.standardAttributes.regions }}</a></td>
+            <td> {{ product.standardAttributes.availablePositions }}</a></td>
+            <td> {{ product.standardAttributes.publisherDays }}</a></td>
+            <td> {{ product.standardAttributes.sizes }}</a></td>
+            <td> {{ product.standardAttributes.isNonStandard }}</a></td>
+            <td> {{ product.standardAttributes.products }}</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="22">No products to display.</td></tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
