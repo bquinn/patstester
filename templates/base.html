@@ -5,25 +5,55 @@
 {% block bootstrap3_title %}PATS API Test Helper{% endblock %}
 
 {% block bootstrap3_content %}
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+      </button>
+      <a class="navbar-brand" href="/">PATS API Tester</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Buyer APIs <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="{% url 'buyer_metadata' %}">Metadata</a></li>
+            <li><a href="{% url 'buyer_campaigns' %}">Campaigns</a></li>
+            <li><a href="{% url 'buyer_rfps_list' %}">RFPs</a></li>
+            <li><a href="{% url 'buyer_orders' %}">Orders</a></li>
+            <li><a href="{% url 'buyer_product_catalogue' %}">Product catalogue</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Seller APIs <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="{% url 'seller_rfps' %}">RFPs</a></li>
+            <li><a href="{% url 'seller_orders_list' %}">Orders</a></li>
+            <li><a href="#">Product catalogue</a></li>
+          </ul>
+        </li>
+      </ul>
+      <!-- form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form -->
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Configuration</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
     <div class="container-fluid">
         <h1>{% block title %}(no title){% endblock %}</h1>
 
         {% bootstrap_messages %}
 
         <div class="row">
-          <div class="col-md-2" role="navigation">
-            <ul class="nav nav-pills nav-stacked">
-              <li><a href="{% url 'buyer_metadata' %}">Buyer - Metadata</a></li>
-              <li><a href="{% url 'buyer_campaigns' %}">Buyer - Campaigns</a></li>
-              <li><a href="{% url 'buyer_rfps_list' %}">Buyer - RFPs</a></li>
-              <li><a href="{% url 'buyer_orders' %}">Buyer - Orders</a></li>
-              <li><a href="{% url 'buyer_product_catalogue' %}">Buyer - Product Catalogue</a></li>
-              <li><a href="{% url 'seller_rfps' %}">Seller - RFPs</a></li>
-              <li><a href="{% url 'seller_orders_list' %}">Seller - Orders</a></li>
-              <li><a href="#">Seller - Product Catalogue</a></li>
-            </ul>
-          </div>
-          <div class="col-md-10">
+          <div class="col-md-12">
             {% block content %}(no content){% endblock %}
           </div>
         </div>
