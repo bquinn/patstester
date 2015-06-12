@@ -452,6 +452,7 @@ class ConfigurationView(PATSAPIMixin, FormView):
         self.set_agency_company_id(form.cleaned_data['agency_company_id'])
         self.set_publisher_id(form.cleaned_data['publisher_id'])
         self.set_publisher_api_key(form.cleaned_data['publisher_api_key'])
+        self.set_defaults_key('Custom')
         messages.success(self.request, 'Configuration values updated.')
         return super(ConfigurationView, self).form_valid(form)
 
@@ -466,6 +467,5 @@ class ConfigurationView(PATSAPIMixin, FormView):
         context_data['publisher_api_key'] = self.get_publisher_api_key()
         context_data['config_defaults_list'] = CONFIG_DEFAULTS.keys()
         context_data['defaults_key'] = self.get_defaults_key()
-        
         return context_data
 
