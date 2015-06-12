@@ -12,68 +12,115 @@ from .forms import Buyer_SendOrderForm, ConfigurationForm
 
 # Default values for API buyer/seller parameters
 # buy side
-MEDIAOCEAN_AGENCY_API_KEY = 'yt6wsdwrauz7mrawha7rua8v'
-AGENCY_ID = '35-IDSDKAD-7'
-AGENCY_USER_ID = 'brenddlo@pats3'
-AGENCY_COMPANY_ID = 'PATS3'
-AGENCY_PERSON_ID = 'brenddlo'
-# sell side
-# MEDIAOCEAN_PUBLISHER_API_KEY = 'nz5ta424wv8m2bmg4njbgwya'
-MEDIAOCEAN_PUBLISHER_API_KEY = 'yt6wsdwrauz7mrawha7rua8v'
-PUBLISHER_ID = '35-EEBMG4J-4'
+CONFIG_DEFAULTS = {
+    'DMG Media': {
+        'AGENCY_API_KEY': 'yt6wsdwrauz7mrawha7rua8v',
+        'AGENCY_ID': '35-IDSDKAD-7',
+        'AGENCY_USER_ID': 'brenddlo@pats3',
+        'AGENCY_COMPANY_ID': 'PATS3',
+        'AGENCY_PERSON_ID': 'brenddlo',
+        'PUBLISHER_API_KEY': '4ust6fh2x38hcw8pq2vcef4r',
+        'PUBLISHER_ID': '35-PUOEFOA-9'
+    },
+    'News UK': {
+        'AGENCY_API_KEY': 'yt6wsdwrauz7mrawha7rua8v',
+        'AGENCY_ID': '35-IDSDKAD-7',
+        'AGENCY_USER_ID': 'brenddlo@pats3',
+        'AGENCY_COMPANY_ID': 'PATS3',
+        'AGENCY_PERSON_ID': 'brenddlo',
+        'PUBLISHER_API_KEY': 'nz5ta424wv8m2bmg4njbgwya',
+        'PUBLISHER_ID': '35-OMXDD1T-5'
+    },
+    'PATS Media': {
+        'AGENCY_API_KEY': 'yt6wsdwrauz7mrawha7rua8v',
+        'AGENCY_ID': '35-IDSDKAD-7',
+        'AGENCY_USER_ID': 'brenddlo@pats3',
+        'AGENCY_COMPANY_ID': 'PATS3',
+        'AGENCY_PERSON_ID': 'brenddlo',
+        'PUBLISHER_API_KEY': 'nz5ta424wv8m2bmg4njbgwya',
+        'PUBLISHER_ID': '35-EEBMG4J-4'
+    },
+    'Telegraph': {
+        'AGENCY_API_KEY': 'yt6wsdwrauz7mrawha7rua8v',
+        'AGENCY_ID': '35-IDSDKAD-7',
+        'AGENCY_USER_ID': 'brenddlo@pats3',
+        'AGENCY_COMPANY_ID': 'PATS3',
+        'AGENCY_PERSON_ID': 'brenddlo',
+        'PUBLISHER_API_KEY': 'nz5ta424wv8m2bmg4njbgwya',
+        'PUBLISHER_ID': '35-OIFNHJ7-6'
+    },
+    'Trinity Mirror': {
+        'AGENCY_API_KEY': 'yt6wsdwrauz7mrawha7rua8v',
+        'AGENCY_ID': '35-IDSDKAD-7',
+        'AGENCY_USER_ID': 'brenddlo@pats3',
+        'AGENCY_COMPANY_ID': 'PATS3',
+        'AGENCY_PERSON_ID': 'brenddlo',
+        'PUBLISHER_API_KEY': 'nz5ta424wv8m2bmg4njbgwya',
+        'PUBLISHER_ID': '35-49UUMIY-3'
+    },
+}
+# the default default?!
+CONFIG_DEFAULTS_DEFAULT = 'PATS Media'
 
 class PATSAPIMixin(object):
     pats_buyer = None
     pats_seller = None
-    _agency_id = AGENCY_ID
-    _agency_api_key = MEDIAOCEAN_AGENCY_API_KEY
-    _agency_user_id = AGENCY_USER_ID
-    _agency_person_id = AGENCY_PERSON_ID
-    _agency_company_id = AGENCY_COMPANY_ID
-    _publisher_id = PUBLISHER_ID
-    _publisher_api_key = MEDIAOCEAN_PUBLISHER_API_KEY
 
     def get_agency_id(self):
-        return self._agency_id
+        if 'agency_id' not in self.request.session:
+            self.request.session['agency_id'] = CONFIG_DEFAULTS['PATS']['AGENCY_ID']
+        return self.request.session['agency_id']
 
     def set_agency_id(self, agency_id):
-        self._agency_id = agency_id
+        self.request.session['agency_id'] = agency_id
 
     def get_agency_api_key(self):
-        return self._agency_api_key
+        if 'agency_api_key' not in self.request.session:
+            self.request.session['agency_api_key'] = CONFIG_DEFAULTS['PATS']['AGENCY_API_KEY']
+        return self.request.session['agency_api_key']
  
     def set_agency_api_key(self, agency_api_key):
-        self._agency_api_key = agency_api_key
+        self.request.session['agency_api_key'] = agency_api_key
 
     def get_agency_user_id(self):
-        return self._agency_user_id
- 
+        if 'agency_user_id' not in self.request.session:
+            self.request.session['agency_user_id'] = CONFIG_DEFAULTS['PATS']['AGENCY_USER_ID']
+        return self.request.session['agency_user_id']
+
     def set_agency_user_id(self, agency_user_id):
-        self._agency_user_id = agency_user_id
-
+        self.request.session['agency_user_id'] = agency_user_id
+ 
     def get_agency_person_id(self):
-        return self._agency_person_id
- 
-    def set_agency_user_id(self, agency_person_id):
-        self._agency_person_id = agency_person_id
+        if 'agency_person_id' not in self.request.session:
+            self.request.session['agency_person_id'] = CONFIG_DEFAULTS['PATS']['AGENCY_PERSON_ID']
+        return self.request.session['agency_person_id']
 
-    def get_agency_company_id(self):
-        return self._agency_company_id
+    def set_agency_person_id(self, agency_person_id):
+        self.request.session['agency_person_id'] = agency_person_id
  
+    def get_agency_company_id(self):
+        if 'agency_company_id' not in self.request.session:
+            self.request.session['agency_company_id'] = CONFIG_DEFAULTS['PATS']['AGENCY_COMPANY_ID']
+        return self.request.session['agency_company_id']
+
     def set_agency_company_id(self, agency_company_id):
-        self._agency_company_id = agency_company_id
+        self.request.session['agency_company_id'] = agency_company_id
 
     def get_publisher_id(self):
-        return self._publisher_id
- 
+        if 'publisher_id' not in self.request.session:
+            self.request.session['publisher_id'] = CONFIG_DEFAULTS['PATS']['PUBLISHER_ID']
+        return self.request.session['publisher_id']
+
     def set_publisher_id(self, publisher_id):
-        self._publisher_id = publisher_id
+        self.request.session['publisher_id'] = publisher_id
 
     def get_publisher_api_key(self):
-        return self._publisher_api_key
- 
+        if 'publisher_api_key' not in self.request.session:
+            self.request.session['publisher_api_key'] = CONFIG_DEFAULTS['PATS']['PUBLISHER_API_KEY']
+        return self.request.session['publisher_api_key']
+
     def set_publisher_api_key(self, publisher_api_key):
-        self._publisher_api_key = publisher_api_key
+        self.request.session['publisher_api_key'] = publisher_api_key
 
     def get_buyer_api_handle(self):
         if not self.pats_buyer and 'api_handle_buyer' in self.request.session:
@@ -88,6 +135,28 @@ class PATSAPIMixin(object):
         else:
             self.pats_seller = PATSSeller(vendor_id=self.get_publisher_id(), api_key=self.get_publisher_api_key(), debug_mode=True)
         return self.pats_seller
+
+    def get_defaults_key(self):
+        # in the context processor we actually load this directly from the session
+        # because we don't have access to this method
+        if 'defaults_key' not in self.request.session:
+            self.set_defaults_key(CONFIG_DEFAULTS_DEFAULT)
+        return self.request.session['defaults_key']
+
+    def set_defaults_key(self, defaults_key):
+        self.request.session['defaults_key'] = defaults_key
+
+    def set_config_defaults(self, defaults=CONFIG_DEFAULTS_DEFAULT):
+        if defaults not in CONFIG_DEFAULTS:
+            raise Exception('defaults must be one of %s' % ','.join(keys(CONFIG_DEFAULTS)))
+        self.set_agency_api_key(CONFIG_DEFAULTS[defaults]['AGENCY_API_KEY'])
+        self.set_agency_id(CONFIG_DEFAULTS[defaults]['AGENCY_ID'])
+        self.set_agency_user_id(CONFIG_DEFAULTS[defaults]['AGENCY_USER_ID'])
+        self.set_agency_person_id(CONFIG_DEFAULTS[defaults]['AGENCY_PERSON_ID'])
+        self.set_agency_company_id(CONFIG_DEFAULTS[defaults]['AGENCY_COMPANY_ID'])
+        self.set_publisher_api_key(CONFIG_DEFAULTS[defaults]['PUBLISHER_API_KEY'])
+        self.set_publisher_id(CONFIG_DEFAULTS[defaults]['PUBLISHER_ID'])
+        self.set_defaults_key(defaults)
 
 class Buyer_GetPublishersView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
@@ -365,11 +434,26 @@ class Seller_OrderHistoryView(PATSAPIMixin, ListView):
         return context_data
     
 class ConfigurationView(PATSAPIMixin, FormView):
-    form_class = Buyer_SendOrderForm
+    form_class = ConfigurationForm
+    success_url = reverse_lazy('configuration')
+
+    def get(self, *args, **kwargs):
+        if 'defaults' in self.request.GET:
+            defaults = self.request.GET.get('defaults')
+            self.set_config_defaults(defaults)
+            messages.success(self.request, 'Configuration values updated to the %s set.' % defaults)
+        return super(ConfigurationView, self).get(*args, **kwargs)
 
     def form_valid(self, form):
-        messages.success(self.request, 'Order successfully sent. (Not really)')
-        return super(Buyer_SendOrderView, self).form_valid(form)
+        self.set_agency_id(form.cleaned_data['agency_id'])
+        self.set_agency_api_key(form.cleaned_data['agency_api_key'])
+        self.set_agency_user_id(form.cleaned_data['agency_user_id'])
+        self.set_agency_person_id(form.cleaned_data['agency_person_id'])
+        self.set_agency_company_id(form.cleaned_data['agency_company_id'])
+        self.set_publisher_id(form.cleaned_data['publisher_id'])
+        self.set_publisher_api_key(form.cleaned_data['publisher_api_key'])
+        messages.success(self.request, 'Configuration values updated.')
+        return super(ConfigurationView, self).form_valid(form)
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(ConfigurationView, self).get_context_data(*args, **kwargs)
@@ -380,5 +464,8 @@ class ConfigurationView(PATSAPIMixin, FormView):
         context_data['agency_person_id'] = self.get_agency_person_id()
         context_data['publisher_id'] = self.get_publisher_id()
         context_data['publisher_api_key'] = self.get_publisher_api_key()
+        context_data['config_defaults_list'] = CONFIG_DEFAULTS.keys()
+        context_data['defaults_key'] = self.get_defaults_key()
+        
         return context_data
-    
+

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Configuration{% endblock %}
+
+{% block content %}
+    <h3>Agency side configuration</h3>
+    <table class="table">
+        <tr><th>Agency API key</th><td>{{ agency_api_key }}</td></tr>
+        <tr><th>Agency ID</th><td>{{ agency_id }}</td></tr>
+        <tr><th>Agency user ID</th><td>{{ agency_user_id }}</td></tr>
+        <tr><th>Agency company ID</th><td>{{ agency_company_id }}</td></tr>
+        <tr><th>Agency person ID</th><td>{{ agency_person_id }}</td></tr>
+    </table>
+    <h3>Publisher side configuration</h3>
+    <table class="table">
+        <tr><th>Publisher API key</th><td>{{ publisher_api_key }}</td></tr>
+        <tr><th>Publisher ID</th><td>{{ publisher_id }}</td></tr>
+    </table>
+    <div class="row">
+        <div class="col-md-7">
+            <h3>Set values individually</h3>
+            <form action="{% url 'configuration' %}" method="post" role="form">
+                {% csrf_token %}
+                {% bootstrap_form_errors form type='non_fields' %}
+                {% bootstrap_form form layout='horizontal' %}
+                {% buttons submit='Submit' reset="Cancel" %}{% endbuttons %}
+            </form>
+        </div>
+        <div class="col-md-5">
+            <h3>Or select a configuration set:</h3>
+            <form action="{% url 'configuration' %}" method="get" role="form">
+                {% csrf_token %}
+                <p><select name="defaults" class="form-control">
+                {% for config in config_defaults_list %}
+                    <option>{{ config }}</option>
+                {% endfor %}
+                </select></p>
+                {% buttons submit='Submit' %}{% endbuttons %}
+            </form>
+        </div>
+{% endblock %}
