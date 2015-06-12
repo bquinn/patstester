@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Seller - Get agencies{% endblock %}
+
+{% block content %}
+    <h3>Get agencies: {{ agency_id }}</h3>
+    <form method="get" action="{% url 'seller_metadata_agencies' %}">
+    <table class="table">
+    <tr><td>Agency ID</td><td><input type="text" name="agency_id" value="{{agency_id}}"/></td></tr>
+    <tr><td>Agency name</td><td><input type="text" name="name" value="{{name}}"/></td></tr>
+    <tr><td>Last updated date</td><td> <input type="date" name="last_updated_date" value="{{last_updated_date}}"/></td></tr>
+    </table>
+    <input type="submit" value="Refresh list"/>
+    </form>
+
+    <table class="table">
+        <tr>
+            <th>Agency ID</th>
+            <th>Name</th>
+            <th>Short name</th>
+            <th>Type</th>
+            <th>Locale</th>
+            <th>Parent agency</th>
+            <th>Child agencies</th>
+        </tr>
+        {% for agency in object_list %}
+        <tr>
+            <td>{{ agency.agencyId }}</td>
+            <td>{{ agency.name }}</td>
+            <td>{{ agency.shortName }}</td>
+            <td>{{ agency.type }}</td>
+            <td>{{ agency.locale }}</td>
+            <td>
+<strong>ID:</strong> <a href="{% url 'seller_metadata_agencies' agency_id=agency.parent.agencyId %}">{{ agency.parent.agencyId }}</a><br />
+<strong>Name:</strong> {{ agency.parent.name }}<br />
+<strong>Short name:</strong> {{ agency.parent.shortName }}<br />
+<strong>Type:</strong> {{ agency.parent.type }}<br />
+<strong>Locale:</strong>{{ agency.parent.locale }}<br />
+<strong>Parent:</strong> {{ agency.parent.parent }}<br />
+<strong>Children:</strong> {{ agency.parent.children }}
+</td>
+            <td>{{ agency.children }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

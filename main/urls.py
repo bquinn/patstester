@@ -7,8 +7,10 @@ from .views import (
     Buyer_RFPDetailView, Buyer_RFPSearchView,
     Buyer_OrderDetailView, Buyer_SendOrderView, Buyer_ListOrderRevisionsView,
     Buyer_ListProductsView,
+    Seller_GetAgenciesView,
     Seller_ListRFPsView, Seller_ListProposalsView,
-    Seller_ListOrdersView, Seller_OrderDetailView, Seller_OrderHistoryView
+    Seller_ListOrdersView, Seller_OrderDetailView, Seller_OrderHistoryView,
+    ConfigurationView
 )
 
 urlpatterns = [
@@ -55,6 +57,12 @@ urlpatterns = [
     url(r'^buyer/product-catalogue',
         TemplateView.as_view(template_name='buyer_product_catalogue.html'),
         name='buyer_product_catalogue'),
+    url(r'^seller/metadata/agencies/(?P<agency_id>[\w\-]+)?',
+        Seller_GetAgenciesView.as_view(template_name='seller_metadata_agencies.html'),
+        name='seller_metadata_agencies'),
+    url(r'^seller/metadata',
+        TemplateView.as_view(template_name='seller_metadata.html'),
+        name='seller_metadata'),
     url(r'^seller/rfps/(?P<rfp_id>[\w\-]+)/proposals',
         Seller_ListProposalsView.as_view(template_name='seller_rfps_proposals_list.html'),
         name='seller_rfps_proposals_list'),
@@ -82,6 +90,9 @@ urlpatterns = [
     url(r'^seller/product-catalogue',
         TemplateView.as_view(template_name='seller_product_catalogue.html'),
         name='seller_product_catalogue'),
+    url(r'^configuration',
+        ConfigurationView.as_view(template_name='configuration.html'),
+        name='configuration'),
     url(r'^',
         TemplateView.as_view(template_name='home.html'),
         name='home')
