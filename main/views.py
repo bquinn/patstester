@@ -68,7 +68,7 @@ class PATSAPIMixin(object):
 
     def get_agency_id(self):
         if 'agency_id' not in self.request.session:
-            self.request.session['agency_id'] = CONFIG_DEFAULTS['PATS']['AGENCY_ID']
+            self.request.session['agency_id'] = CONFIG_DEFAULTS[CONFIG_DEFAULTS_DEFAULT]['AGENCY_ID']
         return self.request.session['agency_id']
 
     def set_agency_id(self, agency_id):
@@ -76,7 +76,7 @@ class PATSAPIMixin(object):
 
     def get_agency_api_key(self):
         if 'agency_api_key' not in self.request.session:
-            self.request.session['agency_api_key'] = CONFIG_DEFAULTS['PATS']['AGENCY_API_KEY']
+            self.request.session['agency_api_key'] = CONFIG_DEFAULTS[CONFIG_DEFAULTS_DEFAULT]['AGENCY_API_KEY']
         return self.request.session['agency_api_key']
  
     def set_agency_api_key(self, agency_api_key):
@@ -84,7 +84,7 @@ class PATSAPIMixin(object):
 
     def get_agency_user_id(self):
         if 'agency_user_id' not in self.request.session:
-            self.request.session['agency_user_id'] = CONFIG_DEFAULTS['PATS']['AGENCY_USER_ID']
+            self.request.session['agency_user_id'] = CONFIG_DEFAULTS[CONFIG_DEFAULTS_DEFAULT]['AGENCY_USER_ID']
         return self.request.session['agency_user_id']
 
     def set_agency_user_id(self, agency_user_id):
@@ -92,7 +92,7 @@ class PATSAPIMixin(object):
  
     def get_agency_person_id(self):
         if 'agency_person_id' not in self.request.session:
-            self.request.session['agency_person_id'] = CONFIG_DEFAULTS['PATS']['AGENCY_PERSON_ID']
+            self.request.session['agency_person_id'] = CONFIG_DEFAULTS[CONFIG_DEFAULTS_DEFAULT]['AGENCY_PERSON_ID']
         return self.request.session['agency_person_id']
 
     def set_agency_person_id(self, agency_person_id):
@@ -100,7 +100,7 @@ class PATSAPIMixin(object):
  
     def get_agency_company_id(self):
         if 'agency_company_id' not in self.request.session:
-            self.request.session['agency_company_id'] = CONFIG_DEFAULTS['PATS']['AGENCY_COMPANY_ID']
+            self.request.session['agency_company_id'] = CONFIG_DEFAULTS[CONFIG_DEFAULTS_DEFAULT]['AGENCY_COMPANY_ID']
         return self.request.session['agency_company_id']
 
     def set_agency_company_id(self, agency_company_id):
@@ -108,7 +108,7 @@ class PATSAPIMixin(object):
 
     def get_publisher_id(self):
         if 'publisher_id' not in self.request.session:
-            self.request.session['publisher_id'] = CONFIG_DEFAULTS['PATS']['PUBLISHER_ID']
+            self.request.session['publisher_id'] = CONFIG_DEFAULTS[CONFIG_DEFAULTS_DEFAULT]['PUBLISHER_ID']
         return self.request.session['publisher_id']
 
     def set_publisher_id(self, publisher_id):
@@ -116,7 +116,7 @@ class PATSAPIMixin(object):
 
     def get_publisher_api_key(self):
         if 'publisher_api_key' not in self.request.session:
-            self.request.session['publisher_api_key'] = CONFIG_DEFAULTS['PATS']['PUBLISHER_API_KEY']
+            self.request.session['publisher_api_key'] = CONFIG_DEFAULTS[CONFIG_DEFAULTS_DEFAULT]['PUBLISHER_API_KEY']
         return self.request.session['publisher_api_key']
 
     def set_publisher_api_key(self, publisher_api_key):
