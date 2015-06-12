@@ -15,31 +15,11 @@
     <input type="submit" value="Refresh list"/>
     </form>
     <table class="table">
-        <tr>
-            <th>RFP Public ID</th>
-            <th>RFP ID</th>
-            <th>Agency ID</th>
-            <th>Vendor ID</th>
-            <th>Media Type</th>
-            <th>Status</th>
-            <th>Start date</th>
-            <th>End date</th>
-            <th>Budgets</th>
-            <th>Due Date</th>
-            <th>Buyer Name</th>
-            <th>Buyer Email</th>
-            <th>Comments</th>
-            <th>Campaign Public ID</th>
-            <th>Campaign Name</th>
-            <th>Strategy</th>
-            <th>Publisher recipients</th>
-            <th>Agency user</th>
-            <th>Requested Products</th>
-            <th>Flighting?</th>
-            <th>Attachments</th>
-        </tr>
+        <tr><th>RFP Public ID</th><th>RFP ID</th><th>Agency ID</th><th>Vendor ID</th><th>Media Type</th><th>Status</th><th>Start date</th><th>End date</th><th>Budgets</th><th>Due Date</th><th>Buyer Name</th><th>Buyer Email</th><th>Comments</th><th>Campaign Public ID</th><th>Campaign Name</th><th>Strategy</th><th>Publisher recipients</th><th>Agency user</th><th>Requested Products</th><th>Flighting?</th><th>Attachments</th> </tr>
         {% for rfp_group in object_list %}
-        <tr><td colspan="22">Campaign info: {{ rfp_group.campaignRfpDto }}</td></tr>
+        <tr><td colspan="22">
+        Campaign: {{ rfp_group.campaignRfpDto.campaignName }} (buyer ID {{ rfp_group.campaignRfpDto.campaignPublicId }}, PATS ID {{ rfp_group.campaignRfpDto.campaignUrn }})), for client {{ rfp_group.campaignRfpDto.client }} brand {{ rfp_group.campaignRfpDto.brand }}, dates {{ rfp_group.campaignRfpDto.startdate }} - {{ rfp_group.campaignRfpDto.endDate }}
+        </td></tr>
         {% for rfp in rfp_group.cmRfpDtoList %}
         <tr>
             <td><a href="{% url 'buyer_rfps_view' rfp.rfpPublicId %}">{{ rfp.rfpPublicId }}</a></td>
