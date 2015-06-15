@@ -4,6 +4,14 @@
 {% block content %}
     <p>This is used to run manual tests of the PATS platform.</p>
     <p>Use the navigation menu above to choose an API to test on either the buyer or seller side.</p>
-    <p>Currently the buyer is hardcoded to PATS3 and the seller is hardcoded to PATS Media Seller.</p>
-    <p>Soon you will be able to configure the PATS API Tester to use your (test) vendor and agency IDs.</p>
+    <h3>Updates on 15 June 2015:</h3>
+    <ul>
+    <li>The simple <a href="{% url 'buyer_orders_create_raw' %}">create order</a> form now works - but you have to paste the JSON payload into a textarea so it's still quite clunky. Hopefully I'll have a better version working soon.</li>
+    <li>You can now <a href="{% url 'buyer_campaigns_create' %}">create a campaign</a> using a web form</li>
+    </ul>
+    <h3>Updates on 12 June 2015:</h3>
+    <ul>
+    <li>You can now <a href="{% url 'configuration' %}">change the configuration parameters</a> either individually or using a preset configuration group, using the link in the top right corner of every page</li>
+    </ul>
+    <p>For comments or to report a bug, please <a href="mailto:brendan.quinn@pats.org.uk">email Brendan</a></p>
 {% endblock %}

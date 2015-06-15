@@ -1,5 +1,21 @@
 from django import forms 
 
+class Buyer_CreateCampaignForm(forms.Form):
+    # aka "organisation ID"
+    agency_id = forms.CharField(label='Buyer Agency ID', max_length=100)
+    company_id = forms.CharField(label='Buyer Client ID', max_length=100)
+    person_id = forms.CharField(label='Buyer Person ID', max_length=100)
+    advertiser_code = forms.CharField(label='Advertiser Code', max_length=5)
+    external_campaign_id = forms.CharField(label='External campaign ID', max_length=100)
+    campaign_name = forms.CharField(label='Campaign Name', max_length=200)
+    start_date = forms.DateField(label='Campaign Start Date', widget=forms.DateInput(attrs={'type':'date'}))
+    end_date = forms.DateField(label='Campaign End Date', widget=forms.DateInput(attrs={'type':'date'}))
+    print_flag = forms.BooleanField(label='Print component', required=False)
+    print_budget = forms.CharField(label='Print budget', max_length=10, required=False)
+    digital_flag = forms.BooleanField(label='Digital component', required=False)
+    digital_budget = forms.CharField(label='Digital budget', max_length=10, required=False)
+    campaign_budget = forms.CharField(label='Overall campaign budget', max_length=10, required=False)
+
 class Buyer_CreateOrderForm(forms.Form):
     agency_id = forms.CharField(label='Buyer Agency ID', max_length=100)
     company_id = forms.CharField(label='Buyer Client ID', max_length=100)

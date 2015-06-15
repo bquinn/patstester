@@ -8,9 +8,13 @@ from django.views.generic.edit import FormView
 from django.views.generic.detail import DetailView
 from django.views.generic import TemplateView
 
-from pats import PATSBuyer, PATSSeller, PATSException
+from pats import PATSBuyer, PATSSeller, PATSException, CampaignDetails
 
-from .forms import Buyer_CreateOrderRawForm, Buyer_CreateOrderForm, ConfigurationForm
+from .forms import (
+    Buyer_CreateCampaignForm,
+    Buyer_CreateOrderRawForm, Buyer_CreateOrderForm,
+    ConfigurationForm
+)
 
 # Default values for API buyer/seller parameters
 # buy side
@@ -286,6 +290,43 @@ class Buyer_OrderDetailView(PATSAPIMixin, DetailView):
         context_data['order_id'] = self.order_id
         return context_data
 
+class Buyer_CreateCampaignView(PATSAPIMixin, FormView):
+    form_class = Buyer_CreateCampaignForm
+    success_url = reverse_lazy('buyer_campaigns_create')
+
+    def get_initial(self):
+        return {
+            'agency_id': self.get_agency_id(),
+            'company_id': self.get_agency_company_id(),
+            'person_id': self.get_agency_person_id(),
+        }
+
+    def form_valid(self, form):
+        campaign_details = CampaignDetails(
+            organisation_id = form.cleaned_data['agency_id'],
+            company_id = form.cleaned_data['company_id'],
+            person_id = form.cleaned_data['person_id'],
+            campaign_name = form.cleaned_data['campaign_name'],
+            start_date = form.cleaned_data['start_date'],
+            end_date = form.cleaned_data['end_date'],
+            advertiser_code = form.cleaned_data['advertiser_code'],
+            print_campaign = form.cleaned_data['print_flag'],
+            print_campaign_budget = form.cleaned_data['print_budget'],
+            digital_campaign = form.cleaned_data['digital_flag'],
+            digital_campaign_budget = form.cleaned_data['digital_budget'],
+            campaign_budget = form.cleaned_data['campaign_budget'],
+            external_campaign_id = form.cleaned_data['external_campaign_id'],
+        )
+        buyer_api = self.get_buyer_api_handle()
+        response = ''
+        try:
+            response = buyer_api.create_campaign(campaign_details)
+        except PATSException as error:
+            messages.error(self.request, 'Create Campaign failed: %s' % error)
+        else:
+            messages.success(self.request, 'Create Campaign succeeded: response is %s' % response)
+        return super(Buyer_CreateCampaignView, self).form_valid(form)
+        
 class Buyer_CreateOrderView(PATSAPIMixin, FormView):
     form_class = Buyer_CreateOrderForm
     success_url = reverse_lazy('buyer_orders_create')

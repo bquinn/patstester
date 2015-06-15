@@ -5,6 +5,7 @@ from django.views.generic import TemplateView
 from .views import (
     Buyer_GetPublishersView, Buyer_GetPublisherUsersView, Buyer_GetAgenciesView,
     Buyer_RFPDetailView, Buyer_RFPSearchView,
+    Buyer_CreateCampaignView,
     Buyer_CreateOrderView, Buyer_CreateOrderRawView,
     Buyer_OrderDetailView, Buyer_ListOrderRevisionsView,
     Buyer_ListProductsView,
@@ -27,6 +28,9 @@ urlpatterns = [
     url(r'^buyer/metadata',
         TemplateView.as_view(template_name='buyer_metadata.html'),
         name='buyer_metadata'),
+    url(r'^buyer/campaigns/create',
+        Buyer_CreateCampaignView.as_view(template_name='buyer_campaigns_create.html'),
+        name='buyer_campaigns_create'),
     url(r'^buyer/campaigns',
         TemplateView.as_view(template_name='buyer_campaigns.html'),
         name='buyer_campaigns'),
