@@ -1,4 +1,5 @@
 import datetime
+import json
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import render
@@ -7,8 +8,9 @@ from django.views.generic.edit import FormView
 from django.views.generic.detail import DetailView
 from django.views.generic import TemplateView
 
-from pats import PATSBuyer, PATSSeller
-from .forms import Buyer_SendOrderForm, ConfigurationForm
+from pats import PATSBuyer, PATSSeller, PATSException
+
+from .forms import Buyer_CreateOrderRawForm, Buyer_CreateOrderForm, ConfigurationForm
 
 # Default values for API buyer/seller parameters
 # buy side
@@ -284,18 +286,57 @@ class Buyer_OrderDetailView(PATSAPIMixin, DetailView):
         context_data['order_id'] = self.order_id
         return context_data
 
-class Buyer_SendOrderView(PATSAPIMixin, FormView):
-    form_class = Buyer_SendOrderForm
+class Buyer_CreateOrderView(PATSAPIMixin, FormView):
+    form_class = Buyer_CreateOrderForm
     success_url = reverse_lazy('buyer_orders_create')
+
+class Buyer_CreateOrderRawView(PATSAPIMixin, FormView):
+    form_class = Buyer_CreateOrderRawForm
+    success_url = reverse_lazy('buyer_orders_create_raw')
+
+    def get_initial(self):
+        return {
+            'agency_id': self.get_agency_id(),
+            'company_id': self.get_agency_company_id(),
+            'person_id': self.get_agency_person_id(),
+        }
 
     def form_valid(self, form):
         buyer_api = self.get_buyer_api_handle()
-        messages.success(self.request, 'Order successfully sent. (Not really)')
-        return super(Buyer_SendOrderView, self).form_valid(form)
+        company_id = form.cleaned_data.get('company_id')
+        person_id = form.cleaned_data.get('person_id')
+        # convert the text string to a json object
+        data = json.loads(form.cleaned_data.get('payload'))
+        # take submitted values and call API - raw version
+        result = ''
+        try:
+            result = buyer_api.create_order_raw(company_id=company_id, person_id=person_id, data=data)
+        except PATSException as error:
+            messages.error(self.request, 'Submit Order failed: %s' % error)
+        else:
+            if result['status'] == u'SUCCESSFUL':
+                messages.success(self.request, 'Order sent successfully! ID %s, version %s' % (result[u'publicId'], result[u'version']))
+            else:
+                messages.error(self.request, 'Submit Order failed: %s' % error)
+        return super(Buyer_CreateOrderRawView, self).form_valid(form)
 
     def get_context_data(self, *args, **kwargs):
-        context_data = super(Buyer_SendOrderView, self).get_context_data(*args, **kwargs)
+        context_data = super(Buyer_CreateOrderRawView, self).get_context_data(*args, **kwargs)
         context_data['agency_id'] = self.get_agency_id()
+        return context_data
+
+class Buyer_CreateOrderView(PATSAPIMixin, FormView):
+    form_class = Buyer_CreateOrderForm
+    success_url = reverse_lazy('buyer_orders_create')
+
+    def get_initial(self):
+        return {}
+
+    def form_valid(self, form):
+        return super(Buyer_CreateOrderView, self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_CreateOrderView, self).get_context_data(*args, **kwargs)
         return context_data
 
 class Buyer_ListOrderRevisionsView(PATSAPIMixin, ListView):
