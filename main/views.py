@@ -22,6 +22,24 @@ CONFIG_DEFAULTS = {
         'PUBLISHER_API_KEY': '4ust6fh2x38hcw8pq2vcef4r',
         'PUBLISHER_ID': '35-PUOEFOA-9'
     },
+    'ESI Media': {
+        'AGENCY_API_KEY': 'yt6wsdwrauz7mrawha7rua8v',
+        'AGENCY_ID': '35-IDSDKAD-7',
+        'AGENCY_USER_ID': 'brenddlo@pats3',
+        'AGENCY_COMPANY_ID': 'PATS3',
+        'AGENCY_PERSON_ID': 'brenddlo',
+        'PUBLISHER_API_KEY': 'nz5ta424wv8m2bmg4njbgwya',
+        'PUBLISHER_ID': '35-UJTPWVA-1'
+    },
+    'Guardian': {
+        'AGENCY_API_KEY': 'yt6wsdwrauz7mrawha7rua8v',
+        'AGENCY_ID': '35-IDSDKAD-7',
+        'AGENCY_USER_ID': 'brenddlo@pats3',
+        'AGENCY_COMPANY_ID': 'PATS3',
+        'AGENCY_PERSON_ID': 'brenddlo',
+        'PUBLISHER_API_KEY': 'nz5ta424wv8m2bmg4njbgwya',
+        'PUBLISHER_ID': '35-SKDCCGM-2'
+    },
     'News UK': {
         'AGENCY_API_KEY': 'yt6wsdwrauz7mrawha7rua8v',
         'AGENCY_ID': '35-IDSDKAD-7',
