@@ -18,6 +18,7 @@
             <th>Agency ID</th>
             <th>Client Name</th>
             <th>Campaign ID</th>
+            <th>Action</th>
         </tr>
         {% for order in object_list %}
         <tr>
@@ -29,6 +30,7 @@
             <td>{{ order.agencyId }}</td>
             <td>{{ order.clientName }}</td>
             <td>{{ order.campaignId }}</td>
+            <td>{% if order.type == "Order" and order.status == "New" %} <a href="{% url 'seller_orders_respond' order_id=order.orderId version=order.version %}">Respond</a> {% endif %}</td>
         </tr>
         {% endfor %}
     </table>

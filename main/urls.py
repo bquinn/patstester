@@ -11,7 +11,7 @@ from .views import (
     Buyer_ListProductsView,
     Seller_GetAgenciesView,
     Seller_ListRFPsView, Seller_ListProposalsView,
-    Seller_ListOrdersView, Seller_OrderDetailView, Seller_OrderHistoryView,
+    Seller_ListOrdersView, Seller_OrderDetailView, Seller_OrderHistoryView, Seller_OrderRespondView,
     ConfigurationView
 )
 
@@ -83,6 +83,9 @@ urlpatterns = [
     url(r'^seller/proposals',
         TemplateView.as_view(template_name='seller_proposals.html'),
         name='seller_proposals'),
+    url(r'^seller/orders/(?P<order_id>[\w\-]+)/versions/(?P<version>[\d\.]+)/respond',
+        Seller_OrderRespondView.as_view(template_name='seller_orders_respond.html'),
+        name='seller_orders_respond'),
     url(r'^seller/orders/(?P<order_id>[\w\-]+)/versions/(?P<version>\d+)?',
         Seller_OrderDetailView.as_view(template_name='seller_orders_view.html'),
         name='seller_orders_view'),

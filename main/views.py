@@ -13,6 +13,7 @@ from pats import PATSBuyer, PATSSeller, PATSException, CampaignDetails
 from .forms import (
     Buyer_CreateCampaignForm,
     Buyer_CreateOrderRawForm, Buyer_CreateOrderForm,
+    Seller_OrderRespondForm,
     ConfigurationForm
 )
 
@@ -327,10 +328,6 @@ class Buyer_CreateCampaignView(PATSAPIMixin, FormView):
             messages.success(self.request, 'Create Campaign succeeded: response is %s' % response)
         return super(Buyer_CreateCampaignView, self).form_valid(form)
         
-class Buyer_CreateOrderView(PATSAPIMixin, FormView):
-    form_class = Buyer_CreateOrderForm
-    success_url = reverse_lazy('buyer_orders_create')
-
 class Buyer_CreateOrderRawView(PATSAPIMixin, FormView):
     form_class = Buyer_CreateOrderRawForm
     success_url = reverse_lazy('buyer_orders_create_raw')
@@ -374,6 +371,7 @@ class Buyer_CreateOrderView(PATSAPIMixin, FormView):
         return {}
 
     def form_valid(self, form):
+        messages.error(self.request, 'Not yet implemented!')
         return super(Buyer_CreateOrderView, self).form_valid(form)
 
     def get_context_data(self, *args, **kwargs):
@@ -532,7 +530,66 @@ class Seller_OrderHistoryView(PATSAPIMixin, ListView):
         context_data = super(Seller_OrderHistoryView, self).get_context_data(*args, **kwargs)
         context_data['order_id'] = self.order_id
         return context_data
+
+class Seller_OrderRespondView(PATSAPIMixin, FormView):
+    order_id = None
+    version = None
+    order_detail = None
+    form_class = Seller_OrderRespondForm
+
+    def get_success_url(self):
+        return reverse_lazy('seller_orders_respond', kwargs={'order_id':self.order_id, 'version':self.version})
     
+    def get(self, *args, **kwargs):
+        if 'order_id' in self.kwargs:
+            seller_api = self.get_seller_api_handle()
+            self.order_id = self.kwargs.get('order_id', None)
+            # version defaults to 0
+            self.version = self.kwargs.get('version', 0)
+            # get rid of minor version component in case it's there
+            self.version = int(float(self.version))
+            order_detail_response = seller_api.view_order_detail(order_id=self.order_id, version=self.version)
+            self.order_detail = order_detail_response
+        return super(Seller_OrderRespondView, self).get(*args, **kwargs)
+
+    def get_initial(self):
+        return {
+            'order_id': self.order_id
+        }
+
+    def form_valid(self, form):
+        # fill in order id and version in case we need to display errors
+        self.order_id = self.kwargs.get('order_id', None)
+        # version defaults to 0
+        self.version = self.kwargs.get('version', 0)
+        # get rid of minor version component in case it's there
+        self.version = int(float(self.version))
+
+        seller_api = self.get_seller_api_handle()
+        user_id = form.cleaned_data.get('user_id')
+        self.order_id = form.cleaned_data.get('order_id')
+        status = form.cleaned_data.get('status')
+        comments = form.cleaned_data.get('comments')
+        response = ''
+        try:
+            response = seller_api.respond_to_order(user_id=user_id, order_id=self.order_id, status=status, comments=comments)
+        except PATSException as error:
+            messages.error(self.request, 'Respond to Order failed: %s' % error)
+        else:
+            import pdb; pdb.set_trace()
+            if result['status'] == u'SUCCESSFUL':
+                messages.success(self.request, 'Order sent successfully! ID %s, version %s' % (result[u'publicId'], result[u'version']))
+            else:
+                messages.error(self.request, 'Submit Order failed: %s' % error)
+        return super(Seller_OrderRespondView, self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_OrderRespondView, self).get_context_data(*args, **kwargs)
+        context_data['order_id'] = self.order_id
+        context_data['version'] = self.version
+        context_data['object'] = self.order_detail
+        return context_data
+
 class ConfigurationView(PATSAPIMixin, FormView):
     form_class = ConfigurationForm
     success_url = reverse_lazy('configuration')
