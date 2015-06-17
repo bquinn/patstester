@@ -2,8 +2,9 @@
 {% block title %}Buyer - RFPs{% endblock %}
 
 {% block content %}
-    <h3><a href="{% url 'buyer_rfps_view' rfp_id='RFP2656' %}">View RFP detail</a> (with a hardcoded RFP ID for now)</h3>
-
-    <h3><a href="{% url 'buyer_rfps_search' %}">Search RFPs</a></h3>
-    <h3></h3>
+    <h3><a href="{% url 'buyer_rfps_create' %}">Create RFP</a></h3>
+    <p>Create an RFP for a campaign (you will need the system Campaign ID).</p>
+    <p>Doesn't yet include sending attachments.</p>
+    <h3><a href="{% url 'buyer_rfps_list' %}">List RFPs</a></h3>
+    <p>List all RFPs send by the current buyer.</p>
 {% endblock %}

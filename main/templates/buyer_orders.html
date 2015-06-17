@@ -3,11 +3,19 @@
 
 {% block content %}
     <h3><a href="{% url 'buyer_orders_create_raw' %}">Send Order (raw payload)</a></h3>
+    <p>Basic form to send an order. You must enter the payload as a raw JSON string.</p>
     <h3><a href="{% url 'buyer_orders_create' %}">Send Order</a></h3>
-
-    <h3>List Orders</a></h3>
-
+    <p>This will be where we have a fancier form to send an order, but it isn't finished yet.</p>
+    <h3>List Orders (not implemented)</h3>
+    <p>There isn't yet an API call to see all orders a buyer has sent.</p>
     <h3><a href="{% url 'buyer_order_revisions_list' %}">List Order Revisions</a></h3>
-
-    <h3></h3>
+    <p>We can view order revisions sent back to us, which is a start. A buy-side system would have to constantly poll this API to check for new revisions.</p>
+    <h3>View order detail</h3>
+    <p>Currently only linked from the order revisions list.</p>
+    <h3>View order status (coming soon)</h3>
+    <p></p>
+    <h3>Request order revision (coming soon)</h3>
+    <p>Request a seller to revise an order, whether or not they have sent a revision.</p>
+    <h3>Return order revision (coming soon)</h3>
+    <p>If you don't like an order revision you have received, you can "return" it to the seller.</p>
 {% endblock %}

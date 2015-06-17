@@ -21,7 +21,7 @@
           <ul class="dropdown-menu" role="menu">
             <li><a href="{% url 'buyer_metadata' %}">Metadata</a></li>
             <li><a href="{% url 'buyer_campaigns' %}">Campaigns</a></li>
-            <li><a href="{% url 'buyer_rfps_list' %}">RFPs</a></li>
+            <li><a href="{% url 'buyer_rfps' %}">RFPs</a></li>
             <li><a href="{% url 'buyer_orders' %}">Orders</a></li>
             <li><a href="{% url 'buyer_product_catalogue' %}">Product catalogue</a></li>
           </ul>
@@ -31,8 +31,8 @@
           <ul class="dropdown-menu" role="menu">
             <li><a href="{% url 'seller_metadata' %}">Metadata</a></li>
             <li><a href="{% url 'seller_rfps' %}">RFPs</a></li>
-            <li><a href="{% url 'seller_orders_list' %}">Orders</a></li>
-            <li><a href="#">Product catalogue</a></li>
+            <li><a href="{% url 'seller_orders' %}">Orders</a></li>
+            <li><a href="{% url 'seller_product_catalogue' %}">Product catalogue</a></li>
           </ul>
         </li>
       </ul>

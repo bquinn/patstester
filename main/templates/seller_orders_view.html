@@ -1,12 +1,10 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-{% block title %}Seller - Orders - View Order Detail{% endblock %}
+{% block title %}Seller - Orders - View Order Detail: {{ order_id}} version {{ version }}{% endblock %}
 
 {% block content %}
-    <h3>View Order Detail - {{ order_id }} (version {{ version }})</h3>
-
-    <a href="{% url 'seller_orders_versions' order_id=order_id %}">View full order history</a>
+    <a class="btn btn-default" href="{% url 'seller_orders_versions' order_id=order_id %}">View full order history</a>
 
     <table class="table">
       <tr>

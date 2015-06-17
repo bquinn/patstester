@@ -16,6 +16,21 @@ class Buyer_CreateCampaignForm(forms.Form):
     digital_budget = forms.CharField(label='Digital budget', max_length=10, required=False)
     campaign_budget = forms.CharField(label='Overall campaign budget', max_length=10, required=False)
 
+class Buyer_CreateRFPForm(forms.Form):
+    sender_user_id = forms.CharField(label='Buyer User ID', max_length=100)
+    campaign_public_id = forms.CharField(label='Campaign ID', max_length=100)
+    budget_amount = forms.CharField(label='Budget amount', max_length=100)
+    start_date = forms.DateField(label='RFP start date', widget=forms.DateInput(attrs={'type':'date'}))
+    end_date = forms.DateField(label='RFP end date', widget=forms.DateInput(attrs={'type':'date'}))
+    respond_by_date = forms.DateField(label='Respond by date', widget=forms.DateInput(attrs={'type':'date'}))
+    comments = forms.CharField(label='Comments', max_length=5000, widget=forms.Textarea)
+    publisher_id = forms.CharField(label='Publisher ID', max_length=100)
+    publisher_emails = forms.CharField(label='Publisher email(s)', max_length=100)
+    media_print = forms.BooleanField(label='Print component', required=False)
+    media_online = forms.BooleanField(label='Online (digital) component', required=False)
+    strategy = forms.CharField(label='Strategy', max_length=100)
+    requested_products = forms.CharField(label='Requested products', max_length=100, required=False)
+
 class Buyer_CreateOrderForm(forms.Form):
     agency_id = forms.CharField(label='Buyer Agency ID', max_length=100)
     company_id = forms.CharField(label='Buyer Client ID', max_length=100)

@@ -2,7 +2,6 @@
 {% block title %}Seller - RFPs - List RFPs{% endblock %}
 
 {% block content %}
-    <h3>List RFPs</h3>
     <form method="get" action="{% url 'seller_rfps_list' %}">
     From date: <input type="date" name="start_date" value="{{start_date}}"/>
     To date: <input type="date" name="end_date" value="{{end_date}}"/>

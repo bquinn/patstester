@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Seller - Orders{% endblock %}
+
+{% block content %}
+    <h3><a href="{% url 'seller_orders_list' %}">List Orders</a></h3>
+    <p>View orders that I have received. A seller-side integration would have to poll this API constantly to look for incoming orders.</p>
+    <h3>View order detail for version</h3>
+    <p>Currently only linked from the orders list.</p>
+    <h3>View order history</h3>
+    <p>Currently only linked from the order detail page.</p>
+    <h3>Respond to order</h3>
+    <p>Currently only linked from the orders list.</p>
+    <h3>Submit order revision (coming soon)</h3>
+    <p>Send a proposed revision to an order back to the buyer.</p>
+{% endblock %}

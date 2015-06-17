@@ -12,6 +12,7 @@ from pats import PATSBuyer, PATSSeller, PATSException, CampaignDetails
 
 from .forms import (
     Buyer_CreateCampaignForm,
+    Buyer_CreateRFPForm,
     Buyer_CreateOrderRawForm, Buyer_CreateOrderForm,
     Seller_OrderRespondForm,
     ConfigurationForm
@@ -327,7 +328,51 @@ class Buyer_CreateCampaignView(PATSAPIMixin, FormView):
         else:
             messages.success(self.request, 'Create Campaign succeeded: response is %s' % response)
         return super(Buyer_CreateCampaignView, self).form_valid(form)
-        
+
+class Buyer_CreateRFPView(PATSAPIMixin, FormView):
+    form_class = Buyer_CreateRFPForm
+    success_url = reverse_lazy('buyer_rfps_create')
+
+    def get_initial(self):
+        return {
+            'sender_user_id': self.get_agency_user_id(),
+        }
+
+    def form_valid(self, form):
+        buyer_api = self.get_buyer_api_handle()
+        sender_user_id = form.cleaned_data.get('sender_user_id')
+        campaign_public_id = form.cleaned_data.get('campaign_public_id')
+        budget_amount = form.cleaned_data.get('budget_amount')
+        start_date = form.cleaned_data.get('start_date')
+        end_date = form.cleaned_data.get('end_date')
+        respond_by_date = form.cleaned_data.get('respond_by_date')
+        comments = form.cleaned_data.get('comments')
+        publisher_id = form.cleaned_data.get('publisher_id')
+        # API requires a list, so give it a list of one element for now
+        publisher_emails = [ form.cleaned_data.get('publisher_emails') ]
+        media_print = form.cleaned_data.get('media_print')
+        media_online = form.cleaned_data.get('media_online')
+        strategy = form.cleaned_data.get('strategy')
+        requested_products = form.cleaned_data.get('requested_products')
+        # convert the text string to a json object
+        # take submitted values and call API - raw version
+        result = ''
+        try:
+            result = buyer_api.submit_rfp(sender_user_id=sender_user_id, campaign_public_id=campaign_public_id, budget_amount=budget_amount, start_date=start_date, end_date=end_date, respond_by_date=respond_by_date, comments=comments, publisher_id=publisher_id, publisher_emails=publisher_emails, media_print=media_print, media_online=media_online, strategy=strategy, requested_products=requested_products)
+        except PATSException as error:
+            messages.error(self.request, 'Submit RFP failed: %s' % error)
+        else:
+            if result[0]['status'] == u'SENT':
+                messages.success(self.request, 'RFP sent successfully! Response is %s' % result)
+            else:
+                messages.error(self.request, 'Submit RFP failed. Response is %s' % result)
+        return super(Buyer_CreateRFPView, self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_CreateRFPView, self).get_context_data(*args, **kwargs)
+        context_data['agency_id'] = self.get_agency_id()
+        return context_data
+
 class Buyer_CreateOrderRawView(PATSAPIMixin, FormView):
     form_class = Buyer_CreateOrderRawForm
     success_url = reverse_lazy('buyer_orders_create_raw')
@@ -600,6 +645,17 @@ class ConfigurationView(PATSAPIMixin, FormView):
             self.set_config_defaults(defaults)
             messages.success(self.request, 'Configuration values updated to the %s set.' % defaults)
         return super(ConfigurationView, self).get(*args, **kwargs)
+
+    def get_initial(self):
+        return {
+            'agency_id' : self.get_agency_id(),
+            'agency_api_key' : self.get_agency_api_key(),
+            'agency_user_id' : self.get_agency_user_id(),
+            'agency_person_id' : self.get_agency_person_id(),
+            'agency_company_id' : self.get_agency_company_id(),
+            'publisher_id' : self.get_publisher_id(),
+            'publisher_api_key' : self.get_publisher_api_key(),
+        }
 
     def form_valid(self, form):
         self.set_agency_id(form.cleaned_data['agency_id'])

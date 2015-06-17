@@ -1,8 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Seller - RFPs - List RFPs{% endblock %}
+{% block title %}Buyer - RFPs - List RFPs{% endblock %}
 
 {% block content %}
-    <h3>List RFPs</h3>
     <form method="get" action="{% url 'buyer_rfps_list' %}">
     <table class="table">
     <tr><td>Advertiser name</td><td><input type="text" name="advertiser_name" value="{{search_advertiser_name}}"/></td></tr>
