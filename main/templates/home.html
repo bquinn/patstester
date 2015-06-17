@@ -4,6 +4,12 @@
 {% block content %}
     <p>This is used to run manual tests of the PATS platform.</p>
     <p>Use the navigation menu above to choose an API to test on either the buyer or seller side.</p>
+    <h3>Updates on 17 June 2015:</h3>
+    <ul>
+    <li><a href="{% url 'buyer_rfps_create' %}">Create RFP</a> now works</li>
+    <li>Reorganised the index pages and added descriptions for most API calls</li>
+    <li>Added empty listings for the calls we haven't yet implemented in the API tester</li>
+    </ul>
     <h3>Updates on 16 June 2015:</h3>
     <ul>
     <li>Sellers can now "respond" to orders, ie "Accept" or "Reject" them, via the <a href="{% url 'seller_orders_list' %}">seller view orders page</a>. The Mediaocean API returns a 500 error, but it still works.</li>
