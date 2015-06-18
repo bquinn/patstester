@@ -389,18 +389,22 @@ class Buyer_CreateOrderRawView(PATSAPIMixin, FormView):
         company_id = form.cleaned_data.get('company_id')
         person_id = form.cleaned_data.get('person_id')
         # convert the text string to a json object
-        data = json.loads(form.cleaned_data.get('payload'))
-        # take submitted values and call API - raw version
-        result = ''
         try:
-            result = buyer_api.create_order_raw(company_id=company_id, person_id=person_id, data=data)
-        except PATSException as error:
-            messages.error(self.request, 'Submit Order failed: %s' % error)
-        else:
-            if result['status'] == u'SUCCESSFUL':
-                messages.success(self.request, 'Order sent successfully! ID %s, version %s' % (result[u'publicId'], result[u'version']))
-            else:
+            data = json.loads(form.cleaned_data.get('payload'))
+        except ValueError as json_error:
+            messages.error(self.request, 'Problem with JSON payload: %s <br />Try using jsonlint.com to fix it!' % json_error)
+        else:    
+            # take submitted values and call API - raw version
+            result = ''
+            try:
+                result = buyer_api.create_order_raw(company_id=company_id, person_id=person_id, data=data)
+            except PATSException as error:
                 messages.error(self.request, 'Submit Order failed: %s' % error)
+            else:
+                if result['status'] == u'SUCCESSFUL':
+                    messages.success(self.request, 'Order sent successfully! ID %s, version %s' % (result[u'publicId'], result[u'version']))
+                else:
+                    messages.error(self.request, 'Submit Order failed: %s' % error)
         return super(Buyer_CreateOrderRawView, self).form_valid(form)
 
     def get_context_data(self, *args, **kwargs):
