@@ -284,7 +284,11 @@ class Buyer_OrderDetailView(PATSAPIMixin, DetailView):
     def get_object(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
         self.order_id = self.kwargs.get('order_id', None)
-        order_detail_response = buyer_api.view_order_detail(buyer_email=self.get_agency_user_id(), order_public_id=self.order_id)
+        order_detail_response = None
+        try:
+            order_detail_response = buyer_api.view_order_detail(buyer_email=self.get_agency_user_id(), order_public_id=self.order_id)
+        except PATSException as error:
+            messages.error(self.request, 'Couldn''t load order revision, bug in PATS API: %s' % error)
         return order_detail_response
         
     def get_context_data(self, *args, **kwargs):
