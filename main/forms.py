@@ -35,19 +35,26 @@ class Buyer_CreateOrderForm(forms.Form):
     agency_id = forms.CharField(label='Buyer Agency ID', max_length=100)
     company_id = forms.CharField(label='Buyer Client ID', max_length=100)
     person_id = forms.CharField(label='Buyer Person ID', max_length=100)
-    payload = forms.CharField(label='Payload', max_length=5000, widget=forms.Textarea)
+    payload = forms.CharField(label='Payload', max_length=999999, widget=forms.Textarea)
 
 class Buyer_CreateOrderRawForm(forms.Form):
     agency_id = forms.CharField(label='Buyer Agency ID', max_length=100)
     company_id = forms.CharField(label='Buyer Client ID', max_length=100)
     person_id = forms.CharField(label='Buyer Person ID', max_length=100)
-    payload = forms.CharField(label='Payload', max_length=5000, widget=forms.Textarea)
+    payload = forms.CharField(label='Payload', max_length=999999, widget=forms.Textarea)
 
 class Seller_OrderRespondForm(forms.Form):
     user_id = forms.CharField(label='Seller User ID', max_length=100)
     order_id = forms.CharField(label='Seller Order ID', max_length=100)
     status = forms.CharField(label='Acceptance Status', max_length=100)
     comments = forms.CharField(label='Comments', max_length=1000, widget=forms.Textarea)
+
+class Seller_OrderReviseForm(forms.Form):
+    user_id = forms.CharField(label='Seller User ID', max_length=100)
+    order_id = forms.CharField(label='Seller Order ID', max_length=100)
+    status = forms.CharField(label='Acceptance Status', max_length=100)
+    comments = forms.CharField(label='Comments', max_length=1000, widget=forms.Textarea)
+    payload = forms.CharField(label='Payload', max_length=999999, widget=forms.Textarea)
 
 class ConfigurationForm(forms.Form):
     agency_id = forms.CharField(label='Agency ID', max_length=100)

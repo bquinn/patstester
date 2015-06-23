@@ -38,7 +38,7 @@
         </tr>
         {% for order in object_list %}
         <tr>
-            <td>{{ order.orderId }}</td>
+            <td><a href="{% url 'buyer_orders_view' order.orderId %}">{{ order.orderId }}</a></td>
             <td>{{ order.orderPublicId }}</td>
             <td>{{ order.agencyId }}</td>
             <td>{{ order.agencyName }}</td>

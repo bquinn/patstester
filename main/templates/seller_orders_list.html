@@ -29,7 +29,11 @@
             <td>{{ order.agencyId }}</td>
             <td>{{ order.clientName }}</td>
             <td>{{ order.campaignId }}</td>
-            <td>{% if order.type == "Order" and order.status == "New" %} <a href="{% url 'seller_orders_respond' order_id=order.orderId version=order.version %}">Respond</a> {% endif %}</td>
+            <td>{% if order.type == "Order" and order.status == "New" %}
+                    <a href="{% url 'seller_orders_respond' order_id=order.orderId version=order.version %}">Respond</a>
+                {% elif order.type == "Order" and order.status == "Accepted" or order.type == "Order" and order.status == "Rejected" %}
+                    <a href="{% url 'seller_orders_revise' order_id=order.orderId version=order.version %}">Revise</a>
+                {% endif %}</td>
         </tr>
         {% endfor %}
     </table>
