@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Seller - Orders - Revise Order{% endblock %}
+
+{% block content %}
+    <h3>Propose a revision to an order</h3>
+
+    <form action="{% url 'seller_orders_revise' order_id=order_id version=version %}" method="post" role="form">
+        {% csrf_token %}
+        {% bootstrap_form_errors form type='non_fields' %}
+        {% bootstrap_form form %}
+        {% buttons submit='Submit' reset="Cancel" %}{% endbuttons %}
+    </form>
+{% endblock %}

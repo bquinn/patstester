@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Seller - List Order versions{% endblock %}
+{% block title %}Seller - Order history summary - order {{ order_id }}{% endblock %}
 
 {% block content %}
-    <h3>Order history - Order {{ order_id }}</h3>
 
+    <p><a class="btn btn-primary" href="{% url 'seller_orders_full_history' order_id=order_id %}">Full history including comments</a></p>
     <table class="table">
         <tr>
             <th>Vendor Name</th>

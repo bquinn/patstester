@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Seller - Order full history - order {{ order_id }}{% endblock %}
+
+{% block content %}
+
+    <p><a class="btn btn-primary" href="{% url 'seller_orders_versions' order_id=order_id %}">History summary</a></p>
+    <table class="table">
+        <tr>
+            <th>Vendor Name</th>
+            <th>Agency Name</th>
+            <th>Campaign ID</th>
+            <th>Agency campaign ref</th>
+            <th>Campaign name</th>
+            <th>Client name</th>
+            <th>Order ID</th>
+            <th>Order version</th>
+            <th>Order type</th>
+            <th>Order status</th>
+            <th>Media type</th>
+            <th>Flight start</th>
+            <th>Flight end</th>
+            <th>Author</th>
+            <th>Comment</th>
+            <th>Due by</th>
+            <th>Cost</th>
+            <th>Currency</th>
+            <th>Ts &amp; Cs</th>
+        </tr>
+        {% for order in object_list %}
+{
+    u'status': u'Accepted', u'orderId': u'O-YDT',
+    u'commentHistory': [{u'status': u'Accepted', u'comment': u'Oh yes!', u'documents': [u'01daf5e2-b56e-494f-85e4-0eef373feb0e'], u'timestamp': u'2015-06-16T17:44:56Z', u'version': u'5.00', u'fullName': u'Brendan Quinn', u'email': u'brendan.quinn@pats.org.uk'}, {u'status': u'Accepted', u'comment': u'This is a message sent with the order.', u'documents': [u'4d198e60-69b4-4c91-a24e-c478d9ca6c83'], u'timestamp': u'2015-06-15T11:27:50Z', u'version': u'5.00', u'fullName': u'Agency Buyer', u'email': u'agencybuyer@mediaocean.com'}],
+    u'agencyName': u'PATS3', 
+    u'termsAndConditions': u'Here are my special terms and conditions.',
+    u'campaignId': u'CP1299', u'sellerName': u'Brendan Quinn',
+    u'printLineItems': [
+        {u'size': u'25 x 4', u'packageType': None, u'buyCategory': u'Consumer', u'name': u'Print Placement - col x cm SCC', u'printPosition': u'Above the Fold', u'color': u'4 colour', u'coverDate': u'2015-05-20', u'section': u'Sport', u'unitAmount': 100, u'rate': {u'amount': 10, u'currencyCode': u'GBP'}, u'comments': None, u'groupName': None, u'unitType': u'Columns by cms', u'cost': {u'amount': 1000, u'currencyCode': u'GBP'}, u'publication': u'Shift', u'lineItemId': u'PL3K1HI', u'lineNumber': 1, u'region': u'UK exc Scotland', u'customColumns': [{u'name': u'SUBMEDIATYPE', u'value': u'Display (Print)'}], u'costMethod': u'SCC', u'buyType': u'Magazine'},
+        {u'size': u'17x7', u'packageType': None, u'buyCategory': u'Consumer', u'name': u'Print Placement - col x cm Flat', u'printPosition': u'Any', u'color': u'4 colour', u'coverDate': u'2015-05-20', u'section': u'Business', u'unitAmount': 119, u'rate': {u'amount': None, u'currencyCode': u'GBP'}, u'comments': None, u'groupName': None, u'unitType': u'Columns by cms', u'cost': {u'amount': 2500, u'currencyCode': u'GBP'}, u'publication': u'Shift', u'lineItemId': u'PL3K1HJ', u'lineNumber': 2, u'region': u'Scotland only', u'customColumns': [{u'name': u'SUBMEDIATYPE', u'value': u'Display (Print)'}], u'costMethod': u'Flat', u'buyType': u'Magazine'},
+        {u'size': u'10 x7', u'packageType': None, u'buyCategory': u'Consumer', u'name': u'Print Placement - Cols by cms Free', u'printPosition': u'Any', u'color': u'4 colour', u'coverDate': u'2015-05-20', u'section': u'Finance', u'unitAmount': 70, u'rate': {u'amount': None, u'currencyCode': u'GBP'}, u'comments': None, u'groupName': None, u'unitType': u'Columns by cms', u'cost': {u'amount': 0, u'currencyCode': u'GBP'}, u'publication': u'Shift', u'lineItemId': u'PL3K1HK', u'lineNumber': 3, u'region': u'Wales', u'customColumns': [{u'name': u'SUBMEDIATYPE', u'value': u'Display (Print)'}], u'costMethod': u'Free', u'buyType': u'Magazine'},
+        {u'size': u'A5 Insert', u'packageType': None, u'buyCategory': u'Consumer', u'name': u'Print Placement - Insert CPM', u'printPosition': u'Any Position', u'color': u'4 colour', u'coverDate': u'2015-05-21', u'section': u'Travel', u'unitAmount': 400000, u'rate': {u'amount': 100, u'currencyCode': u'GBP'}, u'comments': None, u'groupName': None, u'unitType': u'Insert', u'cost': {u'amount': 40000, u'currencyCode': u'GBP'}, u'publication': u'Shift', u'lineItemId': u'PL3K1HL', u'lineNumber': 4, u'region': u'All UK', u'customColumns': [{u'name': u'SUBMEDIATYPE', u'value': u'Inserts'}], u'costMethod': u'CPM', u'buyType': u'Magazine'},
+        {u'size': u'A5 Insert', u'packageType': None, u'buyCategory': u'Consumer', u'name': u'Print Placement - Insert Flat', u'printPosition': u'Any', u'color': u'4 colour', u'coverDate': u'2015-05-21', u'section': u'Property', u'unitAmount': 5000, u'rate': {u'amount': None, u'currencyCode': u'GBP'}, u'comments': None, u'groupName': None, u'unitType': u'Insert', u'cost': {u'amount': 5000, u'currencyCode': u'GBP'}, u'publication': u'Shift', u'lineItemId': u'PL3K1HM', u'lineNumber': 5, u'region': u'South East', u'customColumns': [{u'name': u'SUBMEDIATYPE', u'value': u'Inserts'}], u'costMethod': u'Flat', u'buyType': u'Magazine'},
+        {u'size': u'A4 Insert', u'packageType': None, u'buyCategory': u'Consumer', u'name': u'Print Placement - Insert Free', u'printPosition': u'Any Position', u'color': u'Mono', u'coverDate': u'2015-05-21', u'section': u'Fashion', u'unitAmount': 6000, u'rate': {u'amount': None, u'currencyCode': u'GBP'}, u'comments': None, u'groupName': None, u'unitType': u'Insert', u'cost': {u'amount': 0, u'currencyCode': u'GBP'}, u'publication': u'Shift', u'lineItemId': u'PL3K1HN', u'lineNumber': 6, u'region': u'Scotland', u'customColumns': [{u'name': u'SUBMEDIATYPE', u'value': u'Inserts'}], u'costMethod': u'Flat', u'buyType': u'Magazine'},
+        {u'size': u'Double Page Spread', u'packageType': None, u'buyCategory': u'Consumer', u'name': u'Print Placement - Flat cost', u'printPosition': u'Any Position', u'color': u'4 colour', u'coverDate': u'2015-05-22', u'section': u'Family', u'unitAmount': 0, u'rate': {u'amount': None, u'currencyCode': u'GBP'}, u'comments': None, u'groupName': None, u'unitType': u'N/A', u'cost': {u'amount': 7000, u'currencyCode': u'GBP'}, u'publication': u'Shift', u'lineItemId': u'PL3K1HO', u'lineNumber': 7, u'region': u'All UK', u'customColumns': [{u'name': u'SUBMEDIATYPE', u'value': u'Display (Print)'}], u'costMethod': u'Flat', u'buyType': u'Magazine'},
+        {u'size': u'FullPage', u'packageType': None, u'buyCategory': u'Consumer', u'name': u'Print Placement - Free', u'printPosition': u'Any Position', u'color': u'4 colour', u'coverDate': u'2015-05-22', u'section': u'Motoring', u'unitAmount': 0, u'rate': {u'amount': None, u'currencyCode': u'GBP'}, u'comments': None, u'groupName': None, u'unitType': u'N/A', u'cost': {u'amount': 0, u'currencyCode': u'GBP'}, u'publication': u'Shift', u'lineItemId': u'PL3K1HP', u'lineNumber': 8, u'region': u'All UK', u'customColumns': [{u'name': u'SUBMEDIATYPE', u'value': u'Display (Print)'}], u'costMethod': u'Flat', u'buyType': u'Magazine'},
+        {u'size': u'Snake', u'packageType': None, u'buyCategory': u'Consumer', u'name': u'Print Placement - Freetext size - Flat cost', u'printPosition': u'Any', u'color': u'4 colour', u'coverDate': u'2015-05-22', u'section': u'Education', u'unitAmount': 0, u'rate': {u'amount': None, u'currencyCode': u'GBP'}, u'comments': None, u'groupName': None, u'unitType': u'N/A', u'cost': {u'amount': 9000, u'currencyCode': u'GBP'}, u'publication': u'Shift', u'lineItemId': u'PL3K1HQ', u'lineNumber': 9, u'region': u'All UK', u'customColumns': [{u'name': u'SUBMEDIATYPE', u'value': u'Display (Print)'}], u'costMethod': u'Flat', u'buyType': u'Magazine'},
+        {u'size': u'Snake', u'packageType': None, u'buyCategory': u'Consumer', u'name': u'Print Placement - Freetext size - Flat cost - cols x cms', u'printPosition': u'Any', u'color': u'4 colour', u'coverDate': u'2015-05-23', u'section': u'Money', u'unitAmount': 10, u'rate': {u'amount': None, u'currencyCode': u'GBP'}, u'comments': None, u'groupName': None, u'unitType': u'Columns by cms', u'cost': {u'amount': 10000, u'currencyCode': u'GBP'}, u'publication': u'Shift', u'lineItemId': u'PL3K1HR', u'lineNumber': 10, u'region': u'All UK', u'customColumns': [{u'name': u'SUBMEDIATYPE', u'value': u'Display (Print)'}], u'costMethod': u'Flat', u'buyType': u'Magazine'},
+        {u'size': u'FullPage', u'packageType': None, u'buyCategory': u'Consumer', u'name': u'Print Placement - Freetext size - Flat cost - Insert', u'printPosition': u'Any Position', u'color': u'Mono', u'coverDate': u'2015-05-23', u'section': u'Entertainment', u'unitAmount': 100000, u'rate': {u'amount': None, u'currencyCode': u'GBP'}, u'comments': None, u'groupName': None, u'unitType': u'Insert', u'cost': {u'amount': 11000, u'currencyCode': u'GBP'}, u'publication': u'Shift', u'lineItemId': u'PL3K1HS', u'lineNumber': 11, u'region': u'All UK', u'customColumns': [{u'name': u'SUBMEDIATYPE', u'value': u'Display (Print)'}], u'costMethod': u'Flat', u'buyType': u'Magazine'},
+        {u'size': u'FullPage', u'packageType': None, u'buyCategory': u'Consumer', u'name': u'Print Placement - freetext size - free - no unit type', u'printPosition': u'Any Position', u'color': u'4 colour', u'coverDate': u'2015-05-23', u'section': u'Arts', u'unitAmount': 0, u'rate': {u'amount': None, u'currencyCode': u'GBP'}, u'comments': None, u'groupName': None, u'unitType': u'N/A', u'cost': {u'amount': 0, u'currencyCode': u'GBP'}, u'publication': u'Shift', u'lineItemId': u'PL3K1HT', u'lineNumber': 12, u'region': u'All UK', u'customColumns': [{u'name': u'SUBMEDIATYPE', u'value': u'Display (Print)'}], u'costMethod': u'Free', u'buyType': u'Magazine'},
+        {u'size': u'Z-shape', u'packageType': None, u'buyCategory': u'Consumer', u'name': u'Print Placement - Freetext size - free - cols x cms', u'printPosition': u'Any', u'color': u'4 colour', u'coverDate': u'2015-05-24', u'section': u'Books', u'unitAmount': 1, u'rate': {u'amount': None, u'currencyCode': u'GBP'}, u'comments': None, u'groupName': None, u'unitType': u'Columns by cms', u'cost': {u'amount': 0, u'currencyCode': u'GBP'}, u'publication': u'Shift', u'lineItemId': u'PL3K1HU', u'lineNumber': 13, u'region': u'Scotland', u'customColumns': [{u'name': u'SUBMEDIATYPE', u'value': u'Display (Print)'}], u'costMethod': u'Free', u'buyType': u'Magazine'},
+        {u'size': u'Z-shape', u'packageType': None, u'buyCategory': u'Consumer', u'name': u'Print Placement - Freetext size - free - insert', u'printPosition': u'Any', u'color': u'4 colour', u'coverDate': u'2015-05-24', u'section': u'Small Business', u'unitAmount': 1, u'rate': {u'amount': None, u'currencyCode': u'GBP'}, u'comments': None, u'groupName': None, u'unitType': u'Insert', u'cost': {u'amount': 0, u'currencyCode': u'GBP'}, u'publication': u'Shift', u'lineItemId': u'PL3K1HV', u'lineNumber': 14, u'region': u'Scotland', u'customColumns': [{u'name': u'SUBMEDIATYPE', u'value': u'Inserts'}], u'costMethod': u'Free', u'buyType': u'Magazine'},
+        {u'size': u'Rugby Ball', u'packageType': None, u'buyCategory': u'Consumer', u'name': u'Print Placement - Freetext size - SCC - cols by cms', u'printPosition': u'Any', u'color': u'4 colour', u'coverDate': u'2015-05-24', u'section': u'Society', u'unitAmount': 170, u'rate': {u'amount': 15.15, u'currencyCode': u'GBP'}, u'comments': None, u'groupName': None, u'unitType': u'Columns by cms', u'cost': {u'amount': 2575.5, u'currencyCode': u'GBP'}, u'publication': u'Shift', u'lineItemId': u'PL3K1I0', u'lineNumber': 15, u'region': u'All UK', u'customColumns': [{u'name': u'SUBMEDIATYPE', u'value': u'Display (Print)'}], u'costMethod': u'SCC', u'buyType': u'Magazine'}
+    ],
+    u'mediaType': u'Print',
+    u'sellerSignature': u'Brendan Quinn',
+    u'sellerComments': u'Oh yes!',
+    u'digitalLineItems': [],
+    u'version': u'5.00',
+    u'agencyCampaignReferenceNo': u'BQ20153TEST20150511001',
+    u'campaignName': u'BQ 2015.3 subsection test 11 May',
+    u'vendorName': u'PATS Media Seller',
+    u'clientName': u'VODKA'
+}
+        <tr>
+            <td>{{ order }}{{ order.vendorName }}</td>
+            <td>{{ order.agencyName }}</td>
+            <td>{{ order.campaignId }}</td>
+            <td>{{ order.agencyCampaignReferenceNo }}</td>
+            <td>{{ order.campaignName }}</td>
+            <td>{{ order.clientName }}</td>
+            <td>{{ order.orderId }}</td>
+            <td><a href="{% url 'seller_orders_view' order_id=order.orderId version=order.version %}">{{ order.version }}</a></td>
+            <td>{{ order.type }}</td>
+            <td>{{ order.status }}</td>
+            <td>{{ order.mediaType }}</td>
+            <td>{{ order.flightStart }}</td>
+            <td>{{ order.flightEnd }}</td>
+            <td>{{ order.author }}</td>
+            <td>{{ order.comment }}</td>
+            <td>{{ order.dueBy }}</td>
+            <td>{{ order.cost.amount }}</td>
+            <td>{{ order.cost.currencyCode }}</td>
+            <td>{{ order.termsAndConditions }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

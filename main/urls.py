@@ -10,7 +10,7 @@ from .views import (
     Buyer_ListProductsView,
     Seller_GetAgenciesView,
     Seller_ListRFPsView, Seller_ListProposalsView,
-    Seller_ListOrdersView, Seller_OrderDetailView, Seller_OrderHistoryView,
+    Seller_ListOrdersView, Seller_OrderDetailView, Seller_OrderHistoryView, Seller_OrderFullHistoryView,
     Seller_OrderRespondView, Seller_OrderReviseView,
     ConfigurationView
 )
@@ -95,6 +95,9 @@ urlpatterns = [
     url(r'^seller/orders/(?P<order_id>[\w\-]+)/versions/(?P<version>[\d\.]+)/respond',
         Seller_OrderRespondView.as_view(template_name='seller_orders_respond.html'),
         name='seller_orders_respond'),
+    url(r'^seller/orders/(?P<order_id>[\w\-]+)/versions/full',
+        Seller_OrderFullHistoryView.as_view(template_name='seller_orders_full_history.html'),
+        name='seller_orders_full_history'),
     url(r'^seller/orders/(?P<order_id>[\w\-]+)/versions/(?P<version>\d+)?',
         Seller_OrderDetailView.as_view(template_name='seller_orders_view.html'),
         name='seller_orders_view'),

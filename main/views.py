@@ -577,11 +577,25 @@ class Seller_OrderHistoryView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         seller_api = self.get_seller_api_handle()
         self.order_id = self.kwargs.get('order_id', None)
-        order_history_response = seller_api.view_order_history(order_id=self.order_id)
+        order_history_response = seller_api.view_order_history(order_id=self.order_id, full=False)
         return order_history_response
         
     def get_context_data(self, *args, **kwargs):
         context_data = super(Seller_OrderHistoryView, self).get_context_data(*args, **kwargs)
+        context_data['order_id'] = self.order_id
+        return context_data
+
+class Seller_OrderFullHistoryView(PATSAPIMixin, ListView):
+    order_id = None
+
+    def get_queryset(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.order_id = self.kwargs.get('order_id', None)
+        order_history_response = seller_api.view_order_history(order_id=self.order_id, full=True)
+        return order_history_response
+        
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_OrderFullHistoryView, self).get_context_data(*args, **kwargs)
         context_data['order_id'] = self.order_id
         return context_data
 
@@ -695,7 +709,7 @@ class Seller_OrderReviseView(PATSAPIMixin, FormView):
         return super(Seller_OrderReviseView, self).form_valid(form)
 
     def get_context_data(self, *args, **kwargs):
-        context_data = super(Seller_OrderReviseiew, self).get_context_data(*args, **kwargs)
+        context_data = super(Seller_OrderReviseView, self).get_context_data(*args, **kwargs)
         context_data['order_id'] = self.order_id
         context_data['version'] = self.version
         context_data['object'] = self.order_detail
