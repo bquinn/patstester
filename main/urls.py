@@ -9,7 +9,7 @@ from .views import (
     Buyer_CreateOrderView, Buyer_CreateOrderRawView, Buyer_OrderDetailView, Buyer_ListOrderRevisionsView,
     Buyer_ListProductsView,
     Seller_GetAgenciesView,
-    Seller_ListRFPsView, Seller_ListProposalsView,
+    Seller_ListRFPsView, Seller_ListProposalsView, Seller_CreateProposalRawView,
     Seller_ListOrdersView, Seller_OrderDetailView, Seller_OrderHistoryView, Seller_OrderFullHistoryView,
     Seller_OrderRespondView, Seller_OrderReviseView,
     ConfigurationView
@@ -77,6 +77,9 @@ urlpatterns = [
     url(r'^seller/metadata',
         TemplateView.as_view(template_name='seller_metadata.html'),
         name='seller_metadata'),
+    url(r'^seller/rfps/(?P<rfp_id>[\w\-]+)/proposals/create-raw',
+        Seller_CreateProposalRawView.as_view(template_name='seller_rfps_proposals_create_raw.html'),
+        name='seller_rfps_proposals_create_raw'),
     url(r'^seller/rfps/(?P<rfp_id>[\w\-]+)/proposals',
         Seller_ListProposalsView.as_view(template_name='seller_rfps_proposals_list.html'),
         name='seller_rfps_proposals_list'),

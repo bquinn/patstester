@@ -43,6 +43,11 @@ class Buyer_CreateOrderRawForm(forms.Form):
     person_id = forms.CharField(label='Buyer Person ID', max_length=100)
     payload = forms.CharField(label='Payload', max_length=999999, widget=forms.Textarea)
 
+class Seller_CreateProposalRawForm(forms.Form):
+    rfp_id = forms.CharField(label='RFP ID', max_length=100)
+    vendor_id = forms.CharField(label='Vendor (publisher) ID', max_length=100)
+    payload = forms.CharField(label='Payload', max_length=999999, widget=forms.Textarea)
+
 class Seller_OrderRespondForm(forms.Form):
     user_id = forms.CharField(label='Seller User ID', max_length=100)
     order_id = forms.CharField(label='Seller Order ID', max_length=100)

@@ -14,6 +14,7 @@ from .forms import (
     Buyer_CreateCampaignForm,
     Buyer_CreateRFPForm,
     Buyer_CreateOrderRawForm, Buyer_CreateOrderForm,
+    Seller_CreateProposalRawForm,
     Seller_OrderRespondForm, Seller_OrderReviseForm,
     ConfigurationForm
 )
@@ -527,6 +528,52 @@ class Seller_ListProposalsView(PATSAPIMixin, ListView):
         context_data = super(Seller_ListProposalsView, self).get_context_data(*args, **kwargs)
         context_data['rfp_id'] = self.rfp_id
         return context_data
+
+class Seller_CreateProposalRawView(PATSAPIMixin, FormView):
+    form_class = Seller_CreateProposalRawForm
+
+    def get(self, *args, **kwargs):
+        if 'rfp_id' in self.kwargs:
+            self.rfp_id = self.kwargs.get('rfp_id', None)
+        return super(Seller_CreateProposalRawView, self).get(*args, **kwargs)
+        
+    def get_success_url(self):
+        return reverse_lazy('seller_rfps_proposals_create_raw', kwargs={'rfp_id':self.rfp_id})
+
+    def get_initial(self):
+        return {
+            'rfp_id': self.rfp_id,
+            'vendor_id': self.get_publisher_id()
+        }
+
+    def form_valid(self, form):
+        buyer_api = self.get_buyer_api_handle()
+        company_id = form.cleaned_data.get('company_id')
+        person_id = form.cleaned_data.get('person_id')
+        # convert the text string to a json object
+        try:
+            data = json.loads(form.cleaned_data.get('payload'))
+        except ValueError as json_error:
+            messages.error(self.request, 'Problem with JSON payload: %s <br />Try using jsonlint.com to fix it!' % json_error)
+        else:    
+            # take submitted values and call API - raw version
+            result = ''
+            try:
+                result = buyer_api.create_order_raw(company_id=company_id, person_id=person_id, data=data)
+            except PATSException as error:
+                messages.error(self.request, 'Submit Order failed: %s' % error)
+            else:
+                if result['status'] == u'SUCCESSFUL':
+                    messages.success(self.request, 'Order sent successfully! ID %s, version %s' % (result[u'publicId'], result[u'version']))
+                else:
+                    messages.error(self.request, 'Submit Order failed: %s' % error)
+        return super(Seller_CreateProposalRawView, self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_CreateProposalRawView, self).get_context_data(*args, **kwargs)
+        context_data['rfp_id'] = self.rfp_id
+        return context_data
+
 
 class Seller_ListOrdersView(PATSAPIMixin, ListView):
     start_date = None
