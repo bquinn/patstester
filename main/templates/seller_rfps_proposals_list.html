@@ -32,5 +32,6 @@
             <tr><td colspan="20">No proposals for this RFP.</td></tr>
         {% endfor %}
     </table>
+    <p><a class="btn btn-default" href="{% url 'seller_rfps_proposals_create_raw' rfp_id %}">Create a new proposal on this RFP</a></p>
 
 {% endblock %}

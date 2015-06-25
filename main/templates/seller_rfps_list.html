@@ -48,7 +48,10 @@
             <td>{{ rfp.strategy }}</td>
             <td>{{ rfp.requestedProducts }}</td>
             <td>{{ rfp.attachments }}</td>
-            <td><a href="{% url 'seller_rfps_proposals_list' rfp.rfpPublicId %}">Show proposals</a></td>
+            <td>
+                <p><a class="btn btn-primary" href="{% url 'seller_rfps_proposals_list' rfp.rfpPublicId %}">Show proposals</a></p>
+                <p><a class="btn btn-default" href="{% url 'seller_rfps_proposals_create_raw' rfp.rfpPublicId %}">Send new proposal</a></p>
+            </td>
         </tr>
         {% endfor %}
     </table>
