@@ -541,15 +541,15 @@ class Seller_CreateProposalRawView(PATSAPIMixin, FormView):
         return reverse_lazy('seller_rfps_proposals_create_raw', kwargs={'rfp_id':self.rfp_id})
 
     def get_initial(self):
+        if 'rfp_id' in self.kwargs:
+            self.rfp_id = self.kwargs.get('rfp_id', None)
         return {
             'rfp_id': self.rfp_id,
             'vendor_id': self.get_publisher_id()
         }
 
     def form_valid(self, form):
-        buyer_api = self.get_buyer_api_handle()
-        company_id = form.cleaned_data.get('company_id')
-        person_id = form.cleaned_data.get('person_id')
+        seller_api = self.get_seller_api_handle()
         # convert the text string to a json object
         try:
             data = json.loads(form.cleaned_data.get('payload'))
@@ -559,14 +559,14 @@ class Seller_CreateProposalRawView(PATSAPIMixin, FormView):
             # take submitted values and call API - raw version
             result = ''
             try:
-                result = buyer_api.create_order_raw(company_id=company_id, person_id=person_id, data=data)
+                result = seller_api.send_proposal_raw(vendor_id=self.get_publisher_id(), data=data)
             except PATSException as error:
-                messages.error(self.request, 'Submit Order failed: %s' % error)
+                messages.error(self.request, 'Submit Proposal failed: %s' % error)
             else:
                 if result['status'] == u'SUCCESSFUL':
-                    messages.success(self.request, 'Order sent successfully! ID %s, version %s' % (result[u'publicId'], result[u'version']))
+                    messages.success(self.request, 'Proposal sent successfully! result is %s' % result)
                 else:
-                    messages.error(self.request, 'Submit Order failed: %s' % error)
+                    messages.error(self.request, 'Submit Proposal failed: %s' % result)
         return super(Seller_CreateProposalRawView, self).form_valid(form)
 
     def get_context_data(self, *args, **kwargs):
