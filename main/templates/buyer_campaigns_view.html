@@ -1,27 +1,19 @@
 {% extends "base.html" %}
-{% block title %}Buyer - RFPs - List RFPs{% endblock %}
+{% block title %}Buyer - Campaigns - View Campaign: {{ campaign_id }}{% endblock %}
 
 {% block content %}
-    <form method="get" action="{% url 'buyer_rfps_list' %}">
-    <table class="table">
-    <tr><td>Advertiser name</td><td><input type="text" name="advertiser_name" value="{{search_advertiser_name}}"/></td></tr>
-    <tr><td>Campaign URN</td><td> <input type="text" name="campaign_urn" value="{{search_campaign_urn}}"/></td></tr>
-    <tr><td>From date</td><td> <input type="date" name="rfp_start_date" value="{{search_rfp_start_date}}"/></td></tr>
-    <tr><td>To date</td><td> <input type="date" name="rfp_end_date" value="{{search_rfp_end_date}}"/></td></tr>
-    <tr><td>Respond by date</td><td> <input type="date" name="response_due_date" value="{{search_response_due_date}}"/></td></tr>
-    <tr><td>Status</td><td><input type="text" name="status" value="{{search_status}}"/></td></tr>
-    </table>
-    <input type="submit" value="Refresh list"/>
-    </form>
+    {{ object }}
     <table class="table">
         <tr><th>RFP Public ID</th><th>RFP ID</th><th>Agency ID</th><th>Vendor ID</th><th>Media Type</th><th>Status</th><th>Start date</th><th>End date</th><th>Budgets</th><th>Due Date</th><th>Buyer Name</th><th>Buyer Email</th><th>Comments</th><th>Campaign Public ID</th><th>Campaign Name</th><th>Strategy</th><th>Publisher recipients</th><th>Agency user</th><th>Requested Products</th><th>Flighting?</th><th>Attachments</th> </tr>
         {% for rfp_group in object_list %}
         <tr><td colspan="22">
-        Campaign: {{ rfp_group.campaignRfpDto.campaignName }} (PATS Campaign ID <a href="{% url 'buyer_campaigns_view' campaign_id=rfp_group.campaignRfpDto.campaignPublicId %}">{{ rfp_group.campaignRfpDto.campaignPublicId }}</a>, Buyer Campaign ID {{ rfp_group.campaignRfpDto.campaignUrn }})), for client {{ rfp_group.campaignRfpDto.client }} brand {{ rfp_group.campaignRfpDto.brand }}, dates {{ rfp_group.campaignRfpDto.startdate }} - {{ rfp_group.campaignRfpDto.endDate }}
+{{ rfp_group.campaignRfpDto }}
+        Campaign: {{ rfp_group.campaignRfpDto.campaignName }} (buyer ID {{ rfp_group.campaignRfpDto.campaignPublicId }}, PATS ID {{ rfp_group.campaignRfpDto.campaignUrn }})), for client {{ rfp_group.campaignRfpDto.client }} brand {{ rfp_group.campaignRfpDto.brand }}, dates {{ rfp_group.campaignRfpDto.startdate }} - {{ rfp_group.campaignRfpDto.endDate }}
         </td></tr>
         {% for rfp in rfp_group.cmRfpDtoList %}
         <tr>
             <td>
+{{ rfp }}
 <a href="{% url 'buyer_rfps_view' rfp.rfpPublicId %}">{{ rfp.rfpPublicId }}</a></td>
             <td>{{ rfp.rfpId }}</td>
             <td>{{ rfp.agencyPublicId }}</td>

@@ -242,6 +242,20 @@ class Buyer_RFPDetailView(PATSAPIMixin, DetailView):
         context_data['rfp_id'] = self.rfp_id
         return context_data
 
+class Buyer_RFPAttachmentView(PATSAPIMixin, DetailView):
+    def get_object(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.rfp_id = self.kwargs.get('rfp_id', None)
+        self.attachment_id = self.kwargs.get('attachment_id', None)
+        rfp_detail_response = buyer_api.get_rfp_attachment(sender_user_id=self.get_agency_user_id(), rfp_id=self.rfp_id, attachment_id=self.attachment_id)
+        return rfp_detail_response
+    
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_RFPDetailView, self).get_context_data(*args, **kwargs)
+        context_data['rfp_id'] = self.rfp_id
+        context_data['attachment_id'] = self.attachment_id
+        return context_data
+
 class Buyer_RFPSearchView(PATSAPIMixin, ListView):
     search_advertiser_name = None
     search_rfp_start_date = None
@@ -334,6 +348,24 @@ class Buyer_CreateCampaignView(PATSAPIMixin, FormView):
         else:
             messages.success(self.request, 'Create Campaign succeeded: response is %s' % response)
         return super(Buyer_CreateCampaignView, self).form_valid(form)
+
+class Buyer_CampaignDetailView(PATSAPIMixin, DetailView):
+    campaign_id = None
+
+    def get_object(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.campaign_id = self.kwargs.get('campaign_id', None)
+        campaign_detail_response = None
+        try:
+            campaign_detail_response = buyer_api.view_campaign_detail(sender_user_id=self.get_agency_user_id(), campaign_public_id=self.campaign_id)
+        except PATSException as error:
+            messages.error(self.request, 'Couldn''t load campaign: %s' % error)
+        return campaign_detail_response
+        
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_CampaignDetailView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id
+        return context_data
 
 class Buyer_CreateRFPView(PATSAPIMixin, FormView):
     form_class = Buyer_CreateRFPForm
