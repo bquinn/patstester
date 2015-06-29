@@ -33,10 +33,13 @@
                 {% csrf_token %}
                 <p><select name="defaults" class="form-control">
                 {% for config in config_defaults_list %}
-                    <option>{{ config }}</option>
+                    <option {% if config == defaults_key %}selected="selected"{% endif %}>
+                        {{ config }}
+                    </option>
                 {% endfor %}
                 </select></p>
                 {% buttons submit='Submit' %}{% endbuttons %}
             </form>
         </div>
 {% endblock %}
+{% block raw %}{% endblock %}
