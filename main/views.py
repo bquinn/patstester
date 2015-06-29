@@ -153,14 +153,14 @@ class PATSAPIMixin(object):
         if not self.pats_buyer and 'api_handle_buyer' in self.request.session:
             self.pats_buyer = self.request.session['api_handle_buyer']
         else:
-            self.pats_buyer = PATSBuyer(agency_id=self.get_agency_id(), api_key=self.get_agency_api_key(), debug_mode=True)
+            self.pats_buyer = PATSBuyer(agency_id=self.get_agency_id(), api_key=self.get_agency_api_key(), debug_mode=True, raw_mode=True, session=self.request.session)
         return self.pats_buyer
 
     def get_seller_api_handle(self):
         if not self.pats_seller and 'api_handle_seller' in self.request.session:
             self.pats_seller = self.request.session['api_handle_seller']
         else:
-            self.pats_seller = PATSSeller(vendor_id=self.get_publisher_id(), api_key=self.get_publisher_api_key(), debug_mode=True)
+            self.pats_seller = PATSSeller(vendor_id=self.get_publisher_id(), api_key=self.get_publisher_api_key(), debug_mode=True, raw_mode=True, session=self.request.session)
         return self.pats_seller
 
     def get_defaults_key(self):
@@ -774,17 +774,23 @@ class Seller_OrderReviseView(PATSAPIMixin, FormView):
         user_id = form.cleaned_data.get('user_id')
         self.order_id = form.cleaned_data.get('order_id')
         status = form.cleaned_data.get('status')
-        comments = form.cleaned_data.get('comments')
-        response = ''
+        # convert the text string to a json object
         try:
-            response = seller_api.respond_to_order(user_id=user_id, order_id=self.order_id, status=status, comments=comments)
-        except PATSException as error:
-            messages.error(self.request, 'Respond to Order failed: %s' % error)
-        else:
-            if result['status'] == u'SUCCESSFUL':
-                messages.success(self.request, 'Order sent successfully! ID %s, version %s' % (result[u'publicId'], result[u'version']))
+            data = json.loads(form.cleaned_data.get('payload'))
+        except ValueError as json_error:
+            messages.error(self.request, 'Problem with JSON payload: %s <br />Try using jsonlint.com to fix it!' % json_error)
+        else:    
+            # take submitted values and call API - raw version
+            result = ''
+            try:
+                result = seller_api.send_order_revision_raw(data=data)
+            except PATSException as error:
+                messages.error(self.request, 'Submit Order Revision failed: %s' % error)
             else:
-                messages.error(self.request, 'Submit Order failed: %s' % error)
+                if result['status'] == u'SUCCESSFUL':
+                    messages.success(self.request, 'Order revision sent successfully! ID %s, version %s' % (result[u'publicId'], result[u'version']))
+                else:
+                    messages.error(self.request, 'Submit Order Revision failed: %s' % error)
         return super(Seller_OrderReviseView, self).form_valid(form)
 
     def get_context_data(self, *args, **kwargs):
