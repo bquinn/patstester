@@ -31,6 +31,15 @@ class Buyer_CreateRFPForm(forms.Form):
     strategy = forms.CharField(label='Strategy', max_length=100)
     requested_products = forms.CharField(label='Requested products', max_length=100, required=False)
 
+class Buyer_ReturnProposalForm(forms.Form):
+    proposal_id = forms.CharField(label='Proposal Public ID', max_length=50)
+    sender_user_id = forms.CharField(label='Sender User ID', max_length=50)
+    comments = forms.CharField(label='Comments', max_length=5000, widget=forms.Textarea)
+    comments = forms.CharField(label='Comments', max_length=5000, widget=forms.Textarea)
+    due_date = forms.DateField(label='Response due date', widget=forms.DateInput(attrs={'type':'date'}))
+    email = forms.CharField(label='Seller email', max_length=100)
+    # TODO - attachments
+
 class Buyer_CreateOrderForm(forms.Form):
     agency_id = forms.CharField(label='Buyer Agency ID', max_length=100)
     company_id = forms.CharField(label='Buyer Client ID', max_length=100)

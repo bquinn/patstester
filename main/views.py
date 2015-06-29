@@ -12,7 +12,7 @@ from pats import PATSBuyer, PATSSeller, PATSException, CampaignDetails
 
 from .forms import (
     Buyer_CreateCampaignForm,
-    Buyer_CreateRFPForm,
+    Buyer_CreateRFPForm, Buyer_ReturnProposalForm,
     Buyer_CreateOrderRawForm, Buyer_CreateOrderForm,
     Seller_CreateProposalRawForm,
     Seller_OrderRespondForm, Seller_OrderReviseForm,
@@ -292,6 +292,55 @@ class Buyer_RFPSearchView(PATSAPIMixin, ListView):
         context_data['search_response_due_date'] = self.search_response_due_date
         context_data['search_status'] = self.search_status or ''
         return context_data
+
+class Buyer_ReturnProposalView(PATSAPIMixin, FormView):
+    form_class = Buyer_ReturnProposalForm
+
+    def get(self, *args, **kwargs):
+        if 'agency_id' not in self.request.session:
+            self.request.session['curl_command'] = ''
+            self.request.session['response_status'] = ''
+            self.request.session['response_status'] = ''
+        return super(Buyer_ReturnProposalView, self).get(*args, **kwargs)
+
+    def get_initial(self):
+        if 'rfp_id' in self.kwargs:
+            self.rfp_id = self.kwargs.get('rfp_id', None)
+        if 'proposal_id' in self.kwargs:
+            self.proposal_id = self.kwargs.get('proposal_id', None)
+        return {
+            'rfp_id': self.rfp_id,
+            'proposal_id': self.proposal_id,
+            'sender_user_id': self.get_agency_user_id()
+        }
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_ReturnProposalView, self).get_context_data(*args, **kwargs)
+        context_data['rfp_id'] = self.rfp_id or ''
+        context_data['proposal_id'] = self.proposal_id or ''
+        return context_data
+
+    def form_valid(self, form):
+        buyer_api = self.get_buyer_api_handle()
+        proposal_id = form.cleaned_data['proposal_id']
+        sender_user_id = form.cleaned_data['sender_user_id']
+        comments = form.cleaned_data['comments']
+        due_date = form.cleaned_data['due_date']
+        # turn single email into an array
+        emails = [ form.cleaned_data['email'] ]
+        # TODO: handle attachments
+        attachments = []
+        response = ''
+        try:
+            response = buyer_api.return_proposal(sender_user_id=sender_user_id, proposal_public_id=proposal_id, comments=comments, due_date=due_date, emails=emails, attachments=attachments)
+        except PATSException as error:
+            messages.error(self.request, "Return proposal failed: %s" % error)
+        else:
+            messages.success(self.request, "Proposal returned successfully. Response: %s" % response)
+        return super(Buyer_ReturnProposalView, self).form_valid(form)
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_lazy('buyer_rfps_proposals_return', kwargs={'rfp_id':self.rfp_id, 'proposal_id':self.proposal_id})
 
 class Buyer_OrderDetailView(PATSAPIMixin, DetailView):
     order_id = None

@@ -1,12 +1,21 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-{% block title %}Buyer - RFPs - View RFP Detail{% endblock %}
+{% block title %}Buyer - RFPs - View RFP Detail - {{ rfp_id }}{% endblock %}
 
 {% block content %}
-    <h3>View RFP Detail - {{ rfp_id }}</h3>
-
+<h3>Campaign info</h3>
+<table class="table">
+<tr><th>Campaign URN</th><td>{{ object.campaignRfpDto.campaignUrn }}</td></tr>
+<tr><th>Campaign public ID</th><td>{{ object.campaignRfpDto.campaignPublicId }}</td></tr>
+<tr><th>Campaign name</th><td>{{ object.campaignRfpDto.campaignName }}</td></tr>
+<tr><th>Client</th><td>{{ object.campaignRfpDto.client }}</td></tr>
+<tr><th>Brand</th><td>{{ object.campaignRfpDto.brand }}</td></tr>
+<tr><th>Start date</th><td>{{ object.campaignRfpDto.startdate }}</td></tr>
+<tr><th>End date</th><td>{{ object.campaignRfpDto.endDate }}</td></tr>
+</table>
 {% for rfp in object.cmRfpDtoList %}
+<h3>RFP Info</h3>
 <table class="table">
 <tr><th>RFP Public ID</th><td>{{ rfp.rfpPublicId }}</td></tr>
 <tr><th>RFP Status</th><td>{{ rfp.status}}</td></tr>
@@ -32,32 +41,25 @@
 </table>
 <h3>Proposals</h3>
 {% for proposal in rfp.proposals %}
-<h4>Proposal #{{ forloop.counter }}</h4>
-<table class="table">
-<tr><th>Proposal public ID</th><td>{{ proposal.proposalPublicId }} </td></tr>
-<tr><th>Proposal external ID</th><td>{{ proposal.proposalExternalId }} </td></tr>
-<tr><th>Version</th><td>{{ proposal.proposalVersion }} </td></tr>
-<tr><th>Status</th><td>{{ proposal.status }} </td></tr>
-<tr><th>Author name</th><td>{{ proposal.authorName }} </td></tr>
-<tr><th>Comments</th><td>{{ proposal.comments }} </td></tr>
-<tr><th>Print line items</th><td>{{ proposal.printLineItems }} </td></tr>
-<tr><th>Digital line items</th><td>{{ proposal.digitalLineItems }} </td></tr>
-<tr><th>Attachments</th><td>{{ proposal.attachments }} </td></tr>
-</table>
+<div class="row">
+ <div class="col-md-2"><strong>Proposal #{{ forloop.counter }}</strong></div>
+ <div class="col-md-10">
+  <table class="table">
+  <tr><th>Proposal public ID</th><td>{{ proposal.proposalPublicId }} </td></tr>
+  <tr><th>Proposal external ID</th><td>{{ proposal.proposalExternalId }} </td></tr>
+  <tr><th>Version</th><td>{{ proposal.proposalVersion }} </td></tr>
+  <tr><th>Status</th><td>{{ proposal.status }} </td></tr>
+  <tr><th>Author name</th><td>{{ proposal.authorName }} </td></tr>
+  <tr><th>Comments</th><td>{{ proposal.comments }} </td></tr>
+  <tr><th>Print line items</th><td>{{ proposal.printLineItems }} </td></tr>
+  <tr><th>Digital line items</th><td>{{ proposal.digitalLineItems }} </td></tr>
+  <tr><th>Attachments</th><td>{{ proposal.attachments }} </td></tr>
+  </table>
+  <p><a class="btn btn-primary" href="{% url 'buyer_rfps_proposals_return' rfp_id=rfp_id proposal_id=proposal.proposalPublicId %}">Return this proposal</a> (ie send back to seller with a comment)</p>
+ </div>
+</div>
 {% empty %}
 <p>None.</p>
 {% endfor %}
-</td>
-</tr>
 {% endfor %}
-<h3>Campaign info</h3>
-<table class="table">
-<tr><th>Campaign URN</th><td>{{ object.campaignRfpDto.campaignUrn }}</td></tr>
-<tr><th>Campaign public ID</th><td>{{ object.campaignRfpDto.campaignPublicId }}</td></tr>
-<tr><th>Campaign name</th><td>{{ object.campaignRfpDto.campaignName }}</td></tr>
-<tr><th>Client</th><td>{{ object.campaignRfpDto.client }}</td></tr>
-<tr><th>Brand</th><td>{{ object.campaignRfpDto.brand }}</td></tr>
-<tr><th>Start date</th><td>{{ object.campaignRfpDto.startdate }}</td></tr>
-<tr><th>End date</th><td>{{ object.campaignRfpDto.endDate }}</td></tr>
-</table>
 {% endblock %}
