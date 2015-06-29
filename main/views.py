@@ -185,6 +185,12 @@ class PATSAPIMixin(object):
         self.set_publisher_id(CONFIG_DEFAULTS[defaults]['PUBLISHER_ID'])
         self.set_defaults_key(defaults)
 
+    def clear_curl_history(self):
+        if self.request.session:
+            self.request.session['curl_command'] = ''
+            self.request.session['response_status'] = ''
+            self.request.session['response_text'] = ''
+
 class Buyer_GetPublishersView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
@@ -297,10 +303,7 @@ class Buyer_ReturnProposalView(PATSAPIMixin, FormView):
     form_class = Buyer_ReturnProposalForm
 
     def get(self, *args, **kwargs):
-        if 'agency_id' not in self.request.session:
-            self.request.session['curl_command'] = ''
-            self.request.session['response_status'] = ''
-            self.request.session['response_status'] = ''
+        self.clear_curl_history()
         return super(Buyer_ReturnProposalView, self).get(*args, **kwargs)
 
     def get_initial(self):
@@ -364,6 +367,10 @@ class Buyer_CreateCampaignView(PATSAPIMixin, FormView):
     form_class = Buyer_CreateCampaignForm
     success_url = reverse_lazy('buyer_campaigns_create')
 
+    def get(self, *args, **kwargs):
+        self.clear_curl_history()
+        return super(Buyer_CreateCampaignView, self).get(*args, **kwargs)
+
     def get_initial(self):
         return {
             'agency_id': self.get_agency_id(),
@@ -420,6 +427,10 @@ class Buyer_CreateRFPView(PATSAPIMixin, FormView):
     form_class = Buyer_CreateRFPForm
     success_url = reverse_lazy('buyer_rfps_create')
 
+    def get(self, *args, **kwargs):
+        self.clear_curl_history()
+        return super(Buyer_CreateRFPView, self).get(*args, **kwargs)
+
     def get_initial(self):
         return {
             'sender_user_id': self.get_agency_user_id(),
@@ -464,6 +475,10 @@ class Buyer_CreateOrderRawView(PATSAPIMixin, FormView):
     form_class = Buyer_CreateOrderRawForm
     success_url = reverse_lazy('buyer_orders_create_raw')
 
+    def get(self, *args, **kwargs):
+        self.clear_curl_history()
+        return super(Buyer_CreateOrderRawView, self).get(*args, **kwargs)
+
     def get_initial(self):
         return {
             'agency_id': self.get_agency_id(),
@@ -502,6 +517,10 @@ class Buyer_CreateOrderRawView(PATSAPIMixin, FormView):
 class Buyer_CreateOrderView(PATSAPIMixin, FormView):
     form_class = Buyer_CreateOrderForm
     success_url = reverse_lazy('buyer_orders_create')
+
+    def get(self, *args, **kwargs):
+        self.clear_curl_history()
+        return super(Buyer_CreateOrderRawView, self).get(*args, **kwargs)
 
     def get_initial(self):
         return {}
@@ -563,8 +582,13 @@ class Seller_GetAgenciesView(PATSAPIMixin, ListView):
         self.agency_id = self.request.GET.get('agency_id', self.kwargs.get('agency_id', self.get_agency_id()))
         self.search_name = self.request.GET.get('name', None)
         self.search_updated_date = self.request.GET.get('last_updated_date', None)
-        agencies_response = seller_api.get_agency_by_id(user_id=self.get_agency_user_id(), agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
-        return agencies_response['payload']
+        agencies_response = ''
+        try:
+            agencies_response = seller_api.get_agency_by_id(user_id=self.get_agency_user_id(), agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
+        except PATSException as error:
+            messages.error(self.request, "Get agencies failed. Error: %s, response %s" % (error, agencies_response))
+        else:
+            return agencies_response['payload']
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(Seller_GetAgenciesView, self).get_context_data(*args, **kwargs)
