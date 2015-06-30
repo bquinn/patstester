@@ -826,8 +826,6 @@ class Seller_OrderReviseView(PATSAPIMixin, FormView):
             self.version = self.kwargs.get('version', 0)
             # get rid of minor version component in case it's there
             self.version = int(float(self.version))
-            order_detail_response = seller_api.view_order_detail(order_id=self.order_id, version=self.version)
-            self.order_detail = order_detail_response
         return super(Seller_OrderReviseView, self).get(*args, **kwargs)
 
     def get_initial(self):
@@ -856,7 +854,7 @@ class Seller_OrderReviseView(PATSAPIMixin, FormView):
             # take submitted values and call API - raw version
             result = ''
             try:
-                result = seller_api.send_order_revision_raw(data=data)
+                result = seller_api.send_order_revision_raw(person_id=user_id, order_id=self.order_id, data=data)
             except PATSException as error:
                 messages.error(self.request, 'Submit Order Revision failed: %s' % error)
             else:
