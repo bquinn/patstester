@@ -53,7 +53,12 @@
   <tr><th>Comments</th><td>{{ proposal.comments }} </td></tr>
   <tr><th>Print line items</th><td>{{ proposal.printLineItems }} </td></tr>
   <tr><th>Digital line items</th><td>{{ proposal.digitalLineItems }} </td></tr>
-  <tr><th>Attachments</th><td>{{ proposal.attachments }} </td></tr>
+  <tr><th>Attachments</th><td>
+{% for attachment in proposal.attachments %}
+{{ attachment }}<br/>
+<a class="btn btn-primary" href="{% url 'buyer_rfps_proposals_attachment_download' rfp_id=rfp.rfpPublicId proposal_id=proposal.proposalPublicId attachment_id=attachment.publicId %}">Download attachment</a>
+{% endfor %}
+</td></tr>
   </table>
   <p><a class="btn btn-primary" href="{% url 'buyer_rfps_proposals_return' rfp_id=rfp_id proposal_id=proposal.proposalPublicId %}">Return this proposal</a> (ie send back to seller with a comment)</p>
  </div>

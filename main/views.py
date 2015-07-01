@@ -248,12 +248,12 @@ class Buyer_RFPDetailView(PATSAPIMixin, DetailView):
         context_data['rfp_id'] = self.rfp_id
         return context_data
 
-class Buyer_RFPAttachmentView(PATSAPIMixin, DetailView):
+class Buyer_DownloadProposalAttachmentView(PATSAPIMixin, DetailView):
     def get_object(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
-        self.rfp_id = self.kwargs.get('rfp_id', None)
+        self.proposal_id = self.kwargs.get('proposal_id', None)
         self.attachment_id = self.kwargs.get('attachment_id', None)
-        rfp_detail_response = buyer_api.get_rfp_attachment(sender_user_id=self.get_agency_user_id(), rfp_id=self.rfp_id, attachment_id=self.attachment_id)
+        rfp_detail_response = buyer_api.get_proposal_attachment(sender_user_id=self.get_agency_user_id(), proposal_id=self.proposal_id, attachment_id=self.attachment_id)
         return rfp_detail_response
     
     def get_context_data(self, *args, **kwargs):
@@ -679,6 +679,21 @@ class Seller_CreateProposalRawView(PATSAPIMixin, FormView):
         context_data['rfp_id'] = self.rfp_id
         return context_data
 
+class Seller_DownloadRFPAttachmentView(PATSAPIMixin, DetailView):
+    def get_object(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.agency_id = self.kwargs.get('agency_id', None)
+        self.rfp_id = self.kwargs.get('rfp_id', None)
+        self.attachment_id = self.kwargs.get('attachment_id', None)
+        attachment_response = seller_api.get_rfp_attachment(agency_id=self.agency_id, rfp_id=self.rfp_id, attachment_id=self.attachment_id)
+        return attachment_response
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_DownloadRFPAttachmentView, self).get_context_data(*args, **kwargs)
+        context_data['agency_id'] = self.agency_id
+        context_data['rfp_id'] = self.rfp_id
+        context_data['attachment_id'] = self.attachment_id
+        return context_data
 
 class Seller_ListOrdersView(PATSAPIMixin, ListView):
     start_date = None

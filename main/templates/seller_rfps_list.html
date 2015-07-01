@@ -47,7 +47,15 @@
             <td>{{ rfp.campaignName }}</td>
             <td>{{ rfp.strategy }}</td>
             <td>{{ rfp.requestedProducts }}</td>
-            <td>{{ rfp.attachments }}</td>
+            <td>
+                {% if rfp.attachments %}
+                <ul>
+                    {% for attachment in rfp.attachments %}
+                    <li>mimetype={{ attachment.mimeType }}, publicId={{ attachment.publicId }}, fileName={{ attachment.fileName }} <a href="{% url 'seller_rfps_attachment_download' agency_id=rfp.agencyPublicId rfp_id=rfp.rfpPublicId attachment_id=attachment.publicId %}">Download attachment</a></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+</td>
             <td>
                 <p><a class="btn btn-primary" href="{% url 'seller_rfps_proposals_list' rfp.rfpPublicId %}">Show proposals</a></p>
                 <p><a class="btn btn-default" href="{% url 'seller_rfps_proposals_create_raw' rfp.rfpPublicId %}">Send new proposal</a></p>
