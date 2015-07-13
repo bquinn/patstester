@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Buyer - Orders - View Order Status{% endblock %}
+
+{% block content %}
+    <h3>View Order Status - {{ order_id }} {% if version %}(version {{ version }}){% endif %}</h3>
+    <table class="table">
+      <tr>
+        <th>Status</th>
+        <td>{{ object.status }}</td>
+      </tr>
+      <tr>
+        <th>Order ID</th>
+        <td>{{ object.orderId }}</td>
+      </tr>
+      <tr>
+        <th>Version</th>
+        <td>{{ object.version }}</td>
+      </tr>
+    </table>
+{% endblock %}

@@ -353,7 +353,7 @@ class Buyer_OrderDetailView(PATSAPIMixin, DetailView):
         self.order_id = self.kwargs.get('order_id', None)
         order_detail_response = None
         try:
-            order_detail_response = buyer_api.view_order_detail(buyer_email=self.get_agency_user_id(), order_public_id=self.order_id)
+            order_detail_response = buyer_api.view_order_detail(user_id=self.get_agency_user_id(), order_id=self.order_id)
         except PATSException as error:
             messages.error(self.request, 'Couldn''t load order revision, bug in PATS API: %s' % error)
         return order_detail_response
@@ -361,6 +361,28 @@ class Buyer_OrderDetailView(PATSAPIMixin, DetailView):
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_OrderDetailView, self).get_context_data(*args, **kwargs)
         context_data['order_id'] = self.order_id
+        return context_data
+
+class Buyer_OrderStatusView(PATSAPIMixin, DetailView):
+    order_id = None
+
+    def get_object(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.order_id = self.kwargs.get('order_id', None)
+        self.campaign_id = self.kwargs.get('campaign_id', None)
+        self.version = self.kwargs.get('version', None)
+        order_status_response = None
+        try:
+            order_status_response = buyer_api.view_order_status(person_id=self.get_agency_person_id(), company_id=self.get_agency_company_id(), campaign_id=self.campaign_id, order_id=self.order_id, version=self.version)
+        except PATSException as error:
+            messages.error(self.request, 'Couldn\'t get order status: %s' % error)
+        return order_status_response
+        
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_OrderStatusView, self).get_context_data(*args, **kwargs)
+        context_data['order_id'] = self.order_id
+        context_data['campaign_id'] = self.campaign_id
+        context_data['version'] = self.version
         return context_data
 
 class Buyer_CreateCampaignView(PATSAPIMixin, FormView):
@@ -548,7 +570,7 @@ class Buyer_ListOrderRevisionsView(PATSAPIMixin, ListView):
         if not self.end_date:
             self.end_date = datetime.datetime.today().strftime("%Y-%m-%d")
         order_revisions_response = buyer_api.view_order_revisions(
-            buyer_email=self.get_agency_user_id(),
+            user_id=self.get_agency_user_id(),
             start_date=datetime.datetime.strptime(self.start_date, "%Y-%m-%d"),
             end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d")
         )
@@ -811,8 +833,8 @@ class Seller_OrderRespondView(PATSAPIMixin, FormView):
         except PATSException as error:
             messages.error(self.request, 'Respond to Order failed: %s' % error)
         else:
-            if result['status'] == u'SUCCESSFUL':
-                messages.success(self.request, 'Order sent successfully! ID %s, version %s' % (result[u'publicId'], result[u'version']))
+            if response['status'] == u'SUCCESSFUL':
+                messages.success(self.request, 'Order sent successfully! ID %s, version %s' % (result[u'publicId'], response[u'version']))
             else:
                 messages.error(self.request, 'Submit Order failed: %s' % error)
         return super(Seller_OrderRespondView, self).form_valid(form)
