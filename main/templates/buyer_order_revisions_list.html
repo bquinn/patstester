@@ -63,6 +63,7 @@
             <td>{{ order.campaignCurrency }}</td>
             <td>{{ order.campaignStartDate }}</td>
             <td>{{ order.campaignEndDate }}</td>
+            <td><a href="{% url 'buyer_order_status' campaign_id=order.campaignId order_id=order.orderId %}">View order status</a></td>
         </tr>
         {% endfor %}
     </table>
