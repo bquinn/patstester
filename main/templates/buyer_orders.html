@@ -2,6 +2,8 @@
 {% block title %}Buyer - Orders{% endblock %}
 
 {% block content %}
+    <h3><a href="{% url 'buyer_orders_create_with_campaign' %}">Send Order with Campaign</a></h3>
+    <p>Helper page that lets you create a campaign and immediately send up to two orders on that campaign, all with one form. It also inserts campaign dates, publisher ID/name and campaign ID so you won't have to edit the order payload(s).</p>
     <h3><a href="{% url 'buyer_orders_create_raw' %}">Send Order (raw payload)</a></h3>
     <p>Basic form to send an order. You must enter the payload as a raw JSON string.</p>
     <h3><a href="{% url 'buyer_orders_create' %}">Send Order</a></h3>

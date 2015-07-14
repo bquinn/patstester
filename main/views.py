@@ -1,5 +1,6 @@
 import datetime
 import json
+import re
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import render
@@ -13,7 +14,7 @@ from pats import PATSBuyer, PATSSeller, PATSException, CampaignDetails
 from .forms import (
     Buyer_CreateCampaignForm,
     Buyer_CreateRFPForm, Buyer_ReturnProposalForm,
-    Buyer_CreateOrderRawForm, Buyer_CreateOrderForm,
+    Buyer_CreateOrderRawForm, Buyer_CreateOrderForm, Buyer_CreateOrderWithCampaignForm,
     Seller_CreateProposalRawForm,
     Seller_OrderRespondForm, Seller_OrderReviseForm,
     ConfigurationForm
@@ -194,9 +195,16 @@ class PATSAPIMixin(object):
 class Buyer_GetPublishersView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
-        publishers_response = buyer_api.get_sellers(user_id=self.get_agency_user_id())
-        # publishers list is actually the "payload" component of the dict
-        return publishers_response['payload']
+        publishers_response = None
+        response = None
+        try:
+            publishers_response = buyer_api.get_sellers(user_id=self.get_agency_user_id())
+        except PATSException as error:
+            messages.error(self.request, "Get publishers failed. Error: %s Response: %s" % (error, publishers_response))
+        else:
+            response = publishers_response['payload']
+            # publishers list is actually the "payload" component of the dict
+        return response
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_GetPublishersView, self).get_context_data(*args, **kwargs)
@@ -536,6 +544,99 @@ class Buyer_CreateOrderRawView(PATSAPIMixin, FormView):
         context_data['agency_id'] = self.get_agency_id()
         return context_data
 
+class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView):
+    form_class = Buyer_CreateOrderWithCampaignForm
+    success_url = reverse_lazy('buyer_orders_create_with_campaign')
+
+    def get(self, *args, **kwargs):
+        self.clear_curl_history()
+        return super(Buyer_CreateOrderWithCampaignView, self).get(*args, **kwargs)
+
+    def get_initial(self):
+        return {
+            'agency_id': self.get_agency_id(),
+            'company_id': self.get_agency_company_id(),
+            'person_id': self.get_agency_person_id(),
+            'publisher_id': self.get_publisher_id()
+        }
+
+    def form_valid(self, form):
+        company_id = form.cleaned_data.get('company_id')
+        person_id = form.cleaned_data.get('person_id')
+        publisher_id = form.cleaned_data.get('publisher_id')
+        publisher_email = form.cleaned_data.get('publisher_email')
+        # because we use forms.DateField, the dates come through already formatted as datetime objects
+        campaign_start_date = form.cleaned_data.get('start_date')
+        campaign_end_date = form.cleaned_data.get('end_date')
+        external_campaign_id = form.cleaned_data.get('external_campaign_id')
+        try:
+            campaign_details = CampaignDetails(
+                organisation_id = form.cleaned_data['agency_id'],
+                company_id = company_id,
+                person_id = person_id,
+                campaign_name = form.cleaned_data['campaign_name'],
+                start_date = campaign_start_date,
+                end_date = campaign_end_date,
+                advertiser_code = form.cleaned_data['advertiser_code'],
+                print_campaign = form.cleaned_data['print_flag'],
+                print_campaign_budget = form.cleaned_data['print_budget'],
+                digital_campaign = form.cleaned_data['digital_flag'],
+                digital_campaign_budget = form.cleaned_data['digital_budget'],
+                campaign_budget = form.cleaned_data['campaign_budget'],
+                external_campaign_id = external_campaign_id
+            )
+        except PATSException as error:
+            messages.error(self.request, 'Create CampaignDetails object failed: %s' % error)
+        # convert the text string to a json object - best to check that the JSON is valid before 
+        original_payload_1 = form.cleaned_data.get('payload_1')
+        original_payload_2 = form.cleaned_data.get('payload_2')
+        # replace keyword strings
+        replaced_payload_1 = original_payload_1.replace("PUBLISHER_ID", publisher_id).replace("PUBLISHER_EMAIL", publisher_email).replace("CAMPAIGN_ID", external_campaign_id).replace("CAMPAIGN_START_DATE", campaign_start_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_END_DATE", campaign_end_date.strftime("%Y-%m-%d"))
+        if original_payload_2:
+            replaced_payload_2 = original_payload_2.replace("PUBLISHER_ID", publisher_id).replace("PUBLISHER_EMAIL", publisher_email).replace("CAMPAIGN_ID", external_campaign_id).replace("CAMPAIGN_START_DATE", campaign_start_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_END_DATE", campaign_end_date.strftime("%Y-%m-%d"))
+        try:
+            data_1 = json.loads(replaced_payload_1)
+        except ValueError as json_error:
+            messages.error(self.request, 'Problem with JSON payload 1: %s <br />Try using jsonlint.com to fix it!' % json_error)
+        else:
+            if original_payload_2:
+                try:
+                    data_2 = json.loads(replaced_payload_2)
+                except ValueError as json_error:
+                    messages.error(self.request, 'Problem with JSON payload 2: %s <br />Try using jsonlint.com to fix it!' % json_error)
+            # payload(s) is/are valid JSON, so try to create campaign and order
+            buyer_api = self.get_buyer_api_handle()
+            response = ''
+            try:
+                response = buyer_api.create_campaign(campaign_details)
+            except PATSException as error:
+                messages.error(self.request, 'Create Campaign failed: %s' % error)
+            else:
+                messages.success(self.request, 'Create Campaign succeeded: response is %s' % response)
+                result = ''
+                try:
+                    result = buyer_api.create_order_raw(company_id=company_id, person_id=person_id, data=data_1)
+                except PATSException as error:
+                    messages.error(self.request, 'Submit Order 1 failed: %s' % error)
+                else:
+                    if result['status'] != u'SUCCESSFUL':
+                        messages.error(self.request, 'Submit Order 1 failed: %s' % error)
+                    else:
+                        messages.success(self.request, 'Order 1 sent successfully! ID %s, version %s' % (result[u'publicId'], result[u'version']))
+                        if original_payload_2:
+                            try:
+                                result = buyer_api.create_order_raw(company_id=company_id, person_id=person_id, data=data_2)
+                            except PATSException as error:
+                                messages.error(self.request, 'Submit Order 2 failed: %s' % error)
+                            else:
+                                messages.success(self.request, 'Order 2 sent successfully! ID %s, version %s' % (result[u'publicId'], result[u'version']))
+        return super(Buyer_CreateOrderWithCampaignView, self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_CreateOrderWithCampaignView, self).get_context_data(*args, **kwargs)
+        context_data['agency_id'] = self.get_agency_id()
+        return context_data
+
 class Buyer_CreateOrderView(PATSAPIMixin, FormView):
     form_class = Buyer_CreateOrderForm
     success_url = reverse_lazy('buyer_orders_create')
@@ -833,10 +934,8 @@ class Seller_OrderRespondView(PATSAPIMixin, FormView):
         except PATSException as error:
             messages.error(self.request, 'Respond to Order failed: %s' % error)
         else:
-            if response['status'] == u'SUCCESSFUL':
-                messages.success(self.request, 'Order sent successfully! ID %s, version %s' % (result[u'publicId'], response[u'version']))
-            else:
-                messages.error(self.request, 'Submit Order failed: %s' % error)
+            # response is blank for successful responses
+            messages.success(self.request, 'Response sent successfully')
         return super(Seller_OrderRespondView, self).form_valid(form)
 
     def get_context_data(self, *args, **kwargs):

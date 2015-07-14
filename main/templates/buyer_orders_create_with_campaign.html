@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Buyer - Orders - Create Order with Campaign from payload{% endblock %}
+
+{% block content %}
+    <p>Specify a unique Campaign ID and Campaign Name, advertiser (try "AA" for Amex or "SLO" for Brit Rail), campaign dates, and paste a valid payload into the text box, to create a new campaign and send an order on it.</p>
+    <p>Use the second payload if you want to send a print and a digital order on the same campaign.</p>
+    <p>The following keywords in your payload will be replaced by the appropriate values:</p>
+    <ul>
+        <li>PUBLISHER_ID</li>
+        <li>PUBLISHER_EMAIL</li>
+        <li>CAMPAIGN_ID</li>
+        <li>CAMPAIGN_START_DATE</li>
+        <li>CAMPAIGN_END_DATE</li>
+    </ul>
+    <form action="{% url 'buyer_orders_create_with_campaign' %}" method="post" role="form">
+        {% csrf_token %}
+        {% bootstrap_form_errors form type='non_fields' %}
+        {% bootstrap_form form layout='horizontal' %}
+        {% buttons submit='Submit' reset="Cancel" %}{% endbuttons %}
+    </form>
+{% endblock %}
