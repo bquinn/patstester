@@ -13,7 +13,7 @@ from pats import PATSBuyer, PATSSeller, PATSException, CampaignDetails
 
 from .forms import (
     Buyer_CreateCampaignForm,
-    Buyer_CreateRFPForm, Buyer_ReturnProposalForm,
+    Buyer_CreateRFPForm, Buyer_ReturnProposalForm, Buyer_ReturnOrderRevisionForm,
     Buyer_CreateOrderRawForm, Buyer_CreateOrderForm, Buyer_CreateOrderWithCampaignForm,
     Seller_CreateProposalRawForm,
     Seller_OrderRespondForm, Seller_OrderReviseForm,
@@ -306,6 +306,48 @@ class Buyer_RFPSearchView(PATSAPIMixin, ListView):
         context_data['search_response_due_date'] = self.search_response_due_date
         context_data['search_status'] = self.search_status or ''
         return context_data
+
+class Buyer_ReturnOrderRevisionView(PATSAPIMixin, FormView):
+    form_class = Buyer_ReturnOrderRevisionForm
+    order_id = None
+
+    def get(self, *args, **kwargs):
+        self.clear_curl_history()
+        return super(Buyer_ReturnOrderRevisionView, self).get(*args, **kwargs)
+
+    def get_initial(self):
+        if 'order_id' in self.kwargs:
+            self.order_id = self.kwargs.get('order_id', None)
+        return {
+            'order_id': self.order_id,
+            'user_id': self.get_agency_user_id()
+        }
+
+    def form_valid(self, form):
+        buyer_api = self.get_buyer_api_handle()
+        self.order_id = form.cleaned_data['order_id']
+        order_major_version = form.cleaned_data['order_major_version']
+        order_minor_version = form.cleaned_data['order_minor_version']
+        user_id = form.cleaned_data['user_id']
+        seller_email = form.cleaned_data['seller_email']
+        comments = form.cleaned_data['comments']
+        due_date = form.cleaned_data['due_date']
+        response = ''
+        try:
+            response = buyer_api.return_order_revision(order_public_id=self.order_id, order_major_version=order_major_version, order_minor_version=order_minor_version, user_id=user_id, seller_email=seller_email, revision_due_date=due_date, comment=comments)
+        except PATSException as error:
+            messages.error(self.request, "Return order revision failed: %s" % error)
+        else:
+            messages.success(self.request, "Order revision returned successfully. Response: %s" % response)
+        return super(Buyer_ReturnOrderRevisionView, self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_ReturnOrderRevisionView, self).get_context_data(*args, **kwargs)
+        context_data['order_id'] = self.order_id or ''
+        return context_data
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_lazy('buyer_orders_revisions_return', kwargs={'order_id':self.order_id})
 
 class Buyer_ReturnProposalView(PATSAPIMixin, FormView):
     form_class = Buyer_ReturnProposalForm

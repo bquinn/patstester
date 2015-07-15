@@ -4,7 +4,8 @@
 {% block title %}Buyer - Orders - View Order Detail{% endblock %}
 
 {% block content %}
-    <h3>View Order Detail - {{ order_id }} (version {{ object.majorVersion }}.{{object.minorVersion}})</h3>
+    <h3>View Order (Revision) Detail - {{ order_id }} (version {{ object.majorVersion }}.{{object.minorVersion}})</h3>
+    <p><a class="btn btn-default" href="{% url 'buyer_orders_revisions_return' order_id=order_id %}">Return order revision</a></p>
     <table class="table">
       <tr>
         <th>Status</th>

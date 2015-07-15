@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Buyer - Order Revisions - Return Revision - {{ order_id }}{% endblock %}
+
+{% block content %}
+    <form action="{% url 'buyer_orders_revisions_return' order_id=order_id %}" method="post" role="form">
+        {% csrf_token %}
+        {% bootstrap_form_errors form type='non_fields' %}
+        {% bootstrap_form form layout='horizontal' %}
+        {% buttons submit='Submit' reset="Cancel" %}{% endbuttons %}
+    </form>
+{% endblock %}

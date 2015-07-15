@@ -3,7 +3,7 @@
 
 {% block content %}
     <h3>List order revisions</h3>
-    <form method="get" action="{% url 'buyer_order_revisions_list' %}">
+    <form method="get" action="{% url 'buyer_orders_revisions_list' %}">
     From date: <input type="date" name="start_date" value="{{start_date}}"/>
     To date: <input type="date" name="end_date" value="{{end_date}}"/>
     <input type="submit" value="Refresh list"/>
@@ -63,7 +63,10 @@
             <td>{{ order.campaignCurrency }}</td>
             <td>{{ order.campaignStartDate }}</td>
             <td>{{ order.campaignEndDate }}</td>
-            <td><a href="{% url 'buyer_order_status' campaign_id=order.campaignId order_id=order.orderId %}">View order status</a></td>
+            <td>
+                <a class="btn btn-default" href="{% url 'buyer_order_status' campaign_id=order.campaignId order_id=order.orderId %}">View order status</a>
+                <a class="btn btn-default" href="{% url 'buyer_orders_revisions_return' order_id=order.orderId %}">Return order revision</a>
+</td>
         </tr>
         {% endfor %}
     </table>
