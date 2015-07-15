@@ -643,7 +643,7 @@ class Buyer_CreateOrderView(PATSAPIMixin, FormView):
 
     def get(self, *args, **kwargs):
         self.clear_curl_history()
-        return super(Buyer_CreateOrderRawView, self).get(*args, **kwargs)
+        return super(Buyer_CreateOrderView, self).get(*args, **kwargs)
 
     def get_initial(self):
         return {}
