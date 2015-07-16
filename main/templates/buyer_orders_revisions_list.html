@@ -66,6 +66,7 @@
             <td>
                 <a class="btn btn-default" href="{% url 'buyer_order_status' campaign_id=order.campaignId order_id=order.orderId %}">View order status</a>
                 <a class="btn btn-default" href="{% url 'buyer_orders_revisions_return' order_id=order.orderId %}">Return order revision</a>
+                <a class="btn btn-default" href="{% url 'buyer_orders_requestrevision' order_id=order.orderId %}">Request order revision</a>
 </td>
         </tr>
         {% endfor %}
