@@ -87,7 +87,7 @@ class Buyer_CreateOrderWithCampaignForm(forms.Form):
     publisher_id = forms.CharField(label='Publisher ID', max_length=100)
     publisher_email = forms.CharField(label='Publisher (Recipient) Email', max_length=100)
     payload_1 = forms.CharField(label='Payload 1', max_length=999999, widget=forms.Textarea)
-    payload_2 = forms.CharField(label='Payload 2', max_length=999999, widget=forms.Textarea)
+    payload_2 = forms.CharField(label='Payload 2', max_length=999999, widget=forms.Textarea, required=False)
 
 class Seller_CreateProposalRawForm(forms.Form):
     rfp_id = forms.CharField(label='RFP ID', max_length=100)
