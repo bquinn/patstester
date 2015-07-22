@@ -1,3 +1,4 @@
+import base64
 import datetime
 import json
 import re
@@ -567,11 +568,20 @@ class Buyer_CreateRFPView(PATSAPIMixin, FormView):
         media_online = form.cleaned_data.get('media_online')
         strategy = form.cleaned_data.get('strategy')
         requested_products = form.cleaned_data.get('requested_products')
+        attachments = []
+        if self.request.FILES:
+            # take uploaded file and convert to JSON
+            file = self.request.FILES['attachment']
+            attachments = [ {
+                'fileName': file._name,
+                'mimeType': file.content_type,
+                'contents': base64.b64encode(file.read())
+            }]
         # convert the text string to a json object
         # take submitted values and call API - raw version
         result = ''
         try:
-            result = buyer_api.submit_rfp(sender_user_id=sender_user_id, campaign_public_id=campaign_public_id, budget_amount=budget_amount, start_date=start_date, end_date=end_date, respond_by_date=respond_by_date, comments=comments, publisher_id=publisher_id, publisher_emails=publisher_emails, media_print=media_print, media_online=media_online, strategy=strategy, requested_products=requested_products)
+            result = buyer_api.submit_rfp(sender_user_id=sender_user_id, campaign_public_id=campaign_public_id, budget_amount=budget_amount, start_date=start_date, end_date=end_date, respond_by_date=respond_by_date, comments=comments, publisher_id=publisher_id, publisher_emails=publisher_emails, media_print=media_print, media_online=media_online, strategy=strategy, requested_products=requested_products, attachments=attachments)
         except PATSException as error:
             messages.error(self.request, 'Submit RFP failed: %s' % error)
         else:
@@ -634,7 +644,7 @@ class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView):
     success_url = reverse_lazy('buyer_orders_create_with_campaign')
 
     def get(self, *args, **kwargs):
-        self.clear_curl_history()
+        # self.clear_curl_history()
         return super(Buyer_CreateOrderWithCampaignView, self).get(*args, **kwargs)
 
     def get_initial(self):

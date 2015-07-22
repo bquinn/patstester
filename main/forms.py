@@ -1,4 +1,11 @@
 from django import forms 
+from django.forms import widgets
+
+# hacky widget used by file upload forms below
+class BootstrapFileInput(widgets.ClearableFileInput):
+    def render(self, name, value, attrs=None):
+        html = super(BootstrapFileInput, self).render(name, value, attrs)
+        return '<span class="input-group"><span class="btn btn-default btn-file">Browse '+html+'</span>'+'<input name="text" type="text" class="form-control" readonly></span>'
 
 class Buyer_CreateCampaignForm(forms.Form):
     # aka "organisation ID"
@@ -30,6 +37,7 @@ class Buyer_CreateRFPForm(forms.Form):
     media_online = forms.BooleanField(label='Online (digital) component', required=False)
     strategy = forms.CharField(label='Strategy', max_length=100)
     requested_products = forms.CharField(label='Requested products', max_length=100, required=False)
+    attachment = forms.FileField(max_length=100, widget=BootstrapFileInput)
 
 class Buyer_ReturnProposalForm(forms.Form):
     proposal_id = forms.CharField(label='Proposal Public ID', max_length=50)
