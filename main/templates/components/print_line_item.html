@@ -1,0 +1,36 @@
+<tr>
+<td>{{ line.lineItemId }}</td>
+<td>{{ line.lineItemExternalId }}</td>
+<td>{{ line.lineNumber }}</td>
+<td>{{ line.packageType }}</td>
+<td>{{ line.groupName }}</td>
+{# "productName" in proposals, "name" in orders #}
+<td>{{ line.productName }}{{ line.name }}</td>
+{# "publication" in create order and on seller side, "publicationName" in view revision on buy side #}
+<td>{{ line.publication }} {{ line.publicationName }}</td>
+<td>{{ line.section }}</td>
+{# "subsection" in proposals, hidden in customColumns in orders #}
+<td>{{ line.subSection }}</td>
+<td>{{ line.size }}</td>
+<td>{{ line.buyCategory }}</td>
+{# "position" in proposals, "printPosition" in orders #}
+<td>{{ line.position }}{{ line.printPosition }}</td>
+<td>{{ line.color }}</td>
+<td>{{ line.buyType }}</td>
+<td>{{ line.costMethod }}</td>
+{# "units" in proposals, "unitAmount" in orders #}
+<td>{{ line.units }}{{ line.unitAmount }}</td>
+{# "rate" in proposals, "rate.amount" in orders #}
+<td>{{ line.rate }}{{ line.rate.amount }}</td>
+<td>{{ line.rate.currencyCode }}</td>
+<td>{{ line.unitType }}</td>
+{# "cost" in proposals, "cost.amount" in orders #}
+<td>{{ line.cost }}{{ line.cost.amount }}</td>
+<td>{{ line.cost.currencyCode }}</td>
+<td>{{ line.region }}</td>
+<td>{{ line.coverDate }}</td>
+<td>{{ line.comments }}</td>
+<td>{{ line.customColumns }}</td>
+<td>{{ line.subMediaType }}</td>
+<td>{{ line.productId }}</td>
+</tr>

@@ -67,59 +67,13 @@
         <td>
 {% if object.printLineItems %}
 <table class="table">
-<tr>
-<th>Line item ID</th>
-<th>Line number</th>
-<th>Package Type</th>
-<th>Group name</th>
-<th>Name</th>
-<th>Publication</th>
-<th>Section</th>
-<th>Size</th>
-<th>Buy Category</th>
-<th>Print Position</th>
-<th>Colour</th>
-<th>Buy type</th>
-<th>Cost method</th>
-<th>Unit amount</th>
-<th>Rate - amount</th>
-<th>Rate - currency</th>
-<th>Unit type</th>
-<th>Cost - amount</th>
-<th>Cost - currency</th>
-<th>Region</th>
-<th>Cover date</th>
-<th>Comments</th>
-<th>Custom columns</th>
-</tr>
+{% include 'components/print_line_item_header.html' %}
 {% for line in object.printLineItems %}
-<tr>
-<td>{{ line.lineItemId }}</td>
-<td>{{ line.lineNumber }}</td>
-<td>{{ line.packageType }}</td>
-<td>{{ line.groupName }}</td>
-<td>{{ line.name }}</td>
-<td>{{ line.publication }}</td>
-<td>{{ line.section }}</td>
-<td>{{ line.size }}</td>
-<td>{{ line.buyCategory }}</td>
-<td>{{ line.printPosition }}</td>
-<td>{{ line.color }}</td>
-<td>{{ line.buyType }}</td>
-<td>{{ line.costMethod }}</td>
-<td>{{ line.unitAmount }}</td>
-<td>{{ line.rate.amount }}</td>
-<td>{{ line.rate.currencyCode }}</td>
-<td>{{ line.unitType }}</td>
-<td>{{ line.cost.amount }}</td>
-<td>{{ line.cost.currencyCode }}</td>
-<td>{{ line.region }}</td>
-<td>{{ line.coverDate }}</td>
-<td>{{ line.comments }}</td>
-<td>{{ line.customColumns }}</td>
-</tr>
+{% include 'components/print_line_item.html' %}
 {% endfor %}
 </table>
+{% else %}
+None
 {% endif %}
 </td>
       </tr>
@@ -130,17 +84,16 @@
       <tr>
         <th>Digital line items</th>
         <td>
+{% if object.digitalLineItems %}
 <table class="table">
+{% include 'components/digital_line_item_header.html' %}
 {% for line in object.digitalLineItems %}
-<tr>
-<th>Line item ID</th> <th>Line number</th> <th>Package type</th> <th>Primary placement</th> <th>Group name</th> <th>Name</th> <th>Cost Method</th> <th>Site</th> <th>Custom columns</th> <th>Dimensions</th> <th>Flight start</th> <th>Flight end</th> <th>Section</th> <th>Dimensions position</th> <th>Buy type</th> <th>Buy category</th> <th>Target</th> <th>Unit amount</th> <th>Unit type</th> <th>Rate</th> <th>Cost</th> <th>Comments</th> <th>Served by</th> <th>Creative type</th> <th>Market value</th>
-</tr>
-<tr>
-<td>{{ line.lineItemId }}</td> <td>{{ line.lineNumber }}</td> <td>{{ line.packageType }}</td> <td>{{ line.primaryPlacement }}</td> <td>{{ line.groupName }}</td> <td>{{ line.name }}</td> <td>{{ line.costMethod }}</td> <td>{{ line.site }}</td> <td>{{ line.customColumns }}</td> <td>{{ line.dimensions }}</td> <td>{{ line.flightStart }}</td> <td>{{ line.flightEnd }}</td> <td>{{ line.section }}</td> <td>{{ line.dimensionsPosition }}</td> <td>{{ line.buyType }}</td> <td>{{ line.buyCategory }}</td> <td>{{ line.target }}</td> <td>{{ line.unitAmount }}</td> <td>{{ line.unitType }}</td> <td>{{ line.rate }}</td> <td>{{ line.cost }}</td> <td>{{ line.comments }}</td> <td>{{ line.servedBy }}</td> <td>{{ line.creativeType }}</td> <td>{{ line.marketValue }}</td>
-</tr>
-{% empty %}None
+{% include 'components/digital_line_item.html' %}
 {% endfor %}
 </table>
+{% else %}
+None
+{% endif %}
 </td>
       </tr>
       <tr>

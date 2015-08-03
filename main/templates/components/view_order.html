@@ -1,0 +1,103 @@
+    <table class="table">
+      <tr>
+        <th>Order ID</th>
+        <td>{{ order.orderId }}</td>
+      </tr>
+      <tr>
+        <th>Version</th>
+        <td>{{ order.version }}</td>
+      </tr>
+      <tr>
+        <th>Status</th>
+        <td>{{ order.status }}</td>
+      </tr>
+      <tr>
+        <th>Comment History</th>
+        <td>
+<table class="table">
+<tr>
+<th>Timestamp</th>
+<th>Version</th>
+<th>Status</th>
+<th>Full name</th>
+<th>Email</th>
+<th>Comment</th>
+<th>Documents</th>
+</tr>
+{% for comment in order.commentHistory %}
+<tr>
+<td>{{ comment.timestamp }}</td>
+<td>{{ comment.version }}</td>
+<td>{{ comment.status }}</td>
+<td>{{ comment.fullName }}</td>
+<td>{{ comment.email }}</td>
+<td>{{ comment.comment }}</td>
+<td>{{ comment.documents }}</td>
+</tr>
+{% endfor %}
+</table>
+</td>
+      </tr>
+      <tr>
+        <th>Agency Name</th>
+        <td>{{ order.agencyName }}</td>
+      </tr>
+      <tr>
+        <th>Campaign ID</th>
+        <td>{{ order.campaignId }}</td>
+      </tr>
+      <tr>
+        <th>Agency campaign ref no</th>
+        <td>{{ order.agencyCampaignReferenceNo }}</td>
+      </tr>
+      <tr>
+        <th>Campaign Name</th>
+        <td>{{ order.campaignName }}</td>
+      </tr>
+      <tr>
+        <th>Media type</th>
+        <td>{{ order.mediaType }}</td>
+      </tr>
+      <tr>
+        <th>Vendor Name</th>
+        <td>{{ order.vendorName }}</td>
+      </tr>
+      <tr>
+        <th>Client Name</th>
+        <td>{{ order.clientName }}</td>
+      </tr>
+      <tr>
+        <th>Terms and Conditions</th>
+        <td>{{ order.termsAndConditions }}</td>
+      </tr>
+      <tr>
+        <th>Print line items</th>
+        <td>
+{% if order.printLineItems %}
+<table class="table">
+{% include 'components/print_line_item_header.html' %}
+{% for line in order.printLineItems %}
+{% include 'components/print_line_item.html' with line=line %}
+{% endfor %}
+</table>
+{% else %}
+None
+{% endif %}
+</td>
+      </tr>
+      <tr>
+        <th>Digital line items</th>
+        <td>
+{% if order.digitalLineItems %}
+<table class="table">
+{% include 'components/digital_line_item_header.html' %}
+{% for line in order.digitalLineItems %}
+{% include 'components/digital_line_item.html' with line=line %}
+{% endfor %}
+</table>
+{% else %}
+None
+{% endif %}
+</td>
+       </tr>
+    </table>

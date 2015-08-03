@@ -3,29 +3,59 @@
 
 {% block content %}
     <table class="table">
-        <tr>
-            <th>Proposal Public ID</th>
-            <th>Proposal external ID</th>
-            <th>Proposal Version</th>
-            <th>Status</th>
-            <th>Comments</th>
-            <th>Print line items</th>
-            <th>Digital line items</th>
-            <th>Attachments</th>
-        </tr>
         {% for proposal in object_list %}
         <tr>
+            <th>Proposal Public ID</th>
             <td>{{ proposal.proposalPublicId }}</td>
+        </tr>
+        <tr>
+            <th>Proposal external ID</th>
             <td>{{ proposal.proposalExternalId }}</td>
+        </tr>
+        <tr>
+            <th>Proposal Version</th>
             <td>{{ proposal.proposalVersion }}</td>
+        </tr>
+        <tr>
+            <th>Status</th>
             <td>{{ proposal.status }}</td>
+        </tr>
+        <tr>
+            <th>Comments</th>
             <td>{{ proposal.comments }}</td>
-            <td>{% for lineitem in proposal.printLineItems %}
-                    {{ lineitem }}
-                {% endfor %}</td>
-            <td>{% for lineitem in proposal.digitalLineItems %}
-                    {{ lineitem }}
-                {% endfor %}</td>
+        </tr>
+        <tr>
+            <th>Print line items</th>
+            <td>
+{% if proposal.printLineItems %}
+    <table class="table">
+    {% include 'components/print_line_item_header.html' %}
+    {% for line in proposal.printLineItems %}
+        {% include 'components/print_line_item.html' with line=line %}
+    {% endfor %}
+    </table>
+{% else %}
+None.
+{% endif %}
+</td>
+        </tr>
+        <tr>
+            <th>Digital line items</th>
+            <td>
+{% if proposal.digitalLineItems %}
+    <table class="table">
+    {% include 'components/digital_line_item_header.html' %}
+    {% for line in proposal.digitalLineItems %}
+        {% include 'components/digital_line_item.html'  with line=line %}
+    {% endfor %}
+    </table>
+{% else %}
+None.
+{% endif %}
+</td>
+        </tr>
+        <tr>
+            <th>Attachments</th>
             <td>{{ proposal.attachments }}</td>
         </tr>
         {% empty %}

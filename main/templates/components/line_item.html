@@ -1,0 +1,56 @@
+{% if object.printLineItems %}
+<table class="table">
+<tr>
+<th>Line item ID</th>
+<th>Line number</th>
+<th>Package Type</th>
+<th>Group name</th>
+<th>Name</th>
+<th>Publication</th>
+<th>Section</th>
+<th>Size</th>
+<th>Buy Category</th>
+<th>Print Position</th>
+<th>Colour</th>
+<th>Buy type</th>
+<th>Cost method</th>
+<th>Unit amount</th>
+<th>Rate - amount</th>
+<th>Rate - currency</th>
+<th>Unit type</th>
+<th>Cost - amount</th>
+<th>Cost - currency</th>
+<th>Region</th>
+<th>Cover date</th>
+<th>Comments</th>
+<th>Custom columns</th>
+</tr>
+{% for line in object.printLineItems %}
+<tr>
+<td>{{ line.lineItemId }}</td>
+<td>{{ line.lineNumber }}</td>
+<td>{{ line.packageType }}</td>
+<td>{{ line.groupName }}</td>
+<td>{{ line.name }}</td>
+<td>{{ line.publication }}</td>
+<td>{{ line.section }}</td>
+<td>{{ line.size }}</td>
+<td>{{ line.buyCategory }}</td>
+<td>{{ line.printPosition }}</td>
+<td>{{ line.color }}</td>
+<td>{{ line.buyType }}</td>
+<td>{{ line.costMethod }}</td>
+<td>{{ line.unitAmount }}</td>
+<td>{{ line.rate.amount }}</td>
+<td>{{ line.rate.currencyCode }}</td>
+<td>{{ line.unitType }}</td>
+<td>{{ line.cost.amount }}</td>
+<td>{{ line.cost.currencyCode }}</td>
+<td>{{ line.region }}</td>
+<td>{{ line.coverDate }}</td>
+<td>{{ line.comments }}</td>
+<td>{{ line.customColumns }}</td>
+</tr>
+{% endfor %}
+</table>
+{% endif %}
