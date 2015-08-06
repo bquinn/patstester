@@ -844,7 +844,11 @@ class Seller_ListProposalsView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         seller_api = self.get_seller_api_handle()
         self.rfp_id = self.kwargs.get('rfp_id', None)
-        seller_proposals_response = seller_api.view_proposals(rfp_id=self.rfp_id)
+        seller_proposals_response = None
+        try:
+            seller_proposals_response = seller_api.view_proposals(rfp_id=self.rfp_id)
+        except PATSException as error:
+            messages.error(self.request, 'Server error (probably a bug, PATS-936): %s' % error)
         return seller_proposals_response
 
     def get_context_data(self, *args, **kwargs):
