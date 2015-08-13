@@ -95,6 +95,8 @@ CONFIG_DEFAULTS_DEFAULT = 'PATS Media'
 class PATSAPIMixin(object):
     pats_buyer = None
     pats_seller = None
+    debug_mode = True   # hardcoded for now
+    raw_mode = True     # hardcoded for now
 
     def get_agency_id(self):
         if 'agency_id' not in self.request.session:
@@ -156,14 +158,14 @@ class PATSAPIMixin(object):
         if not self.pats_buyer and 'api_handle_buyer' in self.request.session:
             self.pats_buyer = self.request.session['api_handle_buyer']
         else:
-            self.pats_buyer = PATSBuyer(agency_id=self.get_agency_id(), api_key=self.get_agency_api_key(), debug_mode=True, raw_mode=True, session=self.request.session)
+            self.pats_buyer = PATSBuyer(agency_id=self.get_agency_id(), api_key=self.get_agency_api_key(), debug_mode=self.debug_mode, raw_mode=self.raw_mode, session=self.request.session)
         return self.pats_buyer
 
     def get_seller_api_handle(self):
         if not self.pats_seller and 'api_handle_seller' in self.request.session:
             self.pats_seller = self.request.session['api_handle_seller']
         else:
-            self.pats_seller = PATSSeller(vendor_id=self.get_publisher_id(), api_key=self.get_publisher_api_key(), debug_mode=True, raw_mode=True, session=self.request.session)
+            self.pats_seller = PATSSeller(vendor_id=self.get_publisher_id(), api_key=self.get_publisher_api_key(), debug_mode=self.debug_mode, raw_mode=self.raw_mode, session=self.request.session)
         return self.pats_seller
 
     def get_defaults_key(self):
@@ -1153,4 +1155,3 @@ class ConfigurationView(PATSAPIMixin, FormView):
         context_data['config_defaults_list'] = CONFIG_DEFAULTS.keys()
         context_data['defaults_key'] = self.get_defaults_key()
         return context_data
-
