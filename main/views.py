@@ -603,7 +603,7 @@ class Buyer_CreateOrderRawView(PATSAPIMixin, FormView):
     success_url = reverse_lazy('buyer_orders_create_raw')
 
     def get(self, *args, **kwargs):
-        self.clear_curl_history()
+        # self.clear_curl_history()
         return super(Buyer_CreateOrderRawView, self).get(*args, **kwargs)
 
     def get_initial(self):
@@ -1091,7 +1091,7 @@ class Seller_OrderReviseView(PATSAPIMixin, FormView):
             # take submitted values and call API - raw version
             result = ''
             try:
-                result = seller_api.send_order_revision_raw(person_id=user_id, order_id=self.order_id, data=data)
+                result = seller_api.send_order_revision_raw(user_id=user_id, order_id=self.order_id, data=data)
             except PATSException as error:
                 messages.error(self.request, 'Submit Order Revision failed: %s' % error)
             else:
