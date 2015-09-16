@@ -990,6 +990,36 @@ class Seller_OrderFullHistoryView(PATSAPIMixin, ListView):
         context_data['order_id'] = self.order_id
         return context_data
 
+class Seller_OrderRevisionStatusView(PATSAPIMixin, DetailView):
+    order_id = None
+
+    def get_object(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.order_id = self.kwargs.get('order_id', None)
+        order_revision_status = seller_api.view_revision_status_summary(order_id=self.order_id)
+        return order_revision_status
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_OrderRevisionStatusView, self).get_context_data(*args, **kwargs)
+        context_data['order_id'] = self.order_id
+        return context_data
+
+class Seller_OrderRevisionStatusDetailView(PATSAPIMixin, DetailView):
+    order_id = None
+
+    def get_object(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.order_id = self.kwargs.get('order_id', None)
+        self.order_version = self.kwargs.get('version', None)
+        self.revision_version = self.kwargs.get('revision', None)
+        order_revision_detail = seller_api.view_revision_status_detail(order_id=self.order_id, order_version=self.order_version, revision_version=self.revision_version)
+        return order_revision_detail
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_OrderRevisionStatusDetailView, self).get_context_data(*args, **kwargs)
+        context_data['order_id'] = self.order_id
+        return context_data
+
 class Seller_OrderRespondView(PATSAPIMixin, FormView):
     order_id = None
     version = None

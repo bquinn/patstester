@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Seller - Order revision status - order {{ order_id }}{% endblock %} {% block content %}
+
+    {% for order in object_list %}
+<h3>Order {{ order.orderId }}, version {{ order.version }}:</h3>
+{% include 'components/view_order.html' with order=order %}
+    {% endfor %}
+
+{% endblock %}

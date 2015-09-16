@@ -5,6 +5,7 @@
 
 {% block content %}
     <a class="btn btn-default" href="{% url 'seller_orders_versions' order_id=order_id %}">View order history summary</a>
+    <a class="btn btn-default" href="{% url 'seller_orders_revisionstatus' order_id=order_id %}">View order revision status summary</a>
 
 {% include 'components/view_order.html' with order=object %}
 

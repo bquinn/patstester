@@ -13,6 +13,7 @@ from .views import (
     Seller_GetAgenciesView,
     Seller_ListRFPsView, Seller_ListProposalsView, Seller_CreateProposalRawView, Seller_DownloadRFPAttachmentView,
     Seller_ListOrdersView, Seller_OrderDetailView, Seller_OrderHistoryView, Seller_OrderFullHistoryView,
+    Seller_OrderRevisionStatusView, Seller_OrderRevisionStatusDetailView,
     Seller_OrderRespondView, Seller_OrderReviseView,
     ConfigurationView
 )
@@ -133,6 +134,12 @@ urlpatterns = [
     url(r'^seller/orders/(?P<order_id>[\w\-]+)/versions',
         Seller_OrderHistoryView.as_view(template_name='seller_orders_versions.html'),
         name='seller_orders_versions'),
+    url(r'^seller/orders/(?P<order_id>[\w\-]+)/revisionstatus/versions/(?P<version>[\d]+)/revisions/(?P<revision>[\d]+)',
+        Seller_OrderRevisionStatusDetailView.as_view(template_name='seller_orders_revisionstatus_detail.html'),
+        name='seller_orders_revisionstatus_detail'),
+    url(r'^seller/orders/(?P<order_id>[\w\-]+)/revisionstatus',
+        Seller_OrderRevisionStatusView.as_view(template_name='seller_orders_revisionstatus.html'),
+        name='seller_orders_revisionstatus'),
     url(r'^seller/orders/list',
         Seller_ListOrdersView.as_view(template_name='seller_orders_list.html'),
         name='seller_orders_list'),
