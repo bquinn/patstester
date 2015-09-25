@@ -204,7 +204,7 @@ class Buyer_GetPublishersView(PATSAPIMixin, ListView):
         try:
             publishers_response = buyer_api.get_sellers(user_id=self.get_agency_user_id())
         except PATSException as error:
-            messages.error(self.request, "Get publishers failed. Error: %s Response: %s" % (error, publishers_response))
+            messages.error(self.request, "Get publishers failed. Error: %s" % (error, publishers_response))
         else:
             response = publishers_response['payload']
             # publishers list is actually the "payload" component of the dict
@@ -219,7 +219,10 @@ class Buyer_GetPublisherUsersView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
         self.vendor_id = self.kwargs.get('publisher_id', None)
-        publisher_users_response = buyer_api.get_users_for_seller(user_id=self.get_agency_user_id(), vendor_id=self.vendor_id)
+        try:
+            publisher_users_response = buyer_api.get_users_for_seller(user_id=self.get_agency_user_id(), vendor_id=self.vendor_id)
+        except PATSException as error:
+            messages.error(self.request, "Get publisher users failed. Error: %s" % error)
         # publisher emails list is actually the "payload" component of the dict
         return publisher_users_response['payload']['emails']
 
@@ -238,7 +241,10 @@ class Buyer_GetAgenciesView(PATSAPIMixin, ListView):
         self.agency_id = self.request.GET.get('agency_id', self.kwargs.get('agency_id', self.get_agency_id()))
         self.search_name = self.request.GET.get('name', None)
         self.search_updated_date = self.request.GET.get('last_updated_date', None)
-        agencies_response = buyer_api.get_buyers(user_id=self.get_agency_user_id(), agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
+        try:
+            agencies_response = buyer_api.get_buyers(user_id=self.get_agency_user_id(), agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
+        except PATSException as error:
+            messages.error(self.request, "Get agencies failed. Error: %s" % error)
         return agencies_response['payload']
 
     def get_context_data(self, *args, **kwargs):
@@ -252,7 +258,10 @@ class Buyer_RFPDetailView(PATSAPIMixin, DetailView):
     def get_object(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
         self.rfp_id = self.kwargs.get('rfp_id', None)
-        rfp_detail_response = buyer_api.view_rfp_detail(sender_user_id=self.get_agency_user_id(), rfp_id=self.rfp_id)
+        try:
+            rfp_detail_response = buyer_api.view_rfp_detail(sender_user_id=self.get_agency_user_id(), rfp_id=self.rfp_id)
+        except PATSException as error:
+            messages.error(self.request, "Get RFP detail failed. Error: %s" % error)
         return rfp_detail_response
     
     def get_context_data(self, *args, **kwargs):
@@ -265,8 +274,11 @@ class Buyer_DownloadProposalAttachmentView(PATSAPIMixin, DetailView):
         buyer_api = self.get_buyer_api_handle()
         self.proposal_id = self.kwargs.get('proposal_id', None)
         self.attachment_id = self.kwargs.get('attachment_id', None)
-        rfp_detail_response = buyer_api.get_proposal_attachment(sender_user_id=self.get_agency_user_id(), proposal_id=self.proposal_id, attachment_id=self.attachment_id)
-        return rfp_detail_response
+        try:
+            proposal_attachment_response = buyer_api.get_proposal_attachment(sender_user_id=self.get_agency_user_id(), proposal_id=self.proposal_id, attachment_id=self.attachment_id)
+        except PATSException as error:
+            messages.error(self.request, "Get proposal attachment failed. Error: %s" % error)
+        return proposal_attachment_response
     
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_RFPDetailView, self).get_context_data(*args, **kwargs)
@@ -290,15 +302,18 @@ class Buyer_RFPSearchView(PATSAPIMixin, ListView):
         self.search_campaign_urn = self.request.GET.get('campaign_urn', None)
         self.search_response_due_date = self.request.GET.get('response_due_date', None)
         self.search_status = self.request.GET.get('status', None)
-        rfp_list = buyer_api.search_rfps(
-            user_id=self.get_agency_user_id(),
-            advertiser_name=self.search_advertiser_name,
-            rfp_start_date=self.search_rfp_start_date,
-            rfp_end_date=self.search_rfp_end_date,
-            campaign_urn=self.search_campaign_urn,
-            response_due_date=self.search_response_due_date,
-            status=self.search_status
-        )
+        try:
+            rfp_list = buyer_api.search_rfps(
+                user_id=self.get_agency_user_id(),
+                advertiser_name=self.search_advertiser_name,
+                rfp_start_date=self.search_rfp_start_date,
+                rfp_end_date=self.search_rfp_end_date,
+                campaign_urn=self.search_campaign_urn,
+                response_due_date=self.search_response_due_date,
+                status=self.search_status
+            )
+        except PATSException as error:
+            messages.error(self.request, "Search RFPs failed. Error: %s" % error)
         return rfp_list
 
     def get_context_data(self, *args, **kwargs):
@@ -342,7 +357,7 @@ class Buyer_RequestOrderRevisionView(PATSAPIMixin, FormView):
         except PATSException as error:
             messages.error(self.request, "Request order revision failed: %s" % error)
         else:
-            messages.success(self.request, "Order revision requested successfully. Response: %s" % response)
+            messages.success(self.request, "Order revision requested successfully." % response)
         return super(Buyer_RequestOrderRevisionView, self).form_valid(form)
 
     def get_context_data(self, *args, **kwargs):
@@ -384,7 +399,7 @@ class Buyer_ReturnOrderRevisionView(PATSAPIMixin, FormView):
         except PATSException as error:
             messages.error(self.request, "Return order revision failed: %s" % error)
         else:
-            messages.success(self.request, "Order revision returned successfully. Response: %s" % response)
+            messages.success(self.request, "Order revision returned successfully." % response)
         return super(Buyer_ReturnOrderRevisionView, self).form_valid(form)
 
     def get_context_data(self, *args, **kwargs):
@@ -435,7 +450,7 @@ class Buyer_ReturnProposalView(PATSAPIMixin, FormView):
         except PATSException as error:
             messages.error(self.request, "Return proposal failed: %s" % error)
         else:
-            messages.success(self.request, "Proposal returned successfully. Response: %s" % response)
+            messages.success(self.request, "Proposal returned successfully." % response)
         return super(Buyer_ReturnProposalView, self).form_valid(form)
 
     def get_success_url(self, *args, **kwargs):
@@ -767,11 +782,14 @@ class Buyer_ListOrderRevisionsView(PATSAPIMixin, ListView):
         self.end_date = self.request.GET.get('end_date', None)
         if not self.end_date:
             self.end_date = datetime.datetime.today().strftime("%Y-%m-%d")
-        order_revisions_response = buyer_api.view_order_revisions(
-            user_id=self.get_agency_user_id(),
-            start_date=datetime.datetime.strptime(self.start_date, "%Y-%m-%d"),
-            end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d")
-        )
+        try:
+            order_revisions_response = buyer_api.view_order_revisions(
+                user_id=self.get_agency_user_id(),
+                start_date=datetime.datetime.strptime(self.start_date, "%Y-%m-%d"),
+                end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d")
+            )
+        except PATSException as error:
+            messages.error(self.request, "List order revisions failed. Error: %s" % error)
         return order_revisions_response
 
     def get_context_data(self, *args, **kwargs):
@@ -784,7 +802,10 @@ class Buyer_ListProductsView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
         self.vendor_id = self.kwargs.get('publisher_id', None)
-        product_catalogue_response = buyer_api.list_products(vendor_id=self.vendor_id, user_id=self.get_agency_user_id())
+        try:
+            product_catalogue_response = buyer_api.list_products(vendor_id=self.vendor_id, user_id=self.get_agency_user_id())
+        except PATSException as error:
+            messages.error(self.request, "List products failed. Error: %s" % error)
         return product_catalogue_response['products']
 
     def get_context_data(self, *args, **kwargs):
@@ -806,7 +827,7 @@ class Seller_GetAgenciesView(PATSAPIMixin, ListView):
         try:
             agencies_response = seller_api.get_agency_by_id(user_id=self.get_agency_user_id(), agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
         except PATSException as error:
-            messages.error(self.request, "Get agencies failed. Error: %s, response %s" % (error, agencies_response))
+            messages.error(self.request, "Get agencies failed. Error: %s, response %s" % error)
         else:
             return agencies_response['payload']
 
@@ -830,10 +851,13 @@ class Seller_ListRFPsView(PATSAPIMixin, ListView):
         self.end_date = self.request.GET.get('end_date', None)
         if not self.end_date:
             self.end_date = datetime.datetime.today().strftime("%Y-%m-%d")
-        seller_rfps_response = seller_api.view_rfps(
-            start_date=datetime.datetime.strptime(self.start_date, "%Y-%m-%d"),
-            end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d")
-        )
+        try:
+            seller_rfps_response = seller_api.view_rfps(
+                start_date=datetime.datetime.strptime(self.start_date, "%Y-%m-%d"),
+                end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d")
+            )
+        except PATSException as error:
+            messages.error(self.request, "List RFPs failed. Error: %s" % error)
         return seller_rfps_response
 
     def get_context_data(self, *args, **kwargs):
@@ -909,7 +933,10 @@ class Seller_DownloadRFPAttachmentView(PATSAPIMixin, DetailView):
         self.agency_id = self.kwargs.get('agency_id', None)
         self.rfp_id = self.kwargs.get('rfp_id', None)
         self.attachment_id = self.kwargs.get('attachment_id', None)
-        attachment_response = seller_api.get_rfp_attachment(agency_id=self.agency_id, rfp_id=self.rfp_id, attachment_id=self.attachment_id)
+        try:
+            attachment_response = seller_api.get_rfp_attachment(agency_id=self.agency_id, rfp_id=self.rfp_id, attachment_id=self.attachment_id)
+        except PATSException as error:
+            messages.error(self.request, "Can't get attachment, error: %s" % error)
         return attachment_response
 
     def get_context_data(self, *args, **kwargs):
@@ -932,10 +959,13 @@ class Seller_ListOrdersView(PATSAPIMixin, ListView):
         self.end_date = self.request.GET.get('end_date', None)
         if not self.end_date:
             self.end_date = datetime.datetime.today().strftime("%Y-%m-%d")
-        order_revisions_response = seller_api.view_orders(
-            start_date=datetime.datetime.strptime(self.start_date, "%Y-%m-%d"),
-            end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d")
-        )
+        try:
+            order_revisions_response = seller_api.view_orders(
+                start_date=datetime.datetime.strptime(self.start_date, "%Y-%m-%d"),
+                end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d")
+            )
+        except PATSException as error:
+            messages.error(self.request, "Can't get order revisions, error: %s" % error)
         return order_revisions_response
 
     def get_context_data(self, *args, **kwargs):
@@ -953,7 +983,10 @@ class Seller_OrderDetailView(PATSAPIMixin, DetailView):
         self.order_id = self.kwargs.get('order_id', None)
         # version defaults to 0
         self.version = self.kwargs.get('version', 0)
-        order_detail_response = seller_api.view_order_detail(order_id=self.order_id, version=self.version)
+        try:
+            order_detail_response = seller_api.view_order_detail(order_id=self.order_id, version=self.version)
+        except PATSException as error:
+            messages.error(self.request, "Can't get order detail, error: %s" % error)
         return order_detail_response
         
     def get_context_data(self, *args, **kwargs):
@@ -968,7 +1001,10 @@ class Seller_OrderHistoryView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         seller_api = self.get_seller_api_handle()
         self.order_id = self.kwargs.get('order_id', None)
-        order_history_response = seller_api.view_order_history(order_id=self.order_id, full=False)
+        try:
+            order_history_response = seller_api.view_order_history(order_id=self.order_id, full=False)
+        except PATSException as error:
+            messages.error(self.request, "Can't get order history, error: %s" % error)
         return order_history_response
         
     def get_context_data(self, *args, **kwargs):
@@ -982,7 +1018,10 @@ class Seller_OrderFullHistoryView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         seller_api = self.get_seller_api_handle()
         self.order_id = self.kwargs.get('order_id', None)
-        order_history_response = seller_api.view_order_history(order_id=self.order_id, full=True)
+        try:
+            order_history_response = seller_api.view_order_history(order_id=self.order_id, full=True)
+        except PATSException as error:
+            messages.error(self.request, "Can't get order history, error: %s" % error)
         return order_history_response
         
     def get_context_data(self, *args, **kwargs):
@@ -996,7 +1035,10 @@ class Seller_OrderRevisionStatusView(PATSAPIMixin, DetailView):
     def get_object(self, **kwargs):
         seller_api = self.get_seller_api_handle()
         self.order_id = self.kwargs.get('order_id', None)
-        order_revision_status = seller_api.view_revision_status_summary(order_id=self.order_id)
+        try:
+            order_revision_status = seller_api.view_revision_status_summary(order_id=self.order_id)
+        except PATSException as error:
+            messages.error(self.request, "Can't get revision status, error: %s" % error)
         return order_revision_status
 
     def get_context_data(self, *args, **kwargs):
@@ -1012,7 +1054,11 @@ class Seller_OrderRevisionStatusDetailView(PATSAPIMixin, DetailView):
         self.order_id = self.kwargs.get('order_id', None)
         self.order_version = self.kwargs.get('version', None)
         self.revision_version = self.kwargs.get('revision', None)
-        order_revision_detail = seller_api.view_revision_status_detail(order_id=self.order_id, order_version=self.order_version, revision_version=self.revision_version)
+        order_revision_detail = None
+        try:
+            order_revision_detail = seller_api.view_revision_status_detail(order_id=self.order_id, order_version=self.order_version, revision_version=self.revision_version)
+        except PATSException as error:
+            messages.error(self.request, "Can't get revision detail, error: %s" % error)
         return order_revision_detail
 
     def get_context_data(self, *args, **kwargs):
@@ -1037,7 +1083,10 @@ class Seller_OrderRespondView(PATSAPIMixin, FormView):
             self.version = self.kwargs.get('version', 0)
             # get rid of minor version component in case it's there
             self.version = int(float(self.version))
-            order_detail_response = seller_api.view_order_detail(order_id=self.order_id, version=self.version)
+            try:
+                order_detail_response = seller_api.view_order_detail(order_id=self.order_id, version=self.version)
+            except PATSException as error:
+                messages.error(self.request, "Get order detail failed. Error: %s" % error)
             self.order_detail = order_detail_response
         return super(Seller_OrderRespondView, self).get(*args, **kwargs)
 
