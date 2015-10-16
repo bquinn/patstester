@@ -15,11 +15,9 @@
 <th>Buy type</th>
 <th>Cost method</th>
 <th>Unit amount</th>
-<th>Rate - amount</th>
-<th>Rate - currency</th>
+<th>Rate</th>
 <th>Unit type</th>
-<th>Cost - amount</th>
-<th>Cost - currency</th>
+<th>Cost</th>
 <th>Region</th>
 <th>Cover date</th>
 <th>Comments</th>
@@ -31,7 +29,7 @@
 <td>{{ line.lineNumber }}</td>
 <td>{{ line.packageType }}</td>
 <td>{{ line.groupName }}</td>
-<td>{{ line.name }}</td>
+<td>{{ line.lineItemName }}</td>
 <td>{{ line.publication }}</td>
 <td>{{ line.section }}</td>
 <td>{{ line.size }}</td>
@@ -41,11 +39,9 @@
 <td>{{ line.buyType }}</td>
 <td>{{ line.costMethod }}</td>
 <td>{{ line.unitAmount }}</td>
-<td>{{ line.rate.amount }}</td>
-<td>{{ line.rate.currencyCode }}</td>
+<td>{{ line.rate }}</td>
 <td>{{ line.unitType }}</td>
-<td>{{ line.cost.amount }}</td>
-<td>{{ line.cost.currencyCode }}</td>
+<td>{{ line.cost }}</td>
 <td>{{ line.region }}</td>
 <td>{{ line.coverDate }}</td>
 <td>{{ line.comments }}</td>

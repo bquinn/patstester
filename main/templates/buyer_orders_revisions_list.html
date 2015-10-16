@@ -23,7 +23,6 @@
             <th>Major Version</th>
             <th>Minor Version</th>
             <th>Order Cost</th>
-            <th>Order Currency code</th>
             <th>Due Date</th>
             <th>Author</th>
             <th>Comments</th>
@@ -50,8 +49,7 @@
             <td>{{ order.endDate }}</td>
             <td>{{ order.majorVersion }}</td>
             <td>{{ order.minorVersion }}</td>
-            <td>{{ order.cost.amount }}</td>
-            <td>{{ order.cost.currencyCode }}</td>
+            <td>{{ order.cost }}</td>
             <td>{{ order.dueDate }}</td>
             <td>{{ order.author }}</td>
             <td>{{ order.comments }}</td>

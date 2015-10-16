@@ -37,7 +37,7 @@
       </tr>
       <tr>
         <th>Currency</th>
-        <td>{{ object.currency }}</td>
+        <td>{{ object.orderCurrencyCode }}</td>
       </tr>
       <tr>
         <th>Print order summary</th>
@@ -51,7 +51,7 @@
                     <th>Revision number</th>
                 </tr>
                 <tr>
-                    <td>{% if object.printOrderSummary.cost.currencyCode == 'GBP' %}£{% else %}{{ object.printOrderSummary.cost.currencyCode }}{% endif %}{{ object.printOrderSummary.cost.amount}}</td>
+                    <td>{{ object.printOrderSummary.cost }}</td>
                     <td>{{ object.printOrderSummary.insertions }}</td>
                     <td>{{ object.printOrderSummary.version }}</td>
                     <td>{{ object.printOrderSummary.revisionNumber }}</td>
@@ -105,7 +105,7 @@ None
                     <th>Flight dates</th>
                 </tr>
                 <tr>
-                    <td>{% if object.digitalOrderSummary.cost.currencyCode == 'GBP' %}£{% else %}{{ object.digitalOrderSummary.cost.currencyCode }}{% endif %}{{ object.digitalOrderSummary.cost.amount}}</td>
+                    <td>{{ object.digitalOrderSummary.cost }}</td>
                     <td>{{ object.digitalOrderSummary.impressions }}</td>
                     <td>{{ object.digitalOrderSummary.clicks }}</td>
                     <td>{{ object.digitalOrderSummary.actions }}</td>

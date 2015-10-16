@@ -8,14 +8,14 @@
 <td>{{ line.packageName }}</td>
 <td>{{ line.primaryPlacement }}</td>
 <td>{{ line.groupName }}</td>
-{# "productName" in proposals - "placementName" in create order and create revision - "name" in view order: PATS-1003 #} <td>{{ line.name }} {{ line.productName }}</td>
+{# "productName" in proposals - "placementName" in create order and create revision - "lineItemName" in view order - "name" in view order/revision: PATS-1003 #} <td>{{ line.productName }} {{ line.lineItemName }} {{ line.name }}</td>
 <td>{{ line.costMethod }}</td>
 <td>{{ line.site }}</td>
 <td>{{ line.customColumns }}</td>
 <td>{{ line.flightStart }}</td>
 <td>{{ line.flightEnd }}</td>
 <td>{{ line.section }}</td>
-<td>{{ line.subSection }}</td>
+<td>{{ line.subsection }}</td>
 <td>{{ line.dimensions }} {{ line.dimensionsAndPosition }}</td>
 <td>{{ line.dimensionsPosition }} {{ line.dimensionsAndPosition }}</td>
 {# doesn't exist for proposals... #}
@@ -24,8 +24,9 @@
 <td>{{ line.target }}</td>
 <td>{{ line.units }}{{ line.unitAmount }}</td>
 <td>{{ line.unitType }}</td>
-<td>{{ line.rate.amount }}</td>
-<td>{{ line.cost.amount }}</td>
+<td>{{ line.rate }}</td>
+{# cost in some cases, plannedCost in others... #}
+<td>{{ line.cost }}{{ line.plannedCost }}</td>
 <td>{{ line.comments }}</td>
 <td>{{ line.servedBy }}</td>
 <td>{{ line.creativeType }}</td>
