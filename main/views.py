@@ -302,6 +302,7 @@ class Buyer_RFPSearchView(PATSAPIMixin, ListView):
         self.search_campaign_urn = self.request.GET.get('campaign_urn', None)
         self.search_response_due_date = self.request.GET.get('response_due_date', None)
         self.search_status = self.request.GET.get('status', None)
+        rfp_list = ''
         try:
             rfp_list = buyer_api.search_rfps(
                 user_id=self.get_agency_user_id(),
@@ -827,7 +828,7 @@ class Seller_GetAgenciesView(PATSAPIMixin, ListView):
         try:
             agencies_response = seller_api.get_agency_by_id(user_id=self.get_agency_user_id(), agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
         except PATSException as error:
-            messages.error(self.request, "Get agencies failed. Error: %s, response %s" % error)
+            messages.error(self.request, "Get agencies failed. Error: %s" % error)
         else:
             return agencies_response['payload']
 
@@ -933,6 +934,7 @@ class Seller_DownloadRFPAttachmentView(PATSAPIMixin, DetailView):
         self.agency_id = self.kwargs.get('agency_id', None)
         self.rfp_id = self.kwargs.get('rfp_id', None)
         self.attachment_id = self.kwargs.get('attachment_id', None)
+        attachment_response = ''
         try:
             attachment_response = seller_api.get_rfp_attachment(agency_id=self.agency_id, rfp_id=self.rfp_id, attachment_id=self.attachment_id)
         except PATSException as error:
