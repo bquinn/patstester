@@ -258,6 +258,7 @@ class Buyer_RFPDetailView(PATSAPIMixin, DetailView):
     def get_object(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
         self.rfp_id = self.kwargs.get('rfp_id', None)
+        rfp_detail_response = ''
         try:
             rfp_detail_response = buyer_api.view_rfp_detail(sender_user_id=self.get_agency_user_id(), rfp_id=self.rfp_id)
         except PATSException as error:
