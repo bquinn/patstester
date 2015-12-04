@@ -5,6 +5,12 @@
     <form method="get" action="{% url 'seller_rfps_list' %}">
     From date: <input type="date" name="start_date" value="{{start_date}}"/>
     To date: <input type="date" name="end_date" value="{{end_date}}"/>
+    Status:
+    <select name="status">
+        {% for status_choice in status_choices %}
+        <option {% if status == status_choice %}selected{% endif %}>{{ status_choice }}</option>
+        {% endfor %}
+    </select>
     <input type="submit" value="Refresh list"/>
     </form>
     <table class="table">

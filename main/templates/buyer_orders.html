@@ -8,8 +8,8 @@
     <p>Basic form to send an order. You must enter the payload as a raw JSON string.</p>
     <h3><a href="{% url 'buyer_orders_create' %}">Send Order</a></h3>
     <p>This will be where we have a fancier form to send an order, but it isn't finished yet.</p>
-    <h3>List Orders (not implemented)</h3>
-    <p>There isn't yet an API call to see all orders a buyer has sent.</p>
+    <h3><a href="{% url 'buyer_orders_list' %}">List Orders</a></h3>
+    <p>List all orders with any activity since a given date/time.</p>
     <h3><a href="{% url 'buyer_orders_revisions_list' %}">List Order Revisions</a></h3>
     <p>We can view order revisions sent back to us, which is a start. A buy-side system would have to constantly poll this API to check for new revisions.</p>
     <h3>View order detail</h3>

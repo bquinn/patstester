@@ -120,4 +120,5 @@ class ConfigurationForm(forms.Form):
     agency_company_id = forms.CharField(label='Agency Company ID', max_length=100)
     agency_person_id = forms.CharField(label='Agency Person ID', max_length=100)
     publisher_id = forms.CharField(label='Publisher ID', max_length=100)
+    publisher_user = forms.CharField(label='Publisher User Email', max_length=100)
     publisher_api_key = forms.CharField(label='Publisher API Key', max_length=100)
