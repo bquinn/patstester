@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Buyer - Orders - Order Detail: Order {{ order_id}} version {{ version }}{% endblock %}
+
+{% block content %}
+<h2>Order summary</h2>
+<div class="table-responsive">
+ <table class="table">
+  <tr><th>Order ID</th><td>{{ order_id }}</td></tr>
+  <tr><th>External ID</th><td>{{ object.externalId }}</td></tr>
+  <tr><th>Status</th><td> {{ object.status }} {% if object.revisionRequested %}(Revision requested){% endif %}</td></tr>
+  <tr><th>Media type</th><td>{{ object.mediaType }}</td></tr>
+  <tr><th>Summary</th><td>{{ object.actions }} actions, {{ object.clicks }} clicks, {{ object.impressions }} impressions, {{ object.insertions }} insertions</td></tr>
+  <tr><th>Agency ID</th><td>{{ object.agencyId }}</td></tr>
+  <tr><th>Buyer name</th><td> {{ object.buyer.firstName }} {{ object.buyer.lastName }} ({{ object.buyer.email }})</td></tr>
+  <tr><th>Advertiser name</th><td>{{ object.advertiserName }}</td></tr>
+  <tr><th>Total cost</th><td>{{ object.totalCost }} {{ object.currencyCode }}</td></tr>
+  <tr><th>Vendor ID</th><td>{{ object.vendorId }}</td></tr>
+  <tr><th>Vendor recipient</th></td><td>{% for email in object.recipientEmails %}{{ email }} {% endfor %}
+    {% if object.notifyEmails %} (Notify {%for email in object.notifyEmails %}{{email}} {%endfor%}){% endif %}</td></tr>
+  <tr><th>Comment</th><td>{{ object.comment }}</td></tr>
+  <tr><th>Additional info</th><td>{{ object.additionalInfo }}</td></tr>
+  <tr><th>Dates</th><td>{{ object.flightStartDate}} to {{ object.flightEndDate }} (respond by {{ object.respondByDate }})</td></tr>
+  <tr><th>Terms and conditions</th><td><b>{{object.termsAndConditions.name}}</b><br/>{{object.termsAndConditions.content}}</td></tr>
+  <tr><th>Last activity</th><td>{{ object.lastActivityTime }}</td></tr>
+  <tr><th>Events</th><td> {{ object.events }}</td></tr>
+ </table>
+<h2>Line items</h2>
+{% if object.printLineItems %}
+<table class="table">
+{% include 'components/print_line_item_header.html' %}
+{% for line in object.printLineItems %}
+{% include 'components/print_line_item.html' %}
+{% endfor %}
+</table>
+{% endif %}
+</div>
+{% if object.digitalLineItems %}
+<table class="table">
+{% include 'components/digital_line_item_header.html' %}
+{% for line in object.digitalRevisionLineItems %}
+{{ line }}
+{% include 'components/digital_line_item.html' %}
+{% endfor %}
+</table>
+{% endif %}
+{% endblock %}

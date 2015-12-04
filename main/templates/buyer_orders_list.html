@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Buyer - List Orders{% endblock %}
+
+{% block content %}
+    <p>
+        Note that this only shows major versions of orders, not revisions.
+    </p>
+    <form method="get" action="{% url 'buyer_orders_list' %}">
+    Since date: <input type="date" name="since_date" value="{{since_date}}"/>
+    <input type="submit" value="Refresh list"/>
+    </form>
+    <table class="table">
+        <tr>
+            <th>Order ID</th>
+            <th>Agency ID</th>
+            <th>Publisher ID</th>
+            <th>Campaign ID</th>
+            <th>Last activity</th>
+            <th>Major version</th>
+            <th>Order version status</th>
+            <th>Revision requested?</th>
+            <th>Actions</th>
+        </tr>
+        {% for order in object_list %}
+        <tr>
+            <td>{{ order.id }}</a></td>
+            <td>{{ order.agencyId }}</td>
+            <td>{{ order.vendorId }}</td>
+            <td>{{ order.campaignId }}</td>
+            <td>{{ order.lastActivityTime }}</td>
+            <td>{{ order.majorVersion }}</td>
+            <td>{{ order.orderVersionStatus }}</td>
+            <td>{{ order.revisionrequested }}</td>
+            <td>
+[ View order versions ]<br/>
+[ View latest version ]
+                </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
