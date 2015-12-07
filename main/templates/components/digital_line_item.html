@@ -1,40 +1,28 @@
 <tr>
 <td>{{ line.id }}</td>
-{# "id" in revisions #}
-<td>{{ line.lineItemExternalId }} {{ line.id }}</td>
-{# line number missing in proposals - PATS-1004 #}
+<td>{{ line.externalId }}</td>
 <td>{{ line.lineNumber }}</td>
 <td>{{ line.packageType }}</td>
-<td>{{ line.packageName }}</td>
+<td>{{ line.packageName }}{{ line.groupName }}</td>
 <td>{{ line.primaryPlacement }}</td>
-<td>{{ line.groupName }}</td>
-{# "productName" in proposals - "placementName" in create order and create revision - "lineItemName" in view order - "name" in view order/revision: PATS-1003 #} <td>{{ line.productName }} {{ line.lineItemName }} {{ line.name }}</td>
+<td>{{ line.name }}</td>
 <td>{{ line.costMethod }}</td>
-<td>{{ line.site }}</td>
-<td>{{ line.customColumns }}</td>
-<td>{{ line.flightStart }}</td>
-<td>{{ line.flightEnd }}</td>
+<td>{{ line.mediaProperty }}</td>
+<td>{{ line.flightStartDate }}</td>
+<td>{{ line.flightEndDate }}</td>
 <td>{{ line.section }}</td>
 <td>{{ line.subsection }}</td>
-<td>{{ line.dimensions }} {{ line.dimensionsAndPosition }}</td>
-<td>{{ line.dimensionsPosition }} {{ line.dimensionsAndPosition }}</td>
-{# doesn't exist for proposals... #}
+<td>{{ line.dimensions }}</td>
+<td>{{ line.position }}</td>
 <td>{{ line.buyType }}</td>
 <td>{{ line.buyCategory }}</td>
 <td>{{ line.target }}</td>
-<td>{{ line.units }}{{ line.unitAmount }}</td>
+<td>{{ line.units }}</td>
 <td>{{ line.unitType }}</td>
 <td>{{ line.rate }}</td>
-{# cost in some cases, plannedCost in others... #}
-<td>{{ line.cost }}{{ line.plannedCost }}</td>
+<td>{{ line.cost }}</td>
 <td>{{ line.comments }}</td>
 <td>{{ line.servedBy }}</td>
 <td>{{ line.creativeType }}</td>
-<td>{{ line.marketValue }}</td>
-<td>{{ line.maxAnimationTiming }}</td>
-<td>{{ line.shareOfVoice }}</td>
-<td>{{ line.inventoryType }}</td>
-<td>{{ line.placementUrl }}</td>
-<td>{{ line.subMediaType }}</td>
-<td>{{ line.productId }} {{ line.productPublicId }} {{ line.publisherProductExtId }}</td>
+<td>{{ line.productId }}</td>
 </tr>

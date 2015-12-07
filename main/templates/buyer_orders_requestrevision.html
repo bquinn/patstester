@@ -5,7 +5,7 @@
 
 {% block content %}
     <p>For when you as the buyer want to request that the seller revises an order for you.</p>
-    <form action="{% url 'buyer_orders_requestrevision' order_id=order_id %}" method="post" role="form">
+    <form action="{% url 'buyer_orders_requestrevision' campaign_id=campaign_id order_id=order_id version=version %}" method="post" role="form">
         {% csrf_token %}
         {% bootstrap_form_errors form type='non_fields' %}
         {% bootstrap_form form layout='horizontal' %}

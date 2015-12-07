@@ -7,7 +7,7 @@ class BootstrapFileInput(widgets.ClearableFileInput):
         html = super(BootstrapFileInput, self).render(name, value, attrs)
         return '<span class="input-group"><span class="btn btn-default btn-file">Browse '+html+'</span>'+'<input name="text" type="text" class="form-control" readonly></span>'
 
-class Buyer_CreateCampaignForm(forms.Form):
+class Buyer_CampaignForm(forms.Form):
     # aka "organisation ID"
     agency_id = forms.CharField(label='Buyer Agency ID', max_length=100)
     company_id = forms.CharField(label='Buyer Company ID', max_length=100)
@@ -49,8 +49,6 @@ class Buyer_ReturnProposalForm(forms.Form):
 
 class Buyer_RequestOrderRevisionForm(forms.Form):
     order_id = forms.CharField(label='Order Public ID', max_length=50)
-    order_major_version = forms.CharField(label='Order major version', max_length=5)
-    order_minor_version = forms.CharField(label='Order minor version', max_length=5)
     user_id = forms.CharField(label='Sender User ID', max_length=50)
     seller_email = forms.CharField(label='Seller Email', max_length=50)
     due_date = forms.DateField(label='Response due date', widget=forms.DateInput(attrs={'type':'date'}))
@@ -78,7 +76,7 @@ class Buyer_CreateOrderRawForm(forms.Form):
     person_id = forms.CharField(label='Buyer Person ID', max_length=100)
     payload = forms.CharField(label='Payload', max_length=999999, widget=forms.Textarea)
 
-class Buyer_CreateOrderWithCampaignForm(forms.Form):
+class Buyer_CreateOrderWithCampaignForm(forms.ModelForm):
     agency_id = forms.CharField(label='Buyer Agency ID', max_length=100)
     company_id = forms.CharField(label='Buyer Company ID', max_length=100)
     person_id = forms.CharField(label='Buyer Person ID', max_length=100)

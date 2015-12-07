@@ -32,8 +32,9 @@
             <td>{{ order.orderVersionStatus }}</td>
             <td>{{ order.revisionrequested }}</td>
             <td>
-[ View order versions ]<br/>
-[ View latest version ]
+<a href="{% url 'buyer_order_versions_list' campaign_id=order.campaignId order_id=order.id %}" class="btn btn-default">View order versions</a><br/>
+<a href="{% url 'buyer_order_version_view' campaign_id=order.campaignId order_id=order.id version=order.majorVersion%}" class="btn btn-default">View latest version</a><br/>
+<a href="{% url 'buyer_orders_requestrevision' campaign_id=order.campaignId order_id=order.id version=order.majorVersion %}" class="btn btn-default">Request order revision</a><br/>
                 </td>
         </tr>
         {% endfor %}

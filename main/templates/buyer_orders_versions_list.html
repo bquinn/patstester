@@ -15,7 +15,7 @@
             <td>{{ order_version.majorVersion }}</td>
             <td>{{ order_version.status }}</td>
             <td>
-<a href="{% url 'buyer_order_versions_view' campaign_id=campaign_id order_id=order_id version=order_version.majorVersion %}" class="btn btn-primary">View this version</a>
+<a href="{% url 'buyer_order_version_view' campaign_id=campaign_id order_id=order_id version=order_version.majorVersion %}" class="btn btn-primary">View this version</a>
                 </td>
         </tr>
         {% endfor %}

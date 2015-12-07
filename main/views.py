@@ -2,18 +2,19 @@ import base64
 import datetime
 import json
 import re
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import render
 from django.views.generic.list import ListView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, UpdateView
 from django.views.generic.detail import DetailView
 from django.views.generic import TemplateView
 
 from pats import PATSBuyer, PATSSeller, PATSException, CampaignDetails
 
 from .forms import (
-    Buyer_CreateCampaignForm,
+    Buyer_CampaignForm,
     Buyer_CreateRFPForm, Buyer_ReturnProposalForm,
     Buyer_ReturnOrderRevisionForm, Buyer_RequestOrderRevisionForm,
     Buyer_CreateOrderRawForm, Buyer_CreateOrderForm, Buyer_CreateOrderWithCampaignForm,
@@ -286,6 +287,59 @@ class Buyer_RFPDetailView(PATSAPIMixin, DetailView):
         context_data['rfp_id'] = self.rfp_id
         return context_data
 
+class Buyer_ViewOrderAttachmentView(PATSAPIMixin, DetailView):
+    def get_object(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.campaign_id = self.kwargs.get('campaign_id', None)
+        self.order_id = self.kwargs.get('order_id', None)
+        self.attachment_id = self.kwargs.get('attachment_id', None)
+        order_attachment_response = ''
+        try:
+            order_attachment_response = buyer_api.get_order_attachment(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id, attachment_id=self.attachment_id)
+        except PATSException as error:
+            messages.error(self.request, "Get order attachment failed. Error: %s" % error)
+        return order_attachment_response
+    
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_ViewOrderAttachmentView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id
+        context_data['order_id'] = self.order_id
+        context_data['attachment_id'] = self.attachment_id
+        return context_data
+
+class Buyer_DownloadOrderAttachmentView(PATSAPIMixin, DetailView):
+    def get(self, *args, **kwargs):
+        old_response = super(Buyer_DownloadOrderAttachmentView, self).get(*args, **kwargs)
+        # file_contents = self.order_attachment['contents']
+        file_contents = base64.b64decode(self.order_attachment['contents'])
+        http_response = HttpResponse(content_type=self.order_attachment['mimeType'])
+        # the "attachment" version pops up a "do you wish to download?" window
+        # http_response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        http_response['Content-Disposition'] = 'filename="somefilename.pdf"'
+        # http_response['Content-Length'] = len(file_contents)
+        http_response.write(file_contents)
+        return http_response
+
+    def get_object(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.campaign_id = self.kwargs.get('campaign_id', None)
+        self.order_id = self.kwargs.get('order_id', None)
+        self.attachment_id = self.kwargs.get('attachment_id', None)
+        order_attachment_response = ''
+        try:
+            order_attachment_response = buyer_api.get_order_attachment(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id, attachment_id=self.attachment_id)
+            self.order_attachment = order_attachment_response
+        except PATSException as error:
+            messages.error(self.request, "Get order attachment failed. Error: %s" % error)
+        return order_attachment_response
+    
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_DownloadOrderAttachmentView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id
+        context_data['order_id'] = self.order_id
+        context_data['attachment_id'] = self.attachment_id
+        return context_data
+
 class Buyer_DownloadProposalAttachmentView(PATSAPIMixin, DetailView):
     def get_object(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
@@ -353,25 +407,33 @@ class Buyer_RequestOrderRevisionView(PATSAPIMixin, FormView):
         return super(Buyer_RequestOrderRevisionView, self).get(*args, **kwargs)
 
     def get_initial(self):
+        if 'version' in self.kwargs:
+            self.version = self.kwargs.get('version', None)
+        if 'campaign_id' in self.kwargs:
+            self.campaign_id = self.kwargs.get('campaign_id', None)
         if 'order_id' in self.kwargs:
             self.order_id = self.kwargs.get('order_id', None)
         return {
+            'version': self.version,
+            'campaign_id': self.campaign_id,
             'order_id': self.order_id,
-            'user_id': self.get_agency_user_id()
+            'user_id': self.get_agency_user_id(),
+            'seller_email': self.get_publisher_user()
         }
 
     def form_valid(self, form):
         buyer_api = self.get_buyer_api_handle()
         self.order_id = form.cleaned_data['order_id']
-        order_major_version = form.cleaned_data['order_major_version']
-        order_minor_version = form.cleaned_data['order_minor_version']
         user_id = form.cleaned_data['user_id']
         seller_email = form.cleaned_data['seller_email']
         comments = form.cleaned_data['comments']
         due_date = form.cleaned_data['due_date']
+        campaign_id = None
+        if 'campaign_id' in self.kwargs:
+            campaign_id = self.kwargs['campaign_id']
         response = ''
         try:
-            response = buyer_api.request_order_revision(order_public_id=self.order_id, order_major_version=order_major_version, order_minor_version=order_minor_version, user_id=user_id, seller_email=seller_email, revision_due_date=due_date, comment=comments)
+            response = buyer_api.request_order_revision(campaign_id=campaign_id, order_id=self.order_id, version=self.version, user_id=user_id, seller_email=seller_email, revision_due_date=due_date, comment=comments)
         except PATSException as error:
             messages.error(self.request, "Request order revision failed: %s" % error)
         else:
@@ -380,11 +442,13 @@ class Buyer_RequestOrderRevisionView(PATSAPIMixin, FormView):
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_RequestOrderRevisionView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id or ''
         context_data['order_id'] = self.order_id or ''
+        context_data['version'] = self.version or ''
         return context_data
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_lazy('buyer_orders_requestrevision', kwargs={'order_id':self.order_id})
+        return reverse_lazy('buyer_orders_requestrevision', kwargs={'campaign_id':self.campaign_id,'order_id':self.order_id,'version':self.version})
 
 class Buyer_ReturnOrderRevisionView(PATSAPIMixin, FormView):
     form_class = Buyer_ReturnOrderRevisionForm
@@ -395,9 +459,16 @@ class Buyer_ReturnOrderRevisionView(PATSAPIMixin, FormView):
         return super(Buyer_ReturnOrderRevisionView, self).get(*args, **kwargs)
 
     def get_initial(self):
+        if 'campaign_id' in self.kwargs:
+            self.campaign_id = self.kwargs.get('campaign_id', None)
         if 'order_id' in self.kwargs:
             self.order_id = self.kwargs.get('order_id', None)
+        if 'version' in self.kwargs:
+            self.version = self.kwargs.get('version', None)
+        if 'revision' in self.kwargs:
+            self.revision = self.kwargs.get('revision', None)
         return {
+            'campaign_id': self.campaign_id,
             'order_id': self.order_id,
             'user_id': self.get_agency_user_id()
         }
@@ -422,7 +493,10 @@ class Buyer_ReturnOrderRevisionView(PATSAPIMixin, FormView):
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_ReturnOrderRevisionView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id or ''
         context_data['order_id'] = self.order_id or ''
+        context_data['version'] = self.version or ''
+        context_data['revision'] = self.revision or ''
         return context_data
 
     def get_success_url(self, *args, **kwargs):
@@ -507,7 +581,7 @@ class Buyer_OrderVersionDetailView(PATSAPIMixin, DetailView):
         try:
             order_detail_response = buyer_api.view_order_version_detail(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id, order_version=self.version)
         except PATSException as error:
-            messages.error(self.request, 'Couldn''t load order revision: %s' % error)
+            messages.error(self.request, 'Couldn''t load order version: %s' % error)
         return order_detail_response
         
     def get_context_data(self, *args, **kwargs):
@@ -540,7 +614,7 @@ class Buyer_OrderStatusView(PATSAPIMixin, DetailView):
         return context_data
 
 class Buyer_CreateCampaignView(PATSAPIMixin, FormView):
-    form_class = Buyer_CreateCampaignForm
+    form_class = Buyer_CampaignForm
     success_url = reverse_lazy('buyer_campaigns_create')
 
     def get(self, *args, **kwargs):
@@ -590,7 +664,7 @@ class Buyer_CampaignDetailView(PATSAPIMixin, DetailView):
         self.campaign_id = self.kwargs.get('campaign_id', None)
         campaign_detail_response = None
         try:
-            campaign_detail_response = buyer_api.view_campaign_detail(sender_user_id=self.get_agency_user_id(), campaign_public_id=self.campaign_id)
+            campaign_detail_response = buyer_api.view_campaign_detail(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id)
         except PATSException as error:
             messages.error(self.request, 'Couldn''t load campaign: %s' % error)
         return campaign_detail_response
@@ -599,6 +673,29 @@ class Buyer_CampaignDetailView(PATSAPIMixin, DetailView):
         context_data = super(Buyer_CampaignDetailView, self).get_context_data(*args, **kwargs)
         context_data['campaign_id'] = self.campaign_id
         return context_data
+
+class Buyer_UpdateCampaignDetailView(PATSAPIMixin, UpdateView):
+    campaign_id = None
+    form_class = Buyer_CampaignForm
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_lazy('buyer_campaigns_create', kwargs={'campaign_id':self.campaign_id})
+
+    def get_object(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.campaign_id = self.kwargs.get('campaign_id', None)
+        campaign_detail_response = None
+        try:
+            campaign_detail_response = buyer_api.view_campaign_detail(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id)
+        except PATSException as error:
+            messages.error(self.request, 'Couldn''t load campaign: %s' % error)
+        return campaign_detail_response
+        
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_CampaignDetailView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id
+        return context_data
+
 
 class Buyer_CreateRFPView(PATSAPIMixin, FormView):
     form_class = Buyer_CreateRFPForm
@@ -819,7 +916,7 @@ class Buyer_ListOrdersView(PATSAPIMixin, ListView):
         buyer_api = self.get_buyer_api_handle()
         self.since_date = self.request.GET.get('since_date', None)
         if not self.since_date:
-            one_month_ago = datetime.datetime.today()-datetime.timedelta(30)
+            one_month_ago = datetime.datetime.today()-datetime.timedelta(7)
             self.since_date = one_month_ago.strftime("%Y-%m-%d")
         list_orders_response = None
         try:
@@ -837,25 +934,21 @@ class Buyer_ListOrdersView(PATSAPIMixin, ListView):
         return context_data
 
 class Buyer_ListOrderRevisionsView(PATSAPIMixin, ListView):
-    start_date = None
-    end_date = None
-
+    # Pre 2015.8, this would list *all* outstanding revisions.
+    # Now it only lists revisions for a given order.
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
-        vendor_id = self.kwargs.get('publisher_id', None)
-        self.start_date = self.request.GET.get('start_date', None)
-        if not self.start_date:
-            one_month_ago = datetime.datetime.today()-datetime.timedelta(30)
-            self.start_date = one_month_ago.strftime("%Y-%m-%d")
-        self.end_date = self.request.GET.get('end_date', None)
+        self.campaign_id = self.kwargs.get('campaign_id', None)
+        self.order_id = self.kwargs.get('order_id', None)
+        self.version = self.kwargs.get('version', None)
+        user_id = self.get_agency_user_id()
         order_revisions_response = None
-        if not self.end_date:
-            self.end_date = datetime.datetime.today().strftime("%Y-%m-%d")
         try:
             order_revisions_response = buyer_api.view_order_revisions(
-                user_id=self.get_agency_user_id(),
-                start_date=datetime.datetime.strptime(self.start_date, "%Y-%m-%d"),
-                end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d")
+                user_id=user_id,
+                campaign_id=self.campaign_id,
+                order_id=self.order_id,
+                version=self.version
             )
         except PATSException as error:
             messages.error(self.request, "List order revisions failed. Error: %s" % error)
@@ -863,8 +956,33 @@ class Buyer_ListOrderRevisionsView(PATSAPIMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_ListOrderRevisionsView, self).get_context_data(*args, **kwargs)
-        context_data['start_date'] = self.start_date
-        context_data['end_date'] = self.end_date
+        context_data['campaign_id'] = self.campaign_id
+        context_data['order_id'] = self.order_id
+        context_data['version'] = self.version
+        return context_data
+
+class Buyer_OrderRevisionDetailView(PATSAPIMixin, DetailView):
+    order_id = None
+
+    def get_object(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.campaign_id = self.kwargs.get('campaign_id', None)
+        self.order_id = self.kwargs.get('order_id', None)
+        self.version = self.kwargs.get('version', None)
+        self.revision = self.kwargs.get('revision', None)
+        order_detail_response = None
+        try:
+            order_detail_response = buyer_api.view_order_revision_detail(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id, order_version=self.version, order_revision=self.revision)
+        except PATSException as error:
+            messages.error(self.request, 'Couldn''t load order revision: %s' % error)
+        return order_detail_response
+        
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_OrderRevisionDetailView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id
+        context_data['order_id'] = self.order_id
+        context_data['version'] = self.version
+        context_data['revision'] = self.revision
         return context_data
 
 class Buyer_ListProductsView(PATSAPIMixin, ListView):
