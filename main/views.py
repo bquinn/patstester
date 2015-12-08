@@ -455,7 +455,7 @@ class Buyer_ReturnOrderRevisionView(PATSAPIMixin, FormView):
     order_id = None
 
     def get(self, *args, **kwargs):
-        self.clear_curl_history()
+        # self.clear_curl_history()
         return super(Buyer_ReturnOrderRevisionView, self).get(*args, **kwargs)
 
     def get_initial(self):
@@ -468,23 +468,18 @@ class Buyer_ReturnOrderRevisionView(PATSAPIMixin, FormView):
         if 'revision' in self.kwargs:
             self.revision = self.kwargs.get('revision', None)
         return {
-            'campaign_id': self.campaign_id,
-            'order_id': self.order_id,
-            'user_id': self.get_agency_user_id()
+            'seller_email': self.get_publisher_user()
         }
 
     def form_valid(self, form):
         buyer_api = self.get_buyer_api_handle()
-        self.order_id = form.cleaned_data['order_id']
-        order_major_version = form.cleaned_data['order_major_version']
-        order_minor_version = form.cleaned_data['order_minor_version']
-        user_id = form.cleaned_data['user_id']
         seller_email = form.cleaned_data['seller_email']
         comments = form.cleaned_data['comments']
         due_date = form.cleaned_data['due_date']
+        user_id = self.get_agency_user_id()
         response = ''
         try:
-            response = buyer_api.return_order_revision(order_public_id=self.order_id, order_major_version=order_major_version, order_minor_version=order_minor_version, user_id=user_id, seller_email=seller_email, revision_due_date=due_date, comment=comments)
+            response = buyer_api.return_order_revision(user_id=user_id, campaign_id=self.campaign_id, order_id=self.order_id, version=self.version, revision=self.revision, seller_email=seller_email, revision_due_date=due_date, comment=comments)
         except PATSException as error:
             messages.error(self.request, "Return order revision failed: %s" % error)
         else:
@@ -500,7 +495,7 @@ class Buyer_ReturnOrderRevisionView(PATSAPIMixin, FormView):
         return context_data
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_lazy('buyer_orders_revisions_return', kwargs={'order_id':self.order_id})
+        return reverse_lazy('buyer_orders_revisions_return', kwargs={'campaign_id':self.campaign_id,'order_id':self.order_id,'version':self.version,'revision':self.revision})
 
 class Buyer_ReturnProposalView(PATSAPIMixin, FormView):
     form_class = Buyer_ReturnProposalForm

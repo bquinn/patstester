@@ -56,10 +56,10 @@ class Buyer_RequestOrderRevisionForm(forms.Form):
     # TODO - attachments
 
 class Buyer_ReturnOrderRevisionForm(forms.Form):
-    order_id = forms.CharField(label='Order Public ID', max_length=50)
-    order_major_version = forms.CharField(label='Order major version', max_length=5)
-    order_minor_version = forms.CharField(label='Order minor version', max_length=5)
-    user_id = forms.CharField(label='Buyer User ID', max_length=50)
+    #order_id = forms.CharField(label='Order Public ID', max_length=50)
+    #order_major_version = forms.CharField(label='Order major version', max_length=5)
+    #order_minor_version = forms.CharField(label='Order minor version', max_length=5)
+    #user_id = forms.CharField(label='Buyer User ID', max_length=50)
     seller_email = forms.CharField(label='Seller Email', max_length=50)
     due_date = forms.DateField(label='Response due date', widget=forms.DateInput(attrs={'type':'date'}))
     comments = forms.CharField(label='Comments', max_length=5000, widget=forms.Textarea)
