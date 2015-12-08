@@ -1036,11 +1036,11 @@ class Seller_ListRFPsView(PATSAPIMixin, ListView):
         self.end_date = self.request.GET.get('end_date', None)
         if not self.end_date:
             self.end_date = datetime.datetime.today().strftime("%Y-%m-%d")
+        seller_rfps_response = ''
         try:
             seller_rfps_response = seller_api.view_rfps(
                 start_date=datetime.datetime.strptime(self.start_date, "%Y-%m-%d"),
-                end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d"),
-                status=None
+                end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d")
             )
         except PATSException as error:
             messages.error(self.request, "List RFPs failed. Error: %s" % error)
