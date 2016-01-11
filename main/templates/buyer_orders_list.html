@@ -7,6 +7,8 @@
     </p>
     <form method="get" action="{% url 'buyer_orders_list' %}">
     Since date: <input type="date" name="since_date" value="{{since_date}}"/>
+    Page size: <input type="text" name="page_size" value="{{page_size}}"/>
+    Page no: <input type="text" name="page" value="{{page}}"/>
     <input type="submit" value="Refresh list"/>
     </form>
     <table class="table">

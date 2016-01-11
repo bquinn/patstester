@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Seller - Orders - View Order Detail: {{ order_id}} version {{ version }}{% endblock %}
+
+{% block content %}
+    <a class="btn btn-default" href="{% url 'seller_orders_events_list' order_id=order_id %}">View order event history</a>
+    <a class="btn btn-default" href="{% url 'seller_orders_revisions_list' order_id=order_id version=version %}">View order revisions</a>
+
+{% include 'components/view_order.html' with order=object %}
+
+{% endblock %}

@@ -1,13 +1,19 @@
 <tr>
-    <td>{{ event.time }}</td>
+    <td>{{ event.modifiedTime }}</td>
     <td>{{ event.eventType }}</td>
+    <td>{{ event.cost }}</td>
     <td>{{ event.comment }}</td>
     <td> {% for attachment in event.attachments %}
          <li>ID: {{ attachment.id }}<br/>
              MIME Type: {{ attachment.mimeType }}<br />
              Name: {{ attachment.name }}<br />
-             <a href="{% url 'buyer_order_attachment_view' campaign_id=campaign_id order_id=order_id attachment_id=attachment.id %}" class="btn btn-primary">View details</a></li>
-             <a href="{% url 'buyer_order_attachment_download' campaign_id=campaign_id order_id=order_id attachment_id=attachment.id %}" class="btn btn-primary">
+            {% if mode = "buyer" %}
+               <a href="{% url 'buyer_order_attachment_view' campaign_id=campaign_id order_id=order_id attachment_id=attachment.id %}" class="btn btn-primary">View details</a></li>
+               <a href="{% url 'buyer_order_attachment_download' campaign_id=campaign_id order_id=order_id attachment_id=attachment.id %}" class="btn btn-primary">
+            {% else %}
+               <a href="{% url 'seller_order_attachment_view' order_id=order_id attachment_id=attachment.id %}" class="btn btn-primary">View details</a></li>
+               <a href="{% url 'seller_order_attachment_download' order_id=order_id attachment_id=attachment.id %}" class="btn btn-primary">
+            {% endif %}
                 <span class="glyphicon glyphicon-download" aria-hidden="true"></span> Download
             </a></li>
         {% endfor %}</td>

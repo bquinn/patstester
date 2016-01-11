@@ -15,7 +15,7 @@
             <td>{{ order_revision.status }}</td>
             <td>{{ order_revision.lastActivityTime }}</td>
             <td>
-            <a class="btn btn-default" href="{% url 'buyer_orders_revisions_view' campaign_id=campaign_id order_id=order_id version=version revision=order_revision.minorVersion %}">View this revision</a><br/>
+            <a class="btn btn-primary" href="{% url 'buyer_orders_revisions_view' campaign_id=campaign_id order_id=order_id version=version revision=order_revision.minorVersion %}">View this revision</a><br/>
             <a class="btn btn-default" href="{% url 'buyer_orders_revisions_return' campaign_id=campaign_id order_id=order_id version=version revision=order_revision.minorVersion %}">Return this revision</a>
 </td>
         </tr>

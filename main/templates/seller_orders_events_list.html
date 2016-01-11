@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Seller - Order events - order {{ order_id }}{% endblock %}
+
+{% block content %}
+
+<table>
+    {% include 'components/event_line_item_header.html' with event=event %}
+    {% for event in object_list %}
+        {% include 'components/event_line_item.html' with event=event order_id=order_id mode=seller %}
+    {% endfor %}
+</table>
+
+{% endblock %}

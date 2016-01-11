@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Seller - Orders - Order Revision Detail: Order {{ order_id}} version {{ version }} revision {{ revision }}{% endblock %}
+
+{% block content %}
+<h2>Order summary</h2>
+<div class="table-responsive">
+ <table class="table">
+  <tr><th>Order ID</th><td>{{ order_id }}</td></tr>
+  <tr><th>External ID</th><td>{{ object.externalId }}</td></tr>
+  <tr><th>Status</th><td> {{ object.status }} {% if object.revisionRequested %}(Revision requested){% endif %}</td></tr>
+  <tr><th>Comment</th><td>{{ object.comment }}</td></tr>
+  <tr><th>Last activity</th><td>{{ object.lastActivityTime }}</td></tr>
+  <tr><th>Events</th><td><table class="table">{% include 'components/event_line_item_header.html' %}{% for event in object.events %}{% include 'components/event_line_item.html' with event=event campaign_id=campaign_id order_id=order_id %}{% endfor %}</td></tr>
+ </table>
+<h2>Line items</h2>
+{% if object.printLineItems %}
+<table class="table">
+{% include 'components/print_line_item_header.html' %}
+{% for line in object.printLineItems %}
+{% include 'components/print_line_item.html' %}
+{% endfor %}
+</table>
+{% endif %}
+</div>
+{% if object.digitalLineItems %}
+<table class="table">
+{% include 'components/digital_line_item_header.html' %}
+{% for line in object.digitalLineItems %}
+{% include 'components/digital_line_item.html' %}
+{% endfor %}
+</table>
+{% endif %}
+{% endblock %}

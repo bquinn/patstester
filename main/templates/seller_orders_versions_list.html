@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Seller - Orders - Versions of order {{ order_id }}{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <tr>
+            <th>Last activity</th>
+            <th>Major version</th>
+            <th>Order version status</th>
+            <th>Actions</th>
+        </tr>
+        {% for order_version in object_list %}
+        <tr>
+            <td>{{ order_version.lastActivityTime }}</td>
+            <td>{{ order_version.majorVersion }}</td>
+            <td>{{ order_version.status }}</td>
+            <td>
+<a href="{% url 'seller_order_version_view' campaign_id=campaign_id order_id=order_id version=order_version.majorVersion %}" class="btn btn-primary">View this version</a>
+                </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

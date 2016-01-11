@@ -4,6 +4,7 @@
 {% block title %}Buyer - Orders - Order Detail: Order {{ order_id}} version {{ version }}{% endblock %}
 
 {% block content %}
+<p><a class="btn btn-primary" href="{% url 'buyer_orders_revisions_list' campaign_id=campaign_id order_id=order_id version=version  %}">View revisions on this version</a></p>
 <h2>Order summary</h2>
 <div class="table-responsive">
  <table class="table">
@@ -24,8 +25,8 @@
   <tr><th>Dates</th><td>{{ object.flightStartDate}} to {{ object.flightEndDate }} (respond by {{ object.respondByDate }})</td></tr>
   <tr><th>Terms and conditions</th><td><b>{{object.termsAndConditions.name}}</b><br/>{{object.termsAndConditions.content}}</td></tr>
   <tr><th>Last activity</th><td>{{ object.lastActivityTime }}</td></tr>
-  <tr><th>Events</th><td><table class="table">{% include 'components/event_line_item_header.html' %}{% for event in object.events %}{% include 'components/event_line_item.html' with event=event campaign_id=campaign_id order_id=order_id %}{% endfor %}</td></tr>
- </table>
+  <tr><th>Events</th><td><table class="table">{% include 'components/event_line_item_header.html' %}{% for event in object.events %}{% include 'components/event_line_item.html' with event=event campaign_id=campaign_id order_id=order_id %}{% endfor %}</table></td></tr>
+</table>
 <h2>Line items</h2>
 {% if object.printLineItems %}
 <table class="table">

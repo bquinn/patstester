@@ -553,7 +553,7 @@ class Buyer_OrderVersionsView(PATSAPIMixin, ListView):
         self.order_id = self.kwargs.get('order_id', None)
         order_versions_response = None
         try:
-            order_versions_response = buyer_api.view_order_versions(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id)
+            order_versions_response = buyer_api.list_order_versions(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id)
         except PATSException as error:
             messages.error(self.request, 'Couldn''t load order versions: %s' % error)
         return order_versions_response
@@ -574,7 +574,7 @@ class Buyer_OrderVersionDetailView(PATSAPIMixin, DetailView):
         self.version = self.kwargs.get('version', None)
         order_detail_response = None
         try:
-            order_detail_response = buyer_api.view_order_version_detail(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id, order_version=self.version)
+            order_detail_response = buyer_api.view_order_version_detail(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id, version=self.version)
         except PATSException as error:
             messages.error(self.request, 'Couldn''t load order version: %s' % error)
         return order_detail_response
@@ -910,14 +910,17 @@ class Buyer_ListOrdersView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
         self.since_date = self.request.GET.get('since_date', None)
+        self.page_size = self.request.GET.get('page_size', 25)
+        self.page = self.request.GET.get('page', 1)
         if not self.since_date:
             one_month_ago = datetime.datetime.today()-datetime.timedelta(7)
             self.since_date = one_month_ago.strftime("%Y-%m-%d")
         list_orders_response = None
         try:
-            list_orders_response = buyer_api.view_orders(
+            list_orders_response = buyer_api.list_orders(
                 user_id = self.get_agency_user_id(),
-                since_date=datetime.datetime.strptime(self.since_date, "%Y-%m-%d")
+                since_date=datetime.datetime.strptime(self.since_date, "%Y-%m-%d"),
+                page_size=self.page_size, page=self.page
             )
         except PATSException as error:
             messages.error(self.request, "Can't get list of orders, error: %s" % error)
@@ -926,6 +929,8 @@ class Buyer_ListOrdersView(PATSAPIMixin, ListView):
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_ListOrdersView, self).get_context_data(*args, **kwargs)
         context_data['since_date'] = self.since_date
+        context_data['page_size'] = self.page_size
+        context_data['page'] = self.page
         return context_data
 
 class Buyer_ListOrderRevisionsView(PATSAPIMixin, ListView):
@@ -939,7 +944,7 @@ class Buyer_ListOrderRevisionsView(PATSAPIMixin, ListView):
         user_id = self.get_agency_user_id()
         order_revisions_response = None
         try:
-            order_revisions_response = buyer_api.view_order_revisions(
+            order_revisions_response = buyer_api.list_order_revisions(
                 user_id=user_id,
                 campaign_id=self.campaign_id,
                 order_id=self.order_id,
@@ -967,7 +972,7 @@ class Buyer_OrderRevisionDetailView(PATSAPIMixin, DetailView):
         self.revision = self.kwargs.get('revision', None)
         order_detail_response = None
         try:
-            order_detail_response = buyer_api.view_order_revision_detail(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id, order_version=self.version, order_revision=self.revision)
+            order_detail_response = buyer_api.view_order_revision_detail(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id, version=self.version, revision=self.revision)
         except PATSException as error:
             messages.error(self.request, 'Couldn''t load order revision: %s' % error)
         return order_detail_response
@@ -1136,128 +1141,272 @@ class Seller_DownloadRFPAttachmentView(PATSAPIMixin, DetailView):
         return context_data
 
 class Seller_ListOrdersView(PATSAPIMixin, ListView):
+    since_date = None
+
+    def get_queryset(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.since_date = self.request.GET.get('since_date', None)
+        self.page_size = self.request.GET.get('page_size', 25)
+        self.page = self.request.GET.get('page', 1)
+        if not self.since_date:
+            one_week_ago = datetime.datetime.today()-datetime.timedelta(7)
+            self.since_date = one_week_ago.strftime("%Y-%m-%d")
+        order_revisions_response = None
+        try:
+            order_revisions_response = seller_api.list_orders(
+                since_date=datetime.datetime.strptime(self.since_date, "%Y-%m-%d"),
+                page_size=self.page_size, page=self.page
+            )
+        except PATSException as error:
+            messages.error(self.request, "Can't get orders list, error: %s" % error)
+        return order_revisions_response
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_ListOrdersView, self).get_context_data(*args, **kwargs)
+        context_data['since_date'] = self.since_date
+        return context_data
+
+class Seller_ListOrderVersionsView(PATSAPIMixin, ListView):
     start_date = None
     end_date = None
 
     def get_queryset(self, **kwargs):
         seller_api = self.get_seller_api_handle()
-        self.start_date = self.request.GET.get('start_date', None)
-        if not self.start_date:
-            one_month_ago = datetime.datetime.today()-datetime.timedelta(30)
-            self.start_date = one_month_ago.strftime("%Y-%m-%d")
-        self.end_date = self.request.GET.get('end_date', None)
+        self.since_date = self.request.GET.get('since_date', None)
+        if not self.since_date:
+            one_week_ago = datetime.datetime.today()-datetime.timedelta(7)
+            self.since_date = one_week_ago.strftime("%Y-%m-%d")
         order_revisions_response = None
-        if not self.end_date:
-            self.end_date = datetime.datetime.today().strftime("%Y-%m-%d")
         try:
-            order_revisions_response = seller_api.view_orders(
-                start_date=datetime.datetime.strptime(self.start_date, "%Y-%m-%d"),
-                end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d")
+            order_revisions_response = seller_api.list_orders(
+                since_date=datetime.datetime.strptime(self.since_date, "%Y-%m-%d")
             )
         except PATSException as error:
-            messages.error(self.request, "Can't get order revisions, error: %s" % error)
+            messages.error(self.request, "Can't get orders list, error: %s" % error)
         return order_revisions_response
 
     def get_context_data(self, *args, **kwargs):
-        context_data = super(Seller_ListOrdersView, self).get_context_data(*args, **kwargs)
-        context_data['start_date'] = self.start_date
-        context_data['end_date'] = self.end_date
+        context_data = super(Seller_ListOrderVersionsView, self).get_context_data(*args, **kwargs)
+        context_data['since_date'] = self.since_date
         return context_data
 
-class Seller_OrderDetailView(PATSAPIMixin, DetailView):
+class Seller_OrderVersionsView(PATSAPIMixin, ListView):
+    campaign_id = None
+    order_id = None
+
+    def get_queryset(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.campaign_id = self.kwargs.get('campaign_id', None)
+        self.order_id = self.kwargs.get('order_id', None)
+        order_versions_response = None
+        try:
+            order_versions_response = seller_api.list_order_versions(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id)
+        except PATSException as error:
+            messages.error(self.request, 'Couldn''t load order versions: %s' % error)
+        return order_versions_response
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_OrderVersionsView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id
+        context_data['order_id'] = self.order_id
+        return context_data
+
+class Seller_OrderVersionDetailView(PATSAPIMixin, DetailView):
+    campaign_id = None
     order_id = None
     version = None
 
     def get_object(self, **kwargs):
         seller_api = self.get_seller_api_handle()
+        self.campaign_id = self.kwargs.get('campaign_id', None)
         self.order_id = self.kwargs.get('order_id', None)
         # version defaults to 0
         self.version = self.kwargs.get('version', 0)
         order_detail_response = None
         try:
-            order_detail_response = seller_api.view_order_detail(order_id=self.order_id, version=self.version)
+            order_detail_response = seller_api.view_order_version_detail(campaign_id=self.campaign_id, order_id=self.order_id, version=self.version)
         except PATSException as error:
             messages.error(self.request, "Can't get order detail, error: %s" % error)
         return order_detail_response
         
     def get_context_data(self, *args, **kwargs):
-        context_data = super(Seller_OrderDetailView, self).get_context_data(*args, **kwargs)
+        context_data = super(Seller_OrderVersionDetailView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id
         context_data['order_id'] = self.order_id
         context_data['version'] = self.version
         return context_data
+
+class Seller_ListOrderEventsView(PATSAPIMixin, ListView):
+    def get_queryset(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.order_id = self.kwargs.get('order_id', None)
+        seller_events_response = None
+        try:
+            seller_events_response = seller_api.list_order_events(order_id=self.order_id)
+        except PATSException as error:
+            messages.error(self.request, 'Cannot list events: %s' % error)
+        return seller_events_response
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_ListOrderEventsView, self).get_context_data(*args, **kwargs)
+        context_data['order_id'] = self.order_id
+        return context_data
+
+class Seller_ViewOrderAttachmentView(PATSAPIMixin, DetailView):
+    def get_object(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.campaign_id = self.kwargs.get('campaign_id', None)
+        self.order_id = self.kwargs.get('order_id', None)
+        self.attachment_id = self.kwargs.get('attachment_id', None)
+        order_attachment_response = ''
+        try:
+            order_attachment_response = seller_api.get_order_attachment(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id, attachment_id=self.attachment_id)
+        except PATSException as error:
+            messages.error(self.request, "Get order attachment failed. Error: %s" % error)
+        return order_attachment_response
     
-class Seller_OrderHistoryView(PATSAPIMixin, ListView):
-    order_id = None
-
-    def get_queryset(self, **kwargs):
-        seller_api = self.get_seller_api_handle()
-        self.order_id = self.kwargs.get('order_id', None)
-        order_history_response = None
-        try:
-            order_history_response = seller_api.view_order_history(order_id=self.order_id, full=False)
-        except PATSException as error:
-            messages.error(self.request, "Can't get order history, error: %s" % error)
-        return order_history_response
-        
     def get_context_data(self, *args, **kwargs):
-        context_data = super(Seller_OrderHistoryView, self).get_context_data(*args, **kwargs)
+        context_data = super(Seller_ViewOrderAttachmentView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id
         context_data['order_id'] = self.order_id
+        context_data['attachment_id'] = self.attachment_id
         return context_data
 
-class Seller_OrderFullHistoryView(PATSAPIMixin, ListView):
-    order_id = None
+class Seller_DownloadOrderAttachmentView(PATSAPIMixin, DetailView):
+    def get(self, *args, **kwargs):
+        old_response = super(Seller_DownloadOrderAttachmentView, self).get(*args, **kwargs)
+        # file_contents = self.order_attachment['contents']
+        file_contents = base64.b64decode(self.order_attachment['contents'])
+        http_response = HttpResponse(content_type=self.order_attachment['mimeType'])
+        # the "attachment" version pops up a "do you wish to download?" window
+        # http_response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+        http_response['Content-Disposition'] = 'filename="somefilename.pdf"'
+        # http_response['Content-Length'] = len(file_contents)
+        http_response.write(file_contents)
+        return http_response
 
-    def get_queryset(self, **kwargs):
+    def get_object(self, **kwargs):
         seller_api = self.get_seller_api_handle()
+        self.campaign_id = self.kwargs.get('campaign_id', None)
         self.order_id = self.kwargs.get('order_id', None)
-        order_history_response = None
+        self.attachment_id = self.kwargs.get('attachment_id', None)
+        order_attachment_response = ''
         try:
-            order_history_response = seller_api.view_order_history(order_id=self.order_id, full=True)
+            order_attachment_response = seller_api.get_order_attachment(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id, attachment_id=self.attachment_id)
+            self.order_attachment = order_attachment_response
         except PATSException as error:
-            messages.error(self.request, "Can't get order history, error: %s" % error)
-        return order_history_response
-        
+            messages.error(self.request, "Get order attachment failed. Error: %s" % error)
+        return order_attachment_response
+    
     def get_context_data(self, *args, **kwargs):
-        context_data = super(Seller_OrderFullHistoryView, self).get_context_data(*args, **kwargs)
+        context_data = super(Seller_DownloadOrderAttachmentView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id
         context_data['order_id'] = self.order_id
+        context_data['attachment_id'] = self.attachment_id
         return context_data
 
-class Seller_OrderRevisionStatusView(PATSAPIMixin, DetailView):
+#class Seller_OrderHistoryView(PATSAPIMixin, ListView):
+#    order_id = None
+#
+#    def get_queryset(self, **kwargs):
+#        seller_api = self.get_seller_api_handle()
+#        self.order_id = self.kwargs.get('order_id', None)
+#        order_history_response = None
+#        try:
+#            order_history_response = seller_api.view_order_history(order_id=self.order_id, full=False)
+#        except PATSException as error:
+#            messages.error(self.request, "Can't get order history, error: %s" % error)
+#        return order_history_response
+#        
+#    def get_context_data(self, *args, **kwargs):
+#        context_data = super(Seller_OrderHistoryView, self).get_context_data(*args, **kwargs)
+#        context_data['order_id'] = self.order_id
+#        return context_data
+
+#class Seller_OrderFullHistoryView(PATSAPIMixin, ListView):
+#    order_id = None
+#
+#    def get_queryset(self, **kwargs):
+#        seller_api = self.get_seller_api_handle()
+#        self.order_id = self.kwargs.get('order_id', None)
+#        order_history_response = None
+#        try:
+#            order_history_response = seller_api.view_order_history(order_id=self.order_id, full=True)
+#        except PATSException as error:
+#            messages.error(self.request, "Can't get order history, error: %s" % error)
+#        return order_history_response
+#        
+#    def get_context_data(self, *args, **kwargs):
+#        context_data = super(Seller_OrderFullHistoryView, self).get_context_data(*args, **kwargs)
+#        context_data['order_id'] = self.order_id
+#        return context_data
+
+class Seller_ListOrderRevisionsView(PATSAPIMixin, ListView):
+    def get_queryset(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.campaign_id = self.kwargs.get('campaign_id', None)
+        self.order_id = self.kwargs.get('order_id', None)
+        self.version = self.kwargs.get('version', None)
+        user_id = self.get_agency_user_id()
+        order_revisions_response = None
+        try:
+            order_revisions_response = seller_api.list_order_revisions(
+                user_id=user_id,
+                campaign_id=self.campaign_id,
+                order_id=self.order_id,
+                version=self.version
+            )
+        except PATSException as error:
+            messages.error(self.request, "List order revisions failed. Error: %s" % error)
+        return order_revisions_response
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_ListOrderRevisionsView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id
+        context_data['order_id'] = self.order_id
+        context_data['version'] = self.version
+        return context_data
+
+#class Seller_OrderRevisionStatusView(PATSAPIMixin, DetailView):
+#    order_id = None
+#
+#    def get_object(self, **kwargs):
+#        seller_api = self.get_seller_api_handle()
+#        self.order_id = self.kwargs.get('order_id', None)
+#        order_revision_status = None
+#        try:
+#            order_revision_status = seller_api.view_revision_status_summary(order_id=self.order_id)
+#        except PATSException as error:
+#            messages.error(self.request, "Can't get revision status, error: %s" % error)
+#        return order_revision_status
+#
+#    def get_context_data(self, *args, **kwargs):
+#        context_data = super(Seller_OrderRevisionStatusView, self).get_context_data(*args, **kwargs)
+#        context_data['order_id'] = self.order_id
+#        return context_data
+
+class Seller_OrderRevisionDetailView(PATSAPIMixin, DetailView):
     order_id = None
+    version = None
+    revision = None
 
     def get_object(self, **kwargs):
         seller_api = self.get_seller_api_handle()
         self.order_id = self.kwargs.get('order_id', None)
-        order_revision_status = None
-        try:
-            order_revision_status = seller_api.view_revision_status_summary(order_id=self.order_id)
-        except PATSException as error:
-            messages.error(self.request, "Can't get revision status, error: %s" % error)
-        return order_revision_status
-
-    def get_context_data(self, *args, **kwargs):
-        context_data = super(Seller_OrderRevisionStatusView, self).get_context_data(*args, **kwargs)
-        context_data['order_id'] = self.order_id
-        return context_data
-
-class Seller_OrderRevisionStatusDetailView(PATSAPIMixin, DetailView):
-    order_id = None
-
-    def get_object(self, **kwargs):
-        seller_api = self.get_seller_api_handle()
-        self.order_id = self.kwargs.get('order_id', None)
-        self.order_version = self.kwargs.get('version', None)
-        self.revision_version = self.kwargs.get('revision', None)
+        self.version = self.kwargs.get('version', None)
+        self.revision = self.kwargs.get('revision', None)
         order_revision_detail = None
         try:
-            order_revision_detail = seller_api.view_revision_status_detail(order_id=self.order_id, order_version=self.order_version, revision_version=self.revision_version)
+            order_revision_detail = seller_api.view_order_revision_detail(order_id=self.order_id, version=self.version, revision=self.revision)
         except PATSException as error:
             messages.error(self.request, "Can't get revision detail, error: %s" % error)
         return order_revision_detail
 
     def get_context_data(self, *args, **kwargs):
-        context_data = super(Seller_OrderRevisionStatusDetailView, self).get_context_data(*args, **kwargs)
+        context_data = super(Seller_OrderRevisionDetailView, self).get_context_data(*args, **kwargs)
         context_data['order_id'] = self.order_id
+        context_data['version'] = self.version
+        context_data['revision'] = self.revision
         return context_data
 
 class Seller_OrderRespondView(PATSAPIMixin, FormView):
@@ -1280,7 +1429,7 @@ class Seller_OrderRespondView(PATSAPIMixin, FormView):
             self.version = int(float(self.version))
             order_detail_response = None
             try:
-                order_detail_response = seller_api.view_order_detail(order_id=self.order_id, version=self.version)
+                order_detail_response = seller_api.view_order_version_detail(campaign_id=self.campaign_id, order_id=self.order_id, version=self.version)
             except PATSException as error:
                 messages.error(self.request, "Get order detail failed. Error: %s" % error)
             self.order_detail = order_detail_response

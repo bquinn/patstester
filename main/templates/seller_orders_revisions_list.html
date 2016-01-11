@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Seller - Orders - Revisions for order {{ order_id }} version {{ version }}{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <tr>
+            <th>Minor Version</th>
+            <th>Revision Status</th>
+            <th>Last activity time</th>
+            <th>Actions</th>
+        </tr>
+        {% for order_revision in object_list %}
+        <tr>
+            <td>{{ order_revision.minorVersion }}</td>
+            <td>{{ order_revision.status }}</td>
+            <td>{{ order_revision.lastActivityTime }}</td>
+            <td>
+                <a class="btn btn-default" href="{% url 'seller_orders_revisions_view' order_id=order_id version=version revision=order_revision.minorVersion %}">View this revision</a><br/>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

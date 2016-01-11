@@ -3,8 +3,9 @@
 
 {% block content %}
     <form method="get" action="{% url 'seller_orders_list' %}">
-    From date: <input type="date" name="start_date" value="{{start_date}}"/>
-    To date: <input type="date" name="end_date" value="{{end_date}}"/>
+    Since date: <input type="date" name="since_date" value="{{since_date}}"/>
+    Page size: <input type="text" name="page_size" value="{{page_size}}"/>
+    Page no: <input type="text" name="page" value="{{page}}"/>
     <input type="submit" value="Refresh list"/>
     </form>
     <table class="table">
@@ -12,48 +13,30 @@
             <th>Order ID</th>
             <th>Publisher ref</th>
             <th>Version</th>
-            <th>Type</th>
             <th>Status</th>
             <th>Agency ID</th>
-            <th>Buyer</th>
             <th>Vendor ID</th>
-            <th>Sellers</th>
-            <th>Client Name</th>
             <th>Campaign ID</th>
-            <th>Campaign Dates</th>
             <th>Revision requested?</th>
-            <th>Last activity date</th>
-            <th>Sent By</th>
-            <th>Sent On</th>
-            <th>Total Cost</th>
-            <th>Order Currency</th>
-            <th>Action</th>
+            <th>Last activity time</th>
+            <th>Actions</th>
         </tr>
         {% for order in object_list %}
         <tr>
-            <td><a href="{% url 'seller_orders_view' order_id=order.orderId version=order.version %}">{{ order.orderId }}</a></td>
-            <td>{{ order.publisherReferenceNumber }}</td>
-            <td>{{ order.version }}</td>
-            <td>{{ order.type }}</td>
-            <td>{{ order.status }}</td>
+            <td>{{ order.id }}</td>
+            <td>{{ order.externalId }}</td>
+            <td>{{ order.majorVersion }}</td>
+            <td>{{ order.orderVersionStatus }}</td>
             <td>{{ order.agencyId }}</td>
-            <td>{{ order.buyer }}</td>
             <td>{{ order.vendorId }}</td>
-            <td>{% for seller in order.sellers %}{{ seller }}<br/>{% endfor %}</td>
-            <td>{{ order.clientName }}</td>
             <td>{{ order.campaignId }}</td>
-            <td>{{ order.campaignStartDate }} - {{ order.campaignEndDate }}</td>
-            <td>{{ order.isRevisionRequested }}</td>
-            <td>{{ order.lastActivityDate }}</td>
-            <td>{{ order.sentBy }}</td>
-            <td>{{ order.sentOn }}</td>
-            <td>{{ order.totalCost }}</td>
-            <td>{{ order.orderCurrencyCode }}</td>
-            <td>{% if order.type == "Order" and order.status == "New" %}
-                    <a href="{% url 'seller_orders_respond' order_id=order.orderId version=order.version %}">Respond</a>
-                {% elif order.type == "Order" and order.status == "Accepted" or order.type == "Order" and order.status == "Rejected" %}
-                    <a href="{% url 'seller_orders_revise' order_id=order.orderId version=order.version %}">Revise</a>
-                {% endif %}</td>
+            <td>{{ order.revisionRequested }}</td>
+            <td>{{ order.lastActivityTime }}</td>
+            <td>
+<a href="{% url 'seller_orders_versions_list' campaign_id=order.campaignId order_id=order.id %}" class="btn btn-default">View order versions</a><br/>
+<a href="{% url 'seller_orders_events_list' order_id=order.id %}" class="btn btn-default">View order event history</a><br/>
+<a href="{% url 'seller_order_version_view' campaign_id=order.campaignId order_id=order.id version=order.majorVersion%}" class="btn btn-default">View latest version</a><br/>
+            </td>
         </tr>
         {% endfor %}
     </table>
