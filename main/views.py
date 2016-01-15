@@ -219,9 +219,10 @@ class Buyer_GetPublishersView(PATSAPIMixin, ListView):
         publishers_response = None
         response = None
         try:
-            publishers_response = buyer_api.get_sellers(user_id=self.get_agency_user_id())
+            # publishers_response = buyer_api.get_sellers(user_id=self.get_agency_user_id())
+            publishers_response = buyer_api.get_sellers(user_id='brenddlo@pats3')
         except PATSException as error:
-            messages.error(self.request, "Get publishers failed. Error: %s" % (error, publishers_response))
+            messages.error(self.request, "Get publishers failed. Error: %s %s" % (error, publishers_response))
         else:
             response = publishers_response['payload']
             # publishers list is actually the "payload" component of the dict
@@ -236,12 +237,15 @@ class Buyer_GetPublisherUsersView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
         self.vendor_id = self.kwargs.get('publisher_id', None)
+        publisher_users_response = {}
         try:
-            publisher_users_response = buyer_api.get_users_for_seller(user_id=self.get_agency_user_id(), vendor_id=self.vendor_id)
+            # publisher_users_response = buyer_api.get_users_for_seller(user_id=self.get_agency_user_id(), vendor_id=self.vendor_id)
+            publisher_users_response = buyer_api.get_users_for_seller(user_id='brenddlo@pats3', vendor_id=self.vendor_id)
+            # publisher emails list is actually the "payload" component of the dict
+            return publisher_users_response['payload']['emails']
         except PATSException as error:
             messages.error(self.request, "Get publisher users failed. Error: %s" % error)
-        # publisher emails list is actually the "payload" component of the dict
-        return publisher_users_response['payload']['emails']
+        return
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_GetPublisherUsersView, self).get_context_data(*args, **kwargs)
@@ -258,11 +262,14 @@ class Buyer_GetAgenciesView(PATSAPIMixin, ListView):
         self.agency_id = self.request.GET.get('agency_id', self.kwargs.get('agency_id', self.get_agency_id()))
         self.search_name = self.request.GET.get('name', None)
         self.search_updated_date = self.request.GET.get('last_updated_date', None)
+        agencies_response = None
         try:
-            agencies_response = buyer_api.get_buyers(user_id=self.get_agency_user_id(), agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
+            # agencies_response = buyer_api.get_buyers(user_id=self.get_agency_user_id(), agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
+            agencies_response = buyer_api.get_buyers(user_id='brenddlo@pats3', agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
+            return agencies_response['payload']
         except PATSException as error:
             messages.error(self.request, "Get agencies failed. Error: %s" % error)
-        return agencies_response['payload']
+        return
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_GetAgenciesView, self).get_context_data(*args, **kwargs)
@@ -277,7 +284,7 @@ class Buyer_RFPDetailView(PATSAPIMixin, DetailView):
         self.rfp_id = self.kwargs.get('rfp_id', None)
         rfp_detail_response = ''
         try:
-            rfp_detail_response = buyer_api.view_rfp_detail(sender_user_id=self.get_agency_user_id(), rfp_id=self.rfp_id)
+            rfp_detail_response = buyer_api.view_rfp_detail(user_id=self.get_agency_user_id(), rfp_id=self.rfp_id)
         except PATSException as error:
             messages.error(self.request, "Get RFP detail failed. Error: %s" % error)
         return rfp_detail_response
@@ -346,7 +353,7 @@ class Buyer_DownloadProposalAttachmentView(PATSAPIMixin, DetailView):
         self.proposal_id = self.kwargs.get('proposal_id', None)
         self.attachment_id = self.kwargs.get('attachment_id', None)
         try:
-            proposal_attachment_response = buyer_api.get_proposal_attachment(sender_user_id=self.get_agency_user_id(), proposal_id=self.proposal_id, attachment_id=self.attachment_id)
+            proposal_attachment_response = buyer_api.get_proposal_attachment(user_id=self.get_agency_user_id(), proposal_id=self.proposal_id, attachment_id=self.attachment_id)
         except PATSException as error:
             messages.error(self.request, "Get proposal attachment failed. Error: %s" % error)
         return proposal_attachment_response
@@ -512,7 +519,7 @@ class Buyer_ReturnProposalView(PATSAPIMixin, FormView):
         return {
             'rfp_id': self.rfp_id,
             'proposal_id': self.proposal_id,
-            'sender_user_id': self.get_agency_user_id()
+            'user_id': self.get_agency_user_id()
         }
 
     def get_context_data(self, *args, **kwargs):
@@ -524,7 +531,7 @@ class Buyer_ReturnProposalView(PATSAPIMixin, FormView):
     def form_valid(self, form):
         buyer_api = self.get_buyer_api_handle()
         proposal_id = form.cleaned_data['proposal_id']
-        sender_user_id = form.cleaned_data['sender_user_id']
+        user_id = form.cleaned_data['user_id']
         comments = form.cleaned_data['comments']
         due_date = form.cleaned_data['due_date']
         # turn single email into an array
@@ -533,7 +540,7 @@ class Buyer_ReturnProposalView(PATSAPIMixin, FormView):
         attachments = []
         response = ''
         try:
-            response = buyer_api.return_proposal(sender_user_id=sender_user_id, proposal_public_id=proposal_id, comments=comments, due_date=due_date, emails=emails, attachments=attachments)
+            response = buyer_api.return_proposal(user_id=user_id, proposal_public_id=proposal_id, comments=comments, due_date=due_date, emails=emails, attachments=attachments)
         except PATSException as error:
             messages.error(self.request, "Return proposal failed: %s" % error)
         else:
@@ -702,12 +709,12 @@ class Buyer_CreateRFPView(PATSAPIMixin, FormView):
 
     def get_initial(self):
         return {
-            'sender_user_id': self.get_agency_user_id(),
+            'user_id': self.get_agency_user_id(),
         }
 
     def form_valid(self, form):
         buyer_api = self.get_buyer_api_handle()
-        sender_user_id = form.cleaned_data.get('sender_user_id')
+        user_id = form.cleaned_data.get('user_id')
         campaign_public_id = form.cleaned_data.get('campaign_public_id')
         budget_amount = form.cleaned_data.get('budget_amount')
         start_date = form.cleaned_data.get('start_date')
@@ -734,7 +741,7 @@ class Buyer_CreateRFPView(PATSAPIMixin, FormView):
         # take submitted values and call API - raw version
         result = ''
         try:
-            result = buyer_api.submit_rfp(sender_user_id=sender_user_id, campaign_public_id=campaign_public_id, budget_amount=budget_amount, start_date=start_date, end_date=end_date, respond_by_date=respond_by_date, comments=comments, publisher_id=publisher_id, publisher_emails=publisher_emails, media_print=media_print, media_online=media_online, strategy=strategy, requested_products=requested_products, attachments=attachments)
+            result = buyer_api.submit_rfp(user_id=user_id, campaign_public_id=campaign_public_id, budget_amount=budget_amount, start_date=start_date, end_date=end_date, respond_by_date=respond_by_date, comments=comments, publisher_id=publisher_id, publisher_emails=publisher_emails, media_print=media_print, media_online=media_online, strategy=strategy, requested_products=requested_products, attachments=attachments)
         except PATSException as error:
             messages.error(self.request, 'Submit RFP failed: %s' % error)
         else:
@@ -989,11 +996,14 @@ class Buyer_ListProductsView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
         self.vendor_id = self.kwargs.get('publisher_id', None)
+        product_catalogue_response = {}
         try:
-            product_catalogue_response = buyer_api.list_products(vendor_id=self.vendor_id, user_id=self.get_agency_user_id())
+            # product_catalogue_response = buyer_api.list_products(vendor_id=self.vendor_id, user_id=self.get_agency_user_id())
+            product_catalogue_response = buyer_api.list_products(vendor_id=self.vendor_id, user_id='brenddlo@pats3')
+            return product_catalogue_response['products']
         except PATSException as error:
             messages.error(self.request, "List products failed. Error: %s" % error)
-        return product_catalogue_response['products']
+        return
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_ListProductsView, self).get_context_data(*args, **kwargs)
