@@ -1,29 +1,17 @@
         <tr>
-            <td>{{ agency.agencyId }}</td>
+            <td><a href="{% url 'buyer_metadata_agencies' agency_id=agency.agencyId %}">{{ agency.agencyId }}</a></td>
             <td>{{ agency.name }}</td>
             <td>{{ agency.shortName }}</td>
             <td>{{ agency.type }}</td>
             <td>{{ agency.locale }}</td>
             <td>
-{% if agency.parent %}
-<strong>ID:</strong> <a href="{% url 'buyer_metadata_agencies' agency_id=agency.parent.agencyId %}">{{ agency.parent.agencyId }}</a><br />
-<strong>Name:</strong> {{ agency.parent.name }}<br />
-<strong>Short name:</strong> {{ agency.parent.shortName }}<br />
-<strong>Type:</strong> {{ agency.parent.type }}<br />
-<strong>Locale:</strong>{{ agency.parent.locale }}<br />
-<strong>Parent:</strong>
+                {% if agency.parent %}
+                <table class="table">
+                {% include 'components/agency_details_header.html' %}
                 {% include 'components/agency_details_line_item.html' with agency=agency.parent %}
-                {# if agency.parent #}
-                    <table class="table">
-                        {% include 'components/agency_details_header.html' %}
-                        {% for parentagency in agency.parent %}
-                            {% include 'components/agency_details_line_item.html' with agency=parentagency %}
-                        {% endfor %}
-                    </table>
-                {# endif #}
-<strong>Children:</strong> {{ agency.parent.children }}
-{% endif %}
-</td>
+                </table>
+                {% endif %}
+            </td>
             <td>
                 {% if agency.children %}
                     <table class="table">
