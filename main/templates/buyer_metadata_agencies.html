@@ -13,34 +13,9 @@
     </form>
 
     <table class="table">
-        <tr>
-            <th>Agency ID</th>
-            <th>Name</th>
-            <th>Short name</th>
-            <th>Type</th>
-            <th>Locale</th>
-            <th>Parent agency</th>
-            <th>Child agencies</th>
-        </tr>
+        {% include 'components/agency_details_header.html' %}
         {% for agency in object_list %}
-        <tr>
-            <td>{{ agency.agencyId }}</td>
-            <td>{{ agency.name }}</td>
-            <td>{{ agency.shortName }}</td>
-            <td>{{ agency.type }}</td>
-            <td>{{ agency.locale }}</td>
-            <td>
-<strong>ID:</strong> <a href="{% url 'buyer_metadata_agencies' agency_id=agency.parent.agencyId %}">{{ agency.parent.agencyId }}</a><br />
-<strong>Name:</strong> {{ agency.parent.name }}<br />
-<strong>Short name:</strong> {{ agency.parent.shortName }}<br />
-<strong>Type:</strong> {{ agency.parent.type }}<br />
-<strong>Locale:</strong>{{ agency.parent.locale }}<br />
-<strong>Parent:</strong> {{ agency.parent.parent }}<br />
-<strong>Children:</strong> {{ agency.parent.children }}
-</td>
-            <td>{{ agency.children }}</td>
-        </tr>
+            {% include 'components/agency_details_line_item.html' %}
         {% endfor %}
     </table>
-
 {% endblock %}
