@@ -205,6 +205,9 @@ urlpatterns = [
     url(r'^configuration',
         ConfigurationView.as_view(template_name='configuration.html'),
         name='configuration'),
+    url(r'^lineitemtester',
+        TemplateView.as_view(template_name='lineitemtester.html'),
+        name='line_item_tester'),
     url(r'^',
         TemplateView.as_view(template_name='home.html'),
         name='home')

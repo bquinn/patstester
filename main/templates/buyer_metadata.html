@@ -6,6 +6,7 @@
     <p>Get lists of publishers available to this buyer. Includes links to view people at each publisher and to view the product catalogue of each publisher.</p>
     <h3><a href="{% url 'buyer_metadata_agencies' %}">Agencies</a></h3>
     <p>View the details of other agencies (although why you would want to do that as a buyer escapes me).</p>
-    <h3></h3>
+    <h3><a href="{% url 'line_item_tester' %}">Product Catalogue (line item tester)</a></h3>
+    <p>Shows a sample line item using an example set of Product Catalogue metadata: media properties, sections/subsections, buytypes / buycategories, costmethods / unittypes.</p>
 {% endblock %}
 {% block raw %}{% endblock %}

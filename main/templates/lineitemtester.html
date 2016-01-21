@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% block title %}PATS 2016.1 Product Catalogue line Item tester{% endblock %}
+{% block bootstrap3_extra_head %}
+<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  var mediaProperties = [
+        'Telegraph Desktop',
+        'Daily Telegraph'
+  ]
+  var sections_and_subsections = {
+        'Telegraph Desktop' : {
+            'Run of Site': [],
+            'Premium ROS': [],
+            'Retargeting': [],
+            'Homepage': [],
+            'Arts': [],
+            'Betting': [],
+            'Cars': [],
+            'Christmas': [],
+            'Comment': [],
+            'Computers': [],
+            'Consumer Advice': [],
+            'Courses': [],
+            'Culture': [
+                'Art',
+                'Barnebys',
+                'Fine Arts',
+                'Hot tickets',
+                'Shop',
+                'The Culture Minute'
+            ],
+            'Dating': [],
+            'Earth': [],
+            'E-Commerce Other': [],
+            'Education': [
+                'UCAS'
+            ],
+            'Entertainment': [],
+            'Expat': [],
+            'Family': [],
+            'Fashion': [
+                'Hilary and Co',
+                'Other',
+                'Shop'
+            ],
+            'Finance': [
+                'Business Bullet',
+                'Indeed',
+                'Mozo'
+            ],
+            'Food and Drink': [],
+            'Frontpage': [],
+            'Galleries': [],
+            'Games': [],
+            'Gardening': [],
+            'Geneology': [],
+            'Health': [],
+            'Horoscopes': [],
+            'Jobs': [
+                'Candidate',
+                'Job Alerts',
+                'Recruiter'
+            ],
+            'Lifestyle': [],
+            'Luxury': [
+                'Art',
+                'Art, Collectibles and Desireables',
+                'Collectibles',
+                'Design',
+                'Diary',
+                'Dining and Drink',
+                'Drink',
+                'Homepage',
+                'Homepage and diary',
+                'Jewellery',
+                'Mens Style',
+                'Mens Style and Technology',
+                'Motoring',
+                'Property',
+                'Property and Architecture',
+                'Restaurants and Bars',
+                'Technology',
+                'Travel',
+                'Watches',
+                'Womens Style'
+            ],
+            'Motoring': [],
+            'My Telegraph': [],
+            'News': [],
+            'Personal Finance': [],
+            'Portal': [],
+            'Promotions': [],
+            'Property': [],
+            'Science': [],
+            'Specialist Sales Network': [],
+            'Sport': [],
+            'Technology': [],
+            'Telegraph Men': [],
+            'Travel': [],
+            'TV Listings': [],
+            'Weather': [],
+            'Women': []
+        },
+        'Daily Telegraph': {
+            'News': [],
+            'Back page': [],
+            'Outside Back Cover': [],
+            'Comment': [],
+            'Leaderspread': [],
+            'Features': [],
+            'Health and Beauty': [],
+            'Arts': [],
+            'Science': [],
+            'Style': [],
+            'Travel': [],
+            'Your Money': [],
+            'Music': [],
+            'Fashion': [],
+            'Film': [],
+            'Reviews': []
+        }
+  }
+  var buytypes_and_buycategories = {
+        "Telegraph Desktop": {
+            "Display": [
+                "Standard",
+                "RichMedia",
+                "Mobile",
+                "Video",
+                "Interstitial",
+                "In-Game",
+                "Social",
+                "Sponsorship",
+                "Tablet",
+                "Text",
+                "Custom-Other"
+            ],
+            "Fee": [
+                "Ad Serving",
+                "Ad Verification",
+                "Data",
+                "Mobile",
+                "Privacy Icon",
+                "Production",
+                "Research",
+                "Search",
+                "Sponsorship",
+                "Tax",
+                "Technology",
+                "Viewability",
+                "Other"
+            ]
+        },
+        'Daily Telegraph': {
+            "Magazine": [
+                "Consumer",
+                "Trade"
+            ],
+            "Newspaper": [
+                "Classified - National",
+                "Classified - Regional",
+                "Display – National",
+                "Display - Regional"
+            ],
+            "Supplement": [
+                "Direct Mail",
+                "Directories, i.e. Yellow Pages",
+                "Inserts",
+                "Sponsorship"
+            ],
+            "Fee": [
+                "Production"
+            ]
+        }
+  }
+  var costmethods_and_unittypes = {
+        "Telegraph Desktop": {
+            "CPM": [
+                "Impressions"
+            ],
+            "CPC": [
+                "Clicks"
+            ],
+            "CPA": [
+                "Actions"
+            ],
+            "CPI": [
+                "Actions"
+            ],
+            "dCPM": [
+                "Impressions"
+            ],
+            "FLAT": [
+                "Impressions",
+                "Viewed Impressions",
+                "Actions",
+                "Clicks",
+                "N/A"
+            ],
+            "FREE": [
+                "Impressions",
+                "Viewed Impressions",
+                "Actions",
+                "Clicks",
+                "N/A"
+            ],
+            "CPE": [
+                "Actions"
+            ],
+            "CPCV": [
+                "Actions"
+            ],
+            "CPMV": [
+                "Viewed Impressions"
+            ],
+            "dCPC": [
+                "Clicks"
+            ],
+            "dCPM": [
+                "Impressions"
+            ]
+        },
+        'Daily Telegraph': {
+            "CPM": [
+                "Insert"
+            ],
+            "FLAT": [
+                "Columns by cms",
+                "Insert"
+            ],
+            "FREE": [
+                "Columns by cms",
+                "Insert"
+            ],
+            "SCC": [
+                "Columns by cms"
+            ]
+        }
+  }
+  function setupForm() {
+    var $mediaPropertySelector = $("select[name=mediaProperty]");
+    $mediaPropertySelector.empty(); // remove old options
+    $.each(mediaProperties, function(value,key) {
+        $mediaPropertySelector.append($("<option></option>").text(key));
+    });
+    $mediaPropertySelector.on("change", mediaPropertyChangeHandler )
+    mediaPropertyChangeHandler();
+  }
+  function mediaPropertyChangeHandler() {
+    var chosenMediaProperty = $("select[name=mediaProperty]").val();
+    var $sectionSelector = $("select[name=section]");
+    $sectionSelector.empty(); // remove old options
+    $.each(sections_and_subsections[chosenMediaProperty], function(value,key) {
+        $sectionSelector.append($("<option></option>").text(value));
+    });
+    $sectionSelector.on("change", sectionChangeHandler ),
+    sectionChangeHandler();
+    var $buyTypeSelector = $("select[name=buyType]");
+    $buyTypeSelector.empty(); // remove old options
+    $.each(buytypes_and_buycategories[chosenMediaProperty], function(value,key) {
+        $buyTypeSelector.append($("<option></option>").text(value));
+    });
+    $buyTypeSelector.on("change", buyTypeChangeHandler ),
+    buyTypeChangeHandler();
+    var $costMethodSelector = $("select[name=costMethod]");
+    $costMethodSelector.empty(); // remove old options
+    $.each(costmethods_and_unittypes[chosenMediaProperty], function(value,key) {
+        $costMethodSelector.append($("<option></option>").text(value));
+    });
+    $costMethodSelector.on("change", costMethodChangeHandler ),
+    costMethodChangeHandler();
+  }
+  function sectionChangeHandler() {
+    var chosenMediaProperty = $("select[name=mediaProperty]").val();
+    var chosenSection = $("select[name=section]").val();
+    var $subsectionSelector = $("select[name=subsection]");
+    $subsectionSelector.empty(); // remove old options
+    $.each(sections_and_subsections[chosenMediaProperty][chosenSection], function(value,key) {
+        $subsectionSelector.append($("<option></option>").text(key));
+    });
+  }
+  function buyTypeChangeHandler() {
+    var chosenMediaProperty = $("select[name=mediaProperty]").val();
+    var chosenBuyType = $("select[name=buyType]").val();
+    var $buyCategorySelector = $("select[name=buyCategory]");
+    $buyCategorySelector.empty(); // remove old options
+    $.each(buytypes_and_buycategories[chosenMediaProperty][chosenBuyType], function(value,key) {
+        $buyCategorySelector.append($("<option></option>").text(key));
+    });
+  }
+  function costMethodChangeHandler() {
+    var chosenMediaProperty = $("select[name=mediaProperty]").val();
+    var chosenCostMethod = $("select[name=costMethod]").val();
+    var $unitTypeSelector = $("select[name=unitType]");
+    $unitTypeSelector.empty(); // remove old options
+    $.each(costmethods_and_unittypes[chosenMediaProperty][chosenCostMethod], function(value,key) {
+        $unitTypeSelector.append($("<option></option>").text(key));
+    });
+  }
+  setupForm();
+</script>
+{% endblock %}
+<!-- body onLoad="setupForm();" -->
+{% block content %}
+<table class="table">
+<tr>
+<th>Media Property</th>
+<th>Section</th>
+<th>Subsection</th>
+<th>Buy Type</th>
+<th>Buy Category</th>
+<th>Cost Method</th>
+<th>Unit Type</th>
+<th>Price etc...</th>
+</tr>
+<tr>
+<form>
+<td><select name="mediaProperty"></select></td>
+<td><select name="section"></select></td>
+<td><select name="subsection"></select></td>
+<td><select name="buyType"></select></td>
+<td><select name="buyCategory"></select></td>
+<td><select name="costMethod"></select></td>
+<td><select name="unitType"></select></td>
+</form>
+</tr>
+</table>
+<script language="javascript">
+    setupForm();
+</script>
+{% endblock %}
+{% block raw %}{% endblock %}
