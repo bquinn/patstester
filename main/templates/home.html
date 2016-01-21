@@ -4,6 +4,25 @@
 {% block content %}
     <p>This is used to run manual tests of the PATS platform.</p>
     <p>Use the navigation menu above to choose an API to test on either the buyer or seller side.</p>
+    <h3>Updates on 21 January 2016:</h3>
+    <ul>
+        <li>Added a <a href="{% url 'line_item_tester' %}">prototype line item selector</a> based on a sample version of the "product catalogue" due to come out in the 2016.1 release.</li>
+    </ul>
+    <h3>Updates on 15 January 2016:</h3>
+    <ul>
+    <li>Fully updated for 2015.8 APIs - if there's something that doesn't work, it should be due to a bug in 2015.8. FOr example:</li>
+    <li>
+        <ul>
+            <li>PATS-1089   
+Buy-side API: Seller activity doesn't update last activity time on buy-side "Find orders" list</li>
+            <li>PATS-1103   
+Buy-side API: Some buyType / buyCategory combinations fail</li>
+            <li>PATS-1117   
+Sell-side API: "FREE" costMethod in revision causes 500 Server Error</li>
+        </ul>
+    </li>
+    <li>You can now submit updates to campaigns.</li>
+    </ul>
     <h3>Updates on 8 December 2015:</h3>
     <ul>
     <li>Updated buyer-side calls for 2015.8 release. Everything should now work from the buyer side at least. I'm still looking at the seller side.</li>
