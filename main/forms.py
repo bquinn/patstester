@@ -9,9 +9,9 @@ class BootstrapFileInput(widgets.ClearableFileInput):
 
 class Buyer_CampaignForm(forms.Form):
     # aka "organisation ID"
-    agency_id = forms.CharField(label='Buyer Agency ID', max_length=100)
-    company_id = forms.CharField(label='Buyer Company ID', max_length=100)
-    person_id = forms.CharField(label='Buyer Person ID', max_length=100)
+    agency_group_id = forms.CharField(label='Buyer Agency Group ID', max_length=100)
+    organisation_id = forms.CharField(label='Buyer Organisation ID', max_length=100)
+    user_id = forms.CharField(label='Buyer User ID', max_length=100)
     advertiser_code = forms.CharField(label='Advertiser Code', max_length=5)
     external_campaign_id = forms.CharField(label='External campaign ID', max_length=100)
     campaign_name = forms.CharField(label='Campaign Name', max_length=200)

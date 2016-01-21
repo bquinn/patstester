@@ -13,4 +13,5 @@
         <tr><th>Campaign budget</th><td>{{ object.mediaBudget.campaignBudget }}</td></tr>
         <tr><th>Multi-currency</th><td>{{ object.multiCurrency }}</td></tr>
     </table>
+    <p><a href="{% url 'buyer_campaigns_update' campaign_id=campaign_id %}" class="btn btn-primary">Update (edit) this campaign</a></p>
 {% endblock %}

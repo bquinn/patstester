@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import render
 from django.views.generic.list import ListView
-from django.views.generic.edit import FormView, UpdateView
+from django.views.generic.edit import FormView
 from django.views.generic.detail import DetailView
 from django.views.generic import TemplateView
 
@@ -625,16 +625,15 @@ class Buyer_CreateCampaignView(PATSAPIMixin, FormView):
 
     def get_initial(self):
         return {
-            'agency_id': self.get_agency_id(),
             'agency_group_id': self.get_agency_group_id(),
-            'user_id': self.get_agency_user_id(),
-            'person_id': self.get_agency_person_id(),
+            'organisation_id': self.get_agency_id(),
+            'user_id': self.get_agency_user_id()
         }
 
     def form_valid(self, form):
         # because we use forms.DateField, the dates come through already formatted as datetime objects
         campaign_details = CampaignDetails(
-            organisation_id = form.cleaned_data['agency_id'],
+            organisation_id = form.cleaned_data['organisation_id'],
             agency_group_id = form.cleaned_data['agency_group_id'],
             person_id = form.cleaned_data['person_id'],
             campaign_name = form.cleaned_data['campaign_name'],
@@ -646,7 +645,7 @@ class Buyer_CreateCampaignView(PATSAPIMixin, FormView):
             digital_campaign = form.cleaned_data['digital_flag'],
             digital_campaign_budget = form.cleaned_data['digital_budget'],
             campaign_budget = form.cleaned_data['campaign_budget'],
-            external_campaign_id = form.cleaned_data['external_campaign_id'],
+            external_id = form.cleaned_data['external_campaign_id'],
         )
         buyer_api = self.get_buyer_api_handle()
         response = ''
@@ -676,12 +675,70 @@ class Buyer_CampaignDetailView(PATSAPIMixin, DetailView):
         context_data['campaign_id'] = self.campaign_id
         return context_data
 
-class Buyer_UpdateCampaignDetailView(PATSAPIMixin, UpdateView):
+class Buyer_UpdateCampaignDetailView(PATSAPIMixin, FormView):
     campaign_id = None
     form_class = Buyer_CampaignForm
 
+    def form_valid(self, form, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        campaign_details = CampaignDetails(
+            organisation_id = form.cleaned_data['organisation_id'],
+            agency_group_id = form.cleaned_data['agency_group_id'],
+            user_id = form.cleaned_data['user_id'],
+            campaign_name = form.cleaned_data['campaign_name'],
+            start_date = form.cleaned_data['start_date'],
+            end_date = form.cleaned_data['end_date'],
+            advertiser_code = form.cleaned_data['advertiser_code'],
+            print_campaign = form.cleaned_data['print_flag'],
+            print_campaign_budget = form.cleaned_data['print_budget'],
+            digital_campaign = form.cleaned_data['digital_flag'],
+            digital_campaign_budget = form.cleaned_data['digital_budget'],
+            campaign_budget = form.cleaned_data['campaign_budget'],
+            external_id = form.cleaned_data['external_campaign_id'],
+        )
+        result = ''
+        try:
+            response = buyer_api.update_campaign(campaign_id=self.campaign_id, campaign_details=campaign_details)
+        except PATSException as error:
+            messages.error(self.request, 'Update campaign failed: %s' % error)
+        else:
+            messages.success(self.request, 'RFP sent successfully! Response is %s' % result)
+        return super(Buyer_UpdateCampaignDetailView, self).form_valid(form)
+
+    def get_initial(self):
+        object = self.get_object()
+        print_flag = False; digital_flag = False
+        print_budget = 0; digital_budget = 0
+
+        for media in object['mediaBudget']['medias']['media']:
+            if media['mediaMix'] == 'Print':
+                print_flag = True
+                if media['budget']:
+                    print_budget = media['budget']
+            if media['mediaMix'] == 'Online':
+                digital_flag = True
+                if media['budget']:
+                    digital_budget = media['budget']
+
+        return {
+            'organisation_id': self.get_agency_id(),
+            'agency_group_id': self.get_agency_group_id(),
+            'user_id': self.get_agency_user_id(),
+            'advertiser_code': object['advertiser'],
+            'external_campaign_id': object['externalDetails']['externalId'],
+            'campaign_name': object['campaignName'],
+            'start_date': object['startDate'],
+            'end_date': object['endDate'],
+            'end_date': object['endDate'],
+            'campaign_budget': object['mediaBudget']['campaignBudget'],
+            'print_flag': print_flag,
+            'print_budget': print_budget,
+            'digital_flag': digital_flag,
+            'digital_budget': digital_budget
+        }
+
     def get_success_url(self, *args, **kwargs):
-        return reverse_lazy('buyer_campaigns_create', kwargs={'campaign_id':self.campaign_id})
+        return reverse_lazy('buyer_campaigns_detail_view', kwargs={'campaign_id':self.campaign_id})
 
     def get_object(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
@@ -694,10 +751,9 @@ class Buyer_UpdateCampaignDetailView(PATSAPIMixin, UpdateView):
         return campaign_detail_response
         
     def get_context_data(self, *args, **kwargs):
-        context_data = super(Buyer_CampaignDetailView, self).get_context_data(*args, **kwargs)
+        context_data = super(Buyer_UpdateCampaignDetailView, self).get_context_data(*args, **kwargs)
         context_data['campaign_id'] = self.campaign_id
         return context_data
-
 
 class Buyer_CreateRFPView(PATSAPIMixin, FormView):
     form_class = Buyer_CreateRFPForm
