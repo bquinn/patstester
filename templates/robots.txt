@@ -1,0 +1,4 @@
+# robots.txt for http://apitester.pats.org.uk/
+
+User-agent: *
+Disallow: /
