@@ -1,70 +1,73 @@
     <table class="table">
       <tr>
         <th>Order ID</th>
-        <td>{{ order.orderId }}</td>
+        <td>{{ order.id }}</td>
       </tr>
       <tr>
         <th>Version</th>
-        <td>{{ order.version }}</td>
+        <td>{{ order.majorVersion }}</td>
       </tr>
       <tr>
         <th>Status</th>
         <td>{{ order.status }}</td>
       </tr>
       <tr>
-        <th>Comment History</th>
+        <th>Event History</th>
         <td>
 <table class="table">
 <tr>
 <th>Timestamp</th>
-<th>Version</th>
-<th>Status</th>
-<th>Full name</th>
-<th>Email</th>
+<th>Event Type</th>
+<th>Name</th>
 <th>Comment</th>
-<th>Documents</th>
+<th>Attachments</th>
+<th>Additional info</th>
 </tr>
-{% for comment in order.commentHistory %}
-<tr>
-<td>{{ comment.timestamp }}</td>
-<td>{{ comment.version }}</td>
-<td>{{ comment.status }}</td>
-<td>{{ comment.fullName }}</td>
-<td>{{ comment.email }}</td>
-<td>{{ comment.comment }}</td>
-<td>{{ comment.documents }}</td>
-</tr>
-{% endfor %}
+    {% for event in order.events %}
+        {% include 'components/event_line_item.html' with event=event order_id=order_id mode=seller %}
+    {% endfor %}
 </table>
 </td>
       </tr>
       <tr>
-        <th>Agency Name</th>
-        <td>{{ order.agencyName }}</td>
+        <th>Agency Id</th>
+        <td>{{ order.agencyId }}</td>
       </tr>
       <tr>
         <th>Campaign ID</th>
         <td>{{ order.campaignId }}</td>
       </tr>
       <tr>
-        <th>Agency campaign ref no</th>
-        <td>{{ order.agencyCampaignReferenceNo }}</td>
+        <th>Cost</th>
+        <td>{{ order.cost }}</td>
       </tr>
       <tr>
-        <th>Campaign Name</th>
-        <td>{{ order.campaignName }}</td>
+        <th>Currency code</th>
+        <td>{{ order.currencyCode }}</td>
+      </tr>
+      <tr>
+        <th>Campaign ID</th>
+        <td>{{ order.campaignId }}</td>
       </tr>
       <tr>
         <th>Media type</th>
         <td>{{ order.mediaType }}</td>
       </tr>
       <tr>
-        <th>Vendor Name</th>
-        <td>{{ order.vendorName }}</td>
+        <th>Buyer Name</th>
+        <td>{{ order.buyerName }}</td>
       </tr>
       <tr>
-        <th>Client Name</th>
-        <td>{{ order.clientName }}</td>
+        <th>Buyer Email</th>
+        <td>{{ order.buyerEmail }}</td>
+      </tr>
+      <tr>
+        <th>Buyer Phone</th>
+        <td>{{ order.buyerPhone }}</td>
+      </tr>
+      <tr>
+        <th>Advertiser Name</th>
+        <td>{{ order.advertiserName }}</td>
       </tr>
       <tr>
         <th>Terms and Conditions</th>
@@ -100,4 +103,8 @@ None
 {% endif %}
 </td>
        </tr>
+        <tr>
+        <th>Attachments</th>
+        <td>{{ object.attachments }}</td>
+        </tr>
     </table>
