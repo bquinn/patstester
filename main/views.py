@@ -1457,7 +1457,7 @@ class Seller_ViewOrderAttachmentView(PATSAPIMixin, DetailView):
         self.attachment_id = self.kwargs.get('attachment_id', None)
         order_attachment_response = ''
         try:
-            order_attachment_response = seller_api.get_order_attachment(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id, attachment_id=self.attachment_id)
+            order_attachment_response = seller_api.get_order_attachment(user_id=self.get_publisher_user(), order_id=self.order_id, attachment_id=self.attachment_id)
         except PATSException as error:
             messages.error(self.request, "Get order attachment failed. Error: %s" % error)
         return order_attachment_response
@@ -1489,7 +1489,7 @@ class Seller_DownloadOrderAttachmentView(PATSAPIMixin, DetailView):
         self.attachment_id = self.kwargs.get('attachment_id', None)
         order_attachment_response = ''
         try:
-            order_attachment_response = seller_api.get_order_attachment(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id, attachment_id=self.attachment_id)
+            order_attachment_response = seller_api.get_order_attachment(user_id=self.get_publisher_user(), order_id=self.order_id, attachment_id=self.attachment_id)
             self.order_attachment = order_attachment_response
         except PATSException as error:
             messages.error(self.request, "Get order attachment failed. Error: %s" % error)

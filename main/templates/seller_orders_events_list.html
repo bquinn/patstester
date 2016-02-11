@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<table>
+<table class="table">
     {% include 'components/event_line_item_header.html' with event=event %}
     {% for event in object_list %}
         {% include 'components/event_line_item.html' with event=event order_id=order_id mode=seller %}
