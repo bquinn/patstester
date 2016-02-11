@@ -1,0 +1,13 @@
+        <tr>
+            <td><a href="{% url 'buyer_rfps_view' rfp.id %}">{{ rfp.id }}</a></td>
+            <td><a href="{% url 'buyer_campaigns_view' rfp.campaignId %}">{{ rfp.campaignId }}</a></td>
+            <td>{{ rfp.agencyId }}</td>
+            <td>{% for media in rfp.media %}{{ media }}<br />{% endfor %}</td>
+            <td>{{ rfp.status }}</td>
+            <td>{{ rfp.startDate }}</td>
+            <td>{{ rfp.endDate }}</td>
+            <td>{{ rfp.responseDueDate }}</td>
+            <td>{{ rfp.buyerName }}</td>
+            <td>{{ rfp.comments }}</td>
+            <td>{{ rfp.strategy }}</td>
+        </tr>

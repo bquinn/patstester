@@ -7,7 +7,7 @@
     <p>Doesn't yet include sending attachments.</p>
     <h3><a href="{% url 'buyer_rfps_list' %}">List RFPs</a></h3>
     <p>List all RFPs sent by the current buyer.</p>
-    <h3><a href="{% url 'buyer_rfps_list' %}">List RFPs for Campaign</a></h3>
+    <h3><a href="{% url 'buyer_campaigns_rfps_list' campaign_id='CTMP'%}">List RFPs for Campaign</a></h3>
     <p>List all RFPs sent by the current buyer.</p>
 {% endblock %}
 {% block raw %}{% endblock %}

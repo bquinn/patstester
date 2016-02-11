@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Buyer - RFPs - View Proposal Details for Proposal {{ proposal_id }}{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <tr> <th>Proposal ID</th> <td>{{ proposal_id }}</td> </tr>
+        <tr> <th>Proposal external ID</th> <td>{{ object.externalId }}</td> </tr>
+        <tr> <th>Proposal Version</th> <td>{{ object.proposalVersion }}</td> </tr>
+        <tr> <th>RFP ID</th> <td>{{ object.rfpId }}</td> </tr>
+        <tr> <th>Vendor ID</th> <td>{{ object.vendorId }}</td> </tr>
+        <tr> <th>Status</th> <td>{{ object.status }}</td> </tr>
+        <tr> <th>Comments</th> <td>{{ object.comments }}</td> </tr>
+        <tr>
+            <th>Print line items</th>
+            <td>
+{% if object.printLineItems %}
+    <table class="table">
+    {% include 'components/print_line_item_header.html' %}
+    {% for line in object.printLineItems %}
+        {% include 'components/print_line_item.html' with line=line %}
+    {% endfor %}
+    </table>
+{% else %}
+None.
+{% endif %}
+</td>
+        </tr>
+        <tr>
+            <th>Digital line items</th>
+            <td>
+{% if object.digitalLineItems %}
+    <table class="table">
+    {% include 'components/digital_line_item_header.html' %}
+    {% for line in object.digitalLineItems %}
+        {% include 'components/digital_line_item.html'  with line=line %}
+    {% endfor %}
+    </table>
+{% else %}
+None.
+{% endif %}
+</td>
+        </tr>
+        <tr>
+            <th>Attachments</th>
+            <td>
+                {% for attachment in object.attachments %}
+                    {{ attachment }}
+                    <a href="{% url 'buyer_rfps_proposals_attachment_download' rfp_id=object.rfpId proposal_id=proposal_id attachment_id=attachment %}">Download attachment</a>
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+<p><a href="{% url 'buyer_rfps_proposals_return' rfp_id=object.rfpId proposal_id=proposal_id %}" class="btn btn-primary">Return this proposal</a> (ie send a message back to the sender)</p>
+{% endblock %}

@@ -4,6 +4,11 @@
 {% block content %}
     <p>This is used to run manual tests of the PATS platform.</p>
     <p>Use the navigation menu above to choose an API to test on either the buyer or seller side.</p>
+    <h3>Updates on 11 February 2016:</h3>
+    <ul>
+        <li>Updated RFP and Proposals screens to se the new 2016.1 APIs. Everything now works.</li>
+        <li>Added robots.txt because somehow this site was being crawled by search engine robots!</li>
+    </ul>
     <h3>Updates on 21 January 2016:</h3>
     <ul>
         <li>Added a <a href="{% url 'line_item_tester' %}">prototype line item selector</a> based on a sample version of the "product catalogue" due to come out in the 2016.1 release.</li>
@@ -12,12 +17,10 @@
     <ul>
     <li>Fully updated for 2015.8 APIs - if there's something that doesn't work, it should be due to a bug in 2015.8. For example:</li>
     <ul>
-        <li>PATS-1089   
-Buy-side API: Seller activity doesn't update last activity time on buy-side "Find orders" list</li>
-        <li>PATS-1103   
-Buy-side API: Some buyType / buyCategory combinations fail</li>
-        <li>PATS-1117   
-Sell-side API: "FREE" costMethod in revision causes 500 Server Error</li>
+        <li>PATS-1089   Buy-side API: Seller activity doesn't update last activity time on buy-side "Find orders" list</li>
+        <li>PATS-1103   Buy-side API: Some buyType / buyCategory combinations fail</li>
+        <li>PATS-1117   Sell-side API: "FREE" costMethod in revision causes 500 Server Error</li>
+        <li><i><b>Note</b> on 11 Feb 2016: these are now all fixed</i></li>
     </ul>
     <li>You can now submit updates to campaigns.</li>
     </ul>

@@ -15,56 +15,37 @@
     </form>
     <table class="table">
         <tr>
-            <th>RFP Public ID</th>
+            <th>RFP ID</th>
             <th>Agency ID</th>
-            <th>Vendor ID</th>
             <th>Media Type</th>
             <th>Status</th>
             <th>Start date</th>
             <th>End date</th>
-            <th>Order Cost</th>
-            <th>Order Currency code</th>
-            <th>Due Date</th>
+            <th>Response Due date</th>
             <th>Buyer Name</th>
-            <th>Buyer Email</th>
             <th>Comments</th>
-            <th>Campaign Public ID</th>
-            <th>Campaign Name</th>
+            <th>Campaign ID</th>
             <th>Strategy</th>
-            <th>Requested Products</th>
-            <th>Attachments</th>
+            <th>Actions</th>
         </tr>
         {% for rfp in object_list %}
         <tr>
-            <td>{{ rfp.rfpPublicId }}</td>
-            <td>{{ rfp.agencyPublicId }}</td>
-            <td>{{ rfp.publisherPublicId }}</td>
-            <td>{{ rfp.media }}</td>
+            <td>{{ rfp.id }}</td>
+            <td>{{ rfp.agencyId }}</td>
+            <td>{% for media in rfp.media %}{{ media }}<br />{% endfor %}</td>
             <td>{{ rfp.status }}</td>
             <td>{{ rfp.startDate }}</td>
             <td>{{ rfp.endDate }}</td>
-            <td>{{ rfp.budgets.0.amount }}</td>
-            <td>{{ rfp.budgets.0.currencyCode }}</td>
             <td>{{ rfp.responseDueDate }}</td>
             <td>{{ rfp.buyerName }}</td>
-            <td>{{ rfp.buyerEmail }}</td>
             <td>{{ rfp.comments }}</td>
-            <td>{{ rfp.campaignPublicId }}</td>
-            <td>{{ rfp.campaignName }}</td>
+            <td>{{ rfp.campaignId }}</td>
             <td>{{ rfp.strategy }}</td>
-            <td>{{ rfp.requestedProducts }}</td>
             <td>
-                {% if rfp.attachments %}
-                <ul>
-                    {% for attachment in rfp.attachments %}
-                    <li>mimetype={{ attachment.mimeType }}, publicId={{ attachment.publicId }}, fileName={{ attachment.fileName }} <a href="{% url 'seller_rfps_attachment_download' agency_id=rfp.agencyPublicId rfp_id=rfp.rfpPublicId attachment_id=attachment.publicId %}">Download attachment</a></li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-</td>
-            <td>
-                <p><a class="btn btn-primary" href="{% url 'seller_rfps_proposals_list' rfp.rfpPublicId %}">Show proposals</a></p>
-                <p><a class="btn btn-default" href="{% url 'seller_rfps_proposals_create_raw' rfp.rfpPublicId %}">Send new proposal</a></p>
+{% if rfp.status == "RESPONDED" %}
+                <p><a class="btn btn-primary" href="{% url 'seller_rfps_proposals_list' rfp_id=rfp.id %}">Show proposals on this RFP</a></p>
+{% endif %}
+                <p><a class="btn btn-default" href="{% url 'seller_rfps_proposals_create_raw' rfp_id=rfp.id %}">Send new proposal on this RFP</a></p>
             </td>
         </tr>
         {% endfor %}

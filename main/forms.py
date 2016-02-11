@@ -76,15 +76,16 @@ class Buyer_CreateOrderRawForm(forms.Form):
     person_id = forms.CharField(label='Buyer Person ID', max_length=100)
     payload = forms.CharField(label='Payload', max_length=999999, widget=forms.Textarea)
 
-class Buyer_CreateOrderWithCampaignForm(forms.ModelForm):
+class Buyer_CreateOrderWithCampaignForm(forms.Form):
     agency_id = forms.CharField(label='Buyer Agency ID', max_length=100)
-    company_id = forms.CharField(label='Buyer Company ID', max_length=100)
-    person_id = forms.CharField(label='Buyer Person ID', max_length=100)
+    agency_group_id = forms.CharField(label='Buyer Agency Group ID', max_length=100)
+    user_id = forms.CharField(label='Buyer User ID', max_length=100)
     advertiser_code = forms.CharField(label='Advertiser Code', max_length=5)
-    external_campaign_id = forms.CharField(label='External campaign ID', max_length=50)
+    campaign_id = forms.CharField(label='Campaign ID', max_length=50)
     campaign_name = forms.CharField(label='Campaign Name', max_length=200)
-    start_date = forms.DateField(label='Campaign start date', widget=forms.DateInput(attrs={'type':'date'}))
-    end_date = forms.DateField(label='Campaign end date', widget=forms.DateInput(attrs={'type':'date'}))
+    campaign_start_date = forms.DateField(label='Campaign start date', widget=forms.DateInput(attrs={'type':'date'}))
+    campaign_end_date = forms.DateField(label='Campaign end date', widget=forms.DateInput(attrs={'type':'date'}))
+    respond_by_date = forms.DateField(label='Respond-by date', widget=forms.DateInput(attrs={'type':'date'}))
     print_flag = forms.BooleanField(label='Print component', required=False)
     print_budget = forms.CharField(label='Print budget', max_length=10, required=False)
     digital_flag = forms.BooleanField(label='Digital component', required=False)
@@ -112,11 +113,10 @@ class Seller_OrderReviseForm(forms.Form):
     payload = forms.CharField(label='Payload', max_length=999999, widget=forms.Textarea)
 
 class ConfigurationForm(forms.Form):
-    agency_id = forms.CharField(label='Agency ID', max_length=100)
     agency_api_key = forms.CharField(label='Agency API Key', max_length=100)
+    agency_id = forms.CharField(label='Agency ID', max_length=100)
+    agency_group_id = forms.CharField(label='Agency Group ID', max_length=100)
     agency_user_id = forms.CharField(label='Agency User ID', max_length=100)
-    agency_company_id = forms.CharField(label='Agency Company ID', max_length=100)
-    agency_person_id = forms.CharField(label='Agency Person ID', max_length=100)
     publisher_id = forms.CharField(label='Publisher ID', max_length=100)
     publisher_user = forms.CharField(label='Publisher User Email', max_length=100)
     publisher_api_key = forms.CharField(label='Publisher API Key', max_length=100)

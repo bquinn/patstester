@@ -1,7 +1,9 @@
 import base64
 import datetime
 import json
+import random
 import re
+import string
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
@@ -31,7 +33,6 @@ CONFIG_DEFAULTS = {
         'AGENCY_ID': '35-IDSDKAD-7',
         'AGENCY_USER_ID': 'brenddlo',
         'AGENCY_GROUP_ID': 'PATS3',
-        'AGENCY_PERSON_ID': 'brenddlo',
         'PUBLISHER_API_KEY': '4ust6fh2x38hcw8pq2vcef4r',
         'PUBLISHER_ID': '35-PUOEFOA-9',
         'PUBLISHER_USER': 'mona.tawfik@mailnewspapers.co.uk'
@@ -41,7 +42,6 @@ CONFIG_DEFAULTS = {
         'AGENCY_ID': '35-IDSDKAD-7',
         'AGENCY_USER_ID': 'brenddlo',
         'AGENCY_GROUP_ID': 'PATS3',
-        'AGENCY_PERSON_ID': 'brenddlo',
         'PUBLISHER_API_KEY': 'nz5ta424wv8m2bmg4njbgwya',
         'PUBLISHER_ID': '35-UJTPWVA-1',
         'PUBLISHER_USER': 'John.Gay@esimedia.co.uk'
@@ -51,7 +51,6 @@ CONFIG_DEFAULTS = {
         'AGENCY_ID': '35-IDSDKAD-7',
         'AGENCY_USER_ID': 'brenddlo',
         'AGENCY_GROUP_ID': 'PATS3',
-        'AGENCY_PERSON_ID': 'brenddlo',
         'PUBLISHER_API_KEY': 'nz5ta424wv8m2bmg4njbgwya',
         'PUBLISHER_ID': '35-SKDCCGM-2',
         'PUBLISHER_USER': 'Marsha.Sappleton@guardian.co.uk'
@@ -61,7 +60,6 @@ CONFIG_DEFAULTS = {
         'AGENCY_ID': '35-IDSDKAD-7',
         'AGENCY_USER_ID': 'brenddlo',
         'AGENCY_GROUP_ID': 'PATS3',
-        'AGENCY_PERSON_ID': 'brenddlo',
         'PUBLISHER_API_KEY': 'nz5ta424wv8m2bmg4njbgwya',
         'PUBLISHER_ID': '35-OMXDD1T-5',
         'PUBLISHER_USER': 'Rob.Scott@news.co.uk'
@@ -71,7 +69,6 @@ CONFIG_DEFAULTS = {
         'AGENCY_ID': '35-IDSDKAD-7',
         'AGENCY_USER_ID': 'brenddlo',
         'AGENCY_GROUP_ID': 'PATS3',
-        'AGENCY_PERSON_ID': 'brenddlo',
         'PUBLISHER_API_KEY': 'nz5ta424wv8m2bmg4njbgwya',
         'PUBLISHER_ID': '35-EEBMG4J-4',
         'PUBLISHER_USER': 'brendan.quinn@pats.org.uk'
@@ -81,7 +78,6 @@ CONFIG_DEFAULTS = {
         'AGENCY_ID': '35-IDSDKAD-7',
         'AGENCY_USER_ID': 'brenddlo',
         'AGENCY_GROUP_ID': 'PATS3',
-        'AGENCY_PERSON_ID': 'brenddlo',
         'PUBLISHER_API_KEY': 'nz5ta424wv8m2bmg4njbgwya',
         'PUBLISHER_ID': '35-OIFNHJ7-6',
         'PUBLISHER_USER': 'gareth.jones@telegraph.co.uk'
@@ -91,7 +87,6 @@ CONFIG_DEFAULTS = {
         'AGENCY_ID': '35-IDSDKAD-7',
         'AGENCY_USER_ID': 'brenddlo',
         'AGENCY_GROUP_ID': 'PATS3',
-        'AGENCY_PERSON_ID': 'brenddlo',
         'PUBLISHER_API_KEY': 'nz5ta424wv8m2bmg4njbgwya',
         'PUBLISHER_ID': '35-49UUMIY-3',
         'PUBLISHER_USER': 'angela.woodhouse@trinitymirror.com'
@@ -99,6 +94,17 @@ CONFIG_DEFAULTS = {
 }
 # the default default?!
 CONFIG_DEFAULTS_DEFAULT = 'PATS Media'
+
+ADVERTISER_NAMES = {
+    #'AA': 'AMEX',
+    'AA4': 'ALTON', 'AAB': 'FORD', 'AAH': 'SATAC',
+    'AB2': 'AMAZ', 'AMI': 'AUTOMOBILES', 'ARR': 'AAA', 'DEM': 'DEMO',
+    'GE1': 'GR ENTERTAIN', 'HFC': 'HEALTH', 'MOA': 'MOU TRAVEL',
+    'SLO': 'BRIT. RAIL',
+    # 'SU1': 'SUPERMARKET',
+    'VOT': 'VODKA'
+}
+ADVERTISER_LIST = ADVERTISER_NAMES.keys()
 
 class PATSAPIMixin(object):
     pats_buyer = None
@@ -129,14 +135,6 @@ class PATSAPIMixin(object):
 
     def set_agency_user_id(self, agency_user_id):
         self.request.session['agency_user_id'] = agency_user_id
- 
-    def get_agency_person_id(self):
-        if 'agency_person_id' not in self.request.session:
-            self.request.session['agency_person_id'] = CONFIG_DEFAULTS[CONFIG_DEFAULTS_DEFAULT]['AGENCY_PERSON_ID']
-        return self.request.session['agency_person_id']
-
-    def set_agency_person_id(self, agency_person_id):
-        self.request.session['agency_person_id'] = agency_person_id
  
     def get_agency_group_id(self):
         if 'agency_group_id' not in self.request.session:
@@ -174,7 +172,7 @@ class PATSAPIMixin(object):
         if not self.pats_buyer and 'api_handle_buyer' in self.request.session:
             self.pats_buyer = self.request.session['api_handle_buyer']
         else:
-            self.pats_buyer = PATSBuyer(agency_id=self.get_agency_id(), agency_group_id=self.get_agency_group_id(), api_key=self.get_agency_api_key(), debug_mode=self.debug_mode, raw_mode=self.raw_mode, session=self.request.session)
+            self.pats_buyer = PATSBuyer(agency_id=self.get_agency_id(), agency_group_id=self.get_agency_group_id(), user_id=self.get_agency_user_id(), api_key=self.get_agency_api_key(), debug_mode=self.debug_mode, raw_mode=self.raw_mode, session=self.request.session)
         return self.pats_buyer
 
     def get_seller_api_handle(self):
@@ -200,7 +198,6 @@ class PATSAPIMixin(object):
         self.set_agency_api_key(CONFIG_DEFAULTS[defaults]['AGENCY_API_KEY'])
         self.set_agency_id(CONFIG_DEFAULTS[defaults]['AGENCY_ID'])
         self.set_agency_user_id(CONFIG_DEFAULTS[defaults]['AGENCY_USER_ID'])
-        self.set_agency_person_id(CONFIG_DEFAULTS[defaults]['AGENCY_PERSON_ID'])
         self.set_agency_group_id(CONFIG_DEFAULTS[defaults]['AGENCY_GROUP_ID'])
         self.set_publisher_api_key(CONFIG_DEFAULTS[defaults]['PUBLISHER_API_KEY'])
         self.set_publisher_id(CONFIG_DEFAULTS[defaults]['PUBLISHER_ID'])
@@ -213,13 +210,45 @@ class PATSAPIMixin(object):
             self.request.session['response_status'] = ''
             self.request.session['response_text'] = ''
 
+    def get_example_campaign_id(self):
+        if not hasattr(self, 'example_campaign_id'):
+            self.example_campaign_id = "CAMP"+''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(6))
+        return self.example_campaign_id
+
+    def get_example_campaign_name(self):
+        if not hasattr(self, 'example_campaign_name'):
+            self.example_campaign_name = "Test Campaign "+self.get_example_campaign_id()
+        return self.example_campaign_name
+
+    def get_example_campaign_start_date(self):
+        if not hasattr(self, 'example_campaign_start_date'):
+            self.example_campaign_start_date = datetime.datetime.today()+datetime.timedelta(30)
+        return self.example_campaign_start_date.strftime("%Y-%m-%d")
+
+    def get_example_campaign_end_date(self):
+        if not hasattr(self, 'example_campaign_end_date'):
+            self.example_campaign_end_date = datetime.datetime.today()+datetime.timedelta(60)
+        return self.example_campaign_end_date.strftime("%Y-%m-%d")
+
+    def get_example_advertiser_id(self):
+        return random.choice(ADVERTISER_LIST)
+
+    def get_example_respond_by_date(self):
+        if not hasattr(self, 'example_respond_by_date'):
+            self.example_respond_by_date = datetime.datetime.today()+datetime.timedelta(14)
+        return self.example_respond_by_date.strftime("%Y-%m-%d")
+
+    def get_example_budget(self):
+        if not hasattr(self, 'example_budget'):
+            self.example_budget = random.randint(50000,100000)
+        return self.example_budget
+
 class Buyer_GetPublishersView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
         publishers_response = None
         response = None
         try:
-            # publishers_response = buyer_api.get_sellers(user_id=self.get_agency_user_id())
             publishers_response = buyer_api.get_sellers(user_id='brenddlo@pats3')
         except PATSException as error:
             messages.error(self.request, "Get publishers failed. Error: %s %s" % (error, publishers_response))
@@ -376,14 +405,19 @@ class Buyer_RFPSearchView(PATSAPIMixin, ListView):
         buyer_api = self.get_buyer_api_handle()
         self.search_advertiser_name = self.request.GET.get('advertiser_name', None)
         self.search_rfp_start_date = self.request.GET.get('rfp_start_date', None)
+        if not self.search_rfp_start_date:
+            one_month_ago = datetime.datetime.today()-datetime.timedelta(7)
+            self.search_rfp_start_date = one_month_ago.strftime("%Y-%m-%d")
         self.search_rfp_end_date = self.request.GET.get('rfp_end_date', None)
+        if not self.search_rfp_end_date:
+            today = datetime.datetime.today()
+            self.search_rfp_end_date = today.strftime("%Y-%m-%d")
         self.search_campaign_urn = self.request.GET.get('campaign_urn', None)
         self.search_response_due_date = self.request.GET.get('response_due_date', None)
         self.search_status = self.request.GET.get('status', None)
         rfp_list = ''
         try:
             rfp_list = buyer_api.search_rfps(
-                user_id=self.get_agency_user_id(),
                 advertiser_name=self.search_advertiser_name,
                 rfp_start_date=self.search_rfp_start_date,
                 rfp_end_date=self.search_rfp_end_date,
@@ -403,6 +437,22 @@ class Buyer_RFPSearchView(PATSAPIMixin, ListView):
         context_data['search_campaign_urn'] = self.search_campaign_urn or ''
         context_data['search_response_due_date'] = self.search_response_due_date
         context_data['search_status'] = self.search_status or ''
+        return context_data
+
+class Buyer_RFPsForCampaignView(PATSAPIMixin, ListView):
+    def get_queryset(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.campaign_id = self.kwargs.get('campaign_id', None)
+        rfp_list = ''
+        try:
+            rfp_list = buyer_api.list_rfps_for_campaign(campaign_id=self.campaign_id)
+        except PATSException as error:
+            messages.error(self.request, "List RFPs for Campaign failed. Error: %s" % error)
+        return rfp_list
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_RFPsForCampaignView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id or ''
         return context_data
 
 class Buyer_RequestOrderRevisionView(PATSAPIMixin, FormView):
@@ -593,6 +643,24 @@ class Buyer_OrderVersionDetailView(PATSAPIMixin, DetailView):
         context_data['version'] = self.version
         return context_data
 
+class Buyer_ProposalDetailView(PATSAPIMixin, DetailView):
+    proposal_id = None
+
+    def get_object(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.proposal_id = self.kwargs.get('proposal_id', None)
+        proposal_detail_response = None
+        try:
+            proposal_detail_response = buyer_api.view_proposal_detail(proposal_id=self.proposal_id)
+        except PATSException as error:
+            messages.error(self.request, 'Couldn''t load proposal: %s' % error)
+        return proposal_detail_response
+        
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_ProposalDetailView, self).get_context_data(*args, **kwargs)
+        context_data['proposal_id'] = self.proposal_id
+        return context_data
+
 class Buyer_OrderStatusView(PATSAPIMixin, DetailView):
     order_id = None
 
@@ -645,7 +713,7 @@ class Buyer_CreateCampaignView(PATSAPIMixin, FormView):
             digital_campaign = form.cleaned_data['digital_flag'],
             digital_campaign_budget = form.cleaned_data['digital_budget'],
             campaign_budget = form.cleaned_data['campaign_budget'],
-            external_id = form.cleaned_data['external_campaign_id'],
+            external_id = form.cleaned_data['campaign_id'],
         )
         buyer_api = self.get_buyer_api_handle()
         response = ''
@@ -702,7 +770,7 @@ class Buyer_UpdateCampaignDetailView(PATSAPIMixin, FormView):
         except PATSException as error:
             messages.error(self.request, 'Update campaign failed: %s' % error)
         else:
-            messages.success(self.request, 'RFP sent successfully! Response is %s' % result)
+            messages.success(self.request, 'Campaign updated! Response is %s' % response)
         return super(Buyer_UpdateCampaignDetailView, self).form_valid(form)
 
     def get_initial(self):
@@ -738,7 +806,7 @@ class Buyer_UpdateCampaignDetailView(PATSAPIMixin, FormView):
         }
 
     def get_success_url(self, *args, **kwargs):
-        return reverse_lazy('buyer_campaigns_detail_view', kwargs={'campaign_id':self.campaign_id})
+        return reverse_lazy('buyer_campaigns_view', kwargs={'campaign_id':self.campaign_id})
 
     def get_object(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
@@ -824,13 +892,13 @@ class Buyer_CreateOrderRawView(PATSAPIMixin, FormView):
         return {
             'agency_id': self.get_agency_id(),
             'agency_group_id': self.get_agency_group_id(),
-            'person_id': self.get_agency_person_id(),
+            'user_id': self.get_agency_user_id(),
         }
 
     def form_valid(self, form):
         buyer_api = self.get_buyer_api_handle()
         agency_group_id = form.cleaned_data.get('agency_group_id')
-        person_id = form.cleaned_data.get('person_id')
+        user_id = form.cleaned_data.get('user_id')
         # convert the text string to a json object
         try:
             data = json.loads(form.cleaned_data.get('payload'))
@@ -840,7 +908,7 @@ class Buyer_CreateOrderRawView(PATSAPIMixin, FormView):
             # take submitted values and call API - raw version
             result = ''
             try:
-                result = buyer_api.create_order_raw(company_id=company_id, person_id=person_id, data=data)
+                result = buyer_api.send_order_raw(agency_id=agency_id, agency_group_id=agency_group_id, user_id=user_id, data=data)
             except PATSException as error:
                 messages.error(self.request, 'Submit Order failed: %s' % error)
             else:
@@ -853,6 +921,8 @@ class Buyer_CreateOrderRawView(PATSAPIMixin, FormView):
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_CreateOrderRawView, self).get_context_data(*args, **kwargs)
         context_data['agency_id'] = self.get_agency_id()
+        context_data['agency_group_id'] = self.get_agency_group_id()
+        context_data['user_id'] = self.get_user_id()
         return context_data
 
 class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView):
@@ -865,26 +935,38 @@ class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView):
 
     def get_initial(self):
         return {
+            'advertiser_code': self.get_example_advertiser_id(),
             'agency_id': self.get_agency_id(),
-            'company_id': self.get_agency_group_id(),
-            'person_id': self.get_agency_person_id(),
-            'publisher_id': self.get_publisher_id()
+            'agency_group_id': self.get_agency_group_id(),
+            'campaign_start_date':  self.get_example_campaign_start_date(),
+            'campaign_end_date':  self.get_example_campaign_end_date(),
+            'respond_by_date':  self.get_example_respond_by_date(),
+            'print_flag': True,
+            'digital_flag': True,
+            'campaign_budget': self.get_example_budget(),
+            'campaign_id': self.get_example_campaign_id(),
+            'campaign_name': self.get_example_campaign_name(),
+            'user_id': self.get_agency_user_id(),
+            'publisher_id': self.get_publisher_id(),
+            'publisher_email': self.get_publisher_user()
         }
 
     def form_valid(self, form):
-        company_id = form.cleaned_data.get('company_id')
-        person_id = form.cleaned_data.get('person_id')
+        organisation_id = form.cleaned_data.get('agency_id')
+        agency_group_id = form.cleaned_data.get('agency_group_id')
+        user_id = form.cleaned_data.get('user_id')
         publisher_id = form.cleaned_data.get('publisher_id')
         publisher_email = form.cleaned_data.get('publisher_email')
+        campaign_id = form.cleaned_data.get('campaign_id')
         # because we use forms.DateField, the dates come through already formatted as datetime objects
-        campaign_start_date = form.cleaned_data.get('start_date')
-        campaign_end_date = form.cleaned_data.get('end_date')
-        external_campaign_id = form.cleaned_data.get('external_campaign_id')
+        campaign_start_date = form.cleaned_data.get('campaign_start_date')
+        campaign_end_date = form.cleaned_data.get('campaign_end_date')
+        respond_by_date = form.cleaned_data.get('respond_by_date')
         try:
             campaign_details = CampaignDetails(
-                organisation_id = form.cleaned_data['agency_id'],
-                company_id = company_id,
-                person_id = person_id,
+                organisation_id = organisation_id,
+                agency_group_id = agency_group_id,
+                user_id = user_id,
                 campaign_name = form.cleaned_data['campaign_name'],
                 start_date = campaign_start_date,
                 end_date = campaign_end_date,
@@ -894,7 +976,7 @@ class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView):
                 digital_campaign = form.cleaned_data['digital_flag'],
                 digital_campaign_budget = form.cleaned_data['digital_budget'],
                 campaign_budget = form.cleaned_data['campaign_budget'],
-                external_campaign_id = external_campaign_id
+                external_id = campaign_id
             )
         except PATSException as error:
             messages.error(self.request, 'Create CampaignDetails object failed: %s' % error)
@@ -902,9 +984,9 @@ class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView):
         original_payload_1 = form.cleaned_data.get('payload_1')
         original_payload_2 = form.cleaned_data.get('payload_2')
         # replace keyword strings
-        replaced_payload_1 = original_payload_1.replace("PUBLISHER_ID", publisher_id).replace("PUBLISHER_EMAIL", publisher_email).replace("CAMPAIGN_ID", external_campaign_id).replace("CAMPAIGN_START_DATE", campaign_start_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_END_DATE", campaign_end_date.strftime("%Y-%m-%d"))
+        replaced_payload_1 = original_payload_1.replace("PUBLISHER_ID", publisher_id).replace("PUBLISHER_EMAIL", publisher_email).replace("CAMPAIGN_ID", campaign_id).replace("CAMPAIGN_START_DATE", campaign_start_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_END_DATE", campaign_end_date.strftime("%Y-%m-%d")).replace("RESPOND_BY_DATE", respond_by_date.strftime("%Y-%m-%d"))
         if original_payload_2:
-            replaced_payload_2 = original_payload_2.replace("PUBLISHER_ID", publisher_id).replace("PUBLISHER_EMAIL", publisher_email).replace("CAMPAIGN_ID", external_campaign_id).replace("CAMPAIGN_START_DATE", campaign_start_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_END_DATE", campaign_end_date.strftime("%Y-%m-%d"))
+            replaced_payload_2 = original_payload_2.replace("PUBLISHER_ID", publisher_id).replace("PUBLISHER_EMAIL", publisher_email).replace("CAMPAIGN_ID", campaign_id).replace("CAMPAIGN_START_DATE", campaign_start_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_END_DATE", campaign_end_date.strftime("%Y-%m-%d")).replace("RESPOND_BY_DATE", respond_by_date.strftime("%Y-%m-%d"))
         try:
             data_1 = json.loads(replaced_payload_1)
         except ValueError as json_error:
@@ -919,33 +1001,32 @@ class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView):
             buyer_api = self.get_buyer_api_handle()
             response = ''
             try:
-                response = buyer_api.create_campaign(campaign_details)
+                pats_campaign_id = buyer_api.create_campaign(campaign_details)
             except PATSException as error:
                 messages.error(self.request, 'Create Campaign failed: %s' % error)
             else:
-                messages.success(self.request, 'Create Campaign succeeded: response is %s' % response)
+                messages.success(self.request, 'Create Campaign succeeded: campaign ID is %s' % pats_campaign_id)
                 result = ''
                 try:
-                    result = buyer_api.create_order_raw(company_id=company_id, person_id=person_id, data=data_1)
+                    order_1_id = buyer_api.send_order_raw(agency_id=organisation_id, agency_group_id=agency_group_id, user_id=user_id, campaign_id=pats_campaign_id, data=data_1)
                 except PATSException as error:
                     messages.error(self.request, 'Submit Order 1 failed: %s' % error)
                 else:
-                    if result['status'] != u'SUCCESSFUL':
-                        messages.error(self.request, 'Submit Order 1 failed: %s' % error)
-                    else:
-                        messages.success(self.request, 'Order 1 sent successfully! ID %s, version %s' % (result[u'publicId'], result[u'version']))
-                        if original_payload_2:
-                            try:
-                                result = buyer_api.create_order_raw(company_id=company_id, person_id=person_id, data=data_2)
-                            except PATSException as error:
-                                messages.error(self.request, 'Submit Order 2 failed: %s' % error)
-                            else:
-                                messages.success(self.request, 'Order 2 sent successfully! ID %s, version %s' % (result[u'publicId'], result[u'version']))
+                    messages.success(self.request, 'Order 1 sent successfully! ID %s' % order_1_id)
+                    if original_payload_2:
+                        try:
+                            order_2_id = buyer_api.send_order_raw(agency_id=organisation_id, agency_group_id=agency_group_id, user_id=user_id, campaign_id=pats_campaign_id, data=data_2)
+                        except PATSException as error:
+                            messages.error(self.request, 'Submit Order 2 failed: %s' % error)
+                        else:
+                            messages.success(self.request, 'Order 2 sent successfully! ID %s' % order_2_id)
         return super(Buyer_CreateOrderWithCampaignView, self).form_valid(form)
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_CreateOrderWithCampaignView, self).get_context_data(*args, **kwargs)
         context_data['agency_id'] = self.get_agency_id()
+        context_data['agency_group_id'] = self.get_agency_group_id()
+        context_data['agency_user_id'] = self.get_agency_user_id()
         return context_data
 
 class Buyer_CreateOrderView(PATSAPIMixin, FormView):
@@ -1048,6 +1129,22 @@ class Buyer_OrderRevisionDetailView(PATSAPIMixin, DetailView):
         context_data['revision'] = self.revision
         return context_data
 
+class Buyer_ListProposalsView(PATSAPIMixin, ListView):
+    def get_queryset(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.rfp_id = self.kwargs.get('rfp_id', None)
+        buyer_proposals_response = None
+        try:
+            buyer_proposals_response = buyer_api.list_proposals(rfp_id=self.rfp_id)
+        except PATSException as error:
+            messages.error(self.request, 'Couldn''t get list of proposals for RFP %s: %s' % (self.rfp_id, error))
+        return buyer_proposals_response
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_ListProposalsView, self).get_context_data(*args, **kwargs)
+        context_data['rfp_id'] = self.rfp_id
+        return context_data
+
 class Buyer_ListProductsView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
@@ -1109,7 +1206,7 @@ class Seller_ListRFPsView(PATSAPIMixin, ListView):
             self.end_date = datetime.datetime.today().strftime("%Y-%m-%d")
         seller_rfps_response = ''
         try:
-            seller_rfps_response = seller_api.view_rfps(
+            seller_rfps_response = seller_api.list_rfps(
                 start_date=datetime.datetime.strptime(self.start_date, "%Y-%m-%d"),
                 end_date=datetime.datetime.strptime(self.end_date, "%Y-%m-%d")
             )
@@ -1124,21 +1221,55 @@ class Seller_ListRFPsView(PATSAPIMixin, ListView):
         context_data['status'] = self.status
         context_data['status_choices'] = self.status_choices
         return context_data
+
+class Seller_RFPDetailView(PATSAPIMixin, DetailView):
+    def get_object(self, **kwargs):
+        seller_api = self.get_buyer_api_handle()
+        self.rfp_id = self.kwargs.get('rfp_id', None)
+        rfp_detail_response = ''
+        try:
+            rfp_detail_response = seller_api.view_rfp_detail(rfp_id=self.rfp_id)
+        except PATSException as error:
+            messages.error(self.request, "Get RFP detail failed. Error: %s" % error)
+        return rfp_detail_response
     
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_RFPDetailView, self).get_context_data(*args, **kwargs)
+        context_data['rfp_id'] = self.rfp_id
+        return context_data
+
 class Seller_ListProposalsView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         seller_api = self.get_seller_api_handle()
         self.rfp_id = self.kwargs.get('rfp_id', None)
         seller_proposals_response = None
         try:
-            seller_proposals_response = seller_api.view_proposals(rfp_id=self.rfp_id)
+            seller_proposals_response = seller_api.list_proposals(rfp_id=self.rfp_id)
         except PATSException as error:
-            messages.error(self.request, 'Server error (probably a bug, PATS-936): %s' % error)
+            messages.error(self.request, 'List proposals failed. Error: %s' % error)
         return seller_proposals_response
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(Seller_ListProposalsView, self).get_context_data(*args, **kwargs)
         context_data['rfp_id'] = self.rfp_id
+        return context_data
+
+class Seller_ProposalDetailView(PATSAPIMixin, DetailView):
+    proposal_id = None
+
+    def get_object(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.proposal_id = self.kwargs.get('proposal_id', None)
+        proposal_detail_response = None
+        try:
+            proposal_detail_response = seller_api.view_proposal_detail(proposal_id=self.proposal_id)
+        except PATSException as error:
+            messages.error(self.request, 'Couldn''t load proposal: %s' % error)
+        return proposal_detail_response
+        
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_ProposalDetailView, self).get_context_data(*args, **kwargs)
+        context_data['proposal_id'] = self.proposal_id
         return context_data
 
 class Seller_CreateProposalRawView(PATSAPIMixin, FormView):
@@ -1617,22 +1748,20 @@ class ConfigurationView(PATSAPIMixin, FormView):
 
     def get_initial(self):
         return {
-            'agency_id' : self.get_agency_id(),
             'agency_api_key' : self.get_agency_api_key(),
+            'agency_id' : self.get_agency_id(),
+            'agency_group_id' : self.get_agency_group_id(),
             'agency_user_id' : self.get_agency_user_id(),
-            'agency_person_id' : self.get_agency_person_id(),
-            'agency_company_id' : self.get_agency_group_id(),
             'publisher_id' : self.get_publisher_id(),
             'publisher_api_key' : self.get_publisher_api_key(),
             'publisher_user' : self.get_publisher_user(),
         }
 
     def form_valid(self, form):
-        self.set_agency_id(form.cleaned_data['agency_id'])
         self.set_agency_api_key(form.cleaned_data['agency_api_key'])
+        self.set_agency_id(form.cleaned_data['agency_id'])
+        self.set_agency_group_id(form.cleaned_data['agency_group_id'])
         self.set_agency_user_id(form.cleaned_data['agency_user_id'])
-        self.set_agency_person_id(form.cleaned_data['agency_person_id'])
-        self.set_agency_company_id(form.cleaned_data['agency_company_id'])
         self.set_publisher_id(form.cleaned_data['publisher_id'])
         self.set_publisher_api_key(form.cleaned_data['publisher_api_key'])
         self.set_publisher_user(form.cleaned_data['publisher_user'])
@@ -1642,11 +1771,10 @@ class ConfigurationView(PATSAPIMixin, FormView):
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(ConfigurationView, self).get_context_data(*args, **kwargs)
-        context_data['agency_id'] = self.get_agency_id()
         context_data['agency_api_key'] = self.get_agency_api_key()
-        context_data['agency_user_id'] = self.get_agency_user_id()
+        context_data['agency_id'] = self.get_agency_id()
         context_data['agency_group_id'] = self.get_agency_group_id()
-        context_data['agency_person_id'] = self.get_agency_person_id()
+        context_data['agency_user_id'] = self.get_agency_user_id()
         context_data['publisher_id'] = self.get_publisher_id()
         context_data['publisher_api_key'] = self.get_publisher_api_key()
         context_data['publisher_user'] = self.get_publisher_user()

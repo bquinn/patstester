@@ -4,7 +4,7 @@
 {% block content %}
    {% for proposal in object_list %}
     <h2>Proposal {{ forloop.counter }}: {{ proposal.id }}
-    <a class="btn btn-primary" href="{% url 'seller_rfps_proposals_view' rfp_id=rfp_id proposal_id=proposal.id %}">View proposal detail</a></h2>
+    <a class="btn btn-primary" href="{% url 'buyer_rfps_proposals_view' rfp_id=rfp_id proposal_id=proposal.id %}">View proposal detail</a></h2>
     <table class="table">
         <tr>
             <th>Proposal Public ID</th>
@@ -42,6 +42,4 @@
    {% empty %}
     <p>No proposals for this RFP.</p>
    {% endfor %}
-    <p><a class="btn btn-default" href="{% url 'seller_rfps_proposals_create_raw' rfp_id %}">Create a new proposal on this RFP</a></p>
-
 {% endblock %}

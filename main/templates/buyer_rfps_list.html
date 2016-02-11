@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Buyer - RFPs - List RFPs{% endblock %}
+{% block title %}Buyer - RFPs - List/Search RFPs{% endblock %}
 
 {% block content %}
     <form method="get" action="{% url 'buyer_rfps_list' %}">
@@ -13,41 +13,11 @@
     </table>
     <input type="submit" value="Refresh list"/>
     </form>
+    <p></p>
     <table class="table">
-        <tr><th>RFP Public ID</th><th>RFP ID</th><th>Agency ID</th><th>Vendor ID</th><th>Media Type</th><th>Status</th><th>Start date</th><th>End date</th><th>Budgets</th><th>Due Date</th><th>Buyer Name</th><th>Buyer Email</th><th>Comments</th><th>Campaign Public ID</th><th>Campaign Name</th><th>Strategy</th><th>Publisher recipients</th><th>Agency user</th><th>Requested Products</th><th>Flighting?</th><th>Attachments</th> </tr>
-        {% for rfp_group in object_list %}
-        <tr><td colspan="22">
-        Campaign: {{ rfp_group.campaignRfpDto.campaignName }} (PATS Campaign ID <a href="{% url 'buyer_campaigns_detail_view' campaign_id=rfp_group.campaignRfpDto.campaignPublicId %}">{{ rfp_group.campaignRfpDto.campaignPublicId }}</a>, Buyer Campaign ID {{ rfp_group.campaignRfpDto.campaignUrn }})), for client {{ rfp_group.campaignRfpDto.client }} brand {{ rfp_group.campaignRfpDto.brand }}, dates {{ rfp_group.campaignRfpDto.startdate }} - {{ rfp_group.campaignRfpDto.endDate }}
-        </td></tr>
-        {% for rfp in rfp_group.cmRfpDtoList %}
-        <tr>
-            <td>
-<a href="{% url 'buyer_rfps_view' rfp.rfpPublicId %}">{{ rfp.rfpPublicId }}</a></td>
-            <td>{{ rfp.rfpId }}</td>
-            <td>{{ rfp.agencyPublicId }}</td>
-            <td>{{ rfp.publisherPublicId }}</td>
-            <td>{{ rfp.media }}</td>
-            <td>{{ rfp.status }}</td>
-            <td>{{ rfp.startDate }}</td>
-            <td>{{ rfp.endDate }}</td>
-            <td>{{ rfp.budgets }}</td>
-            <td>{{ rfp.responseDueDate }}</td>
-            <td>{{ rfp.buyerName }}</td>
-            <td>{{ rfp.buyerEmail }}</td>
-            <td>{{ rfp.comments }}</td>
-            <td>{{ rfp.campaignPublicId }}</td>
-            <td>{{ rfp.campaignName }}</td>
-            <td>{{ rfp.strategy }}</td>
-            <td>{{ rfp.publisherRecipients }}</td>
-            <td>{{ rfp.agencyUserId }}</td>
-            <td>{{ rfp.requestedProducts }}</td>
-            <td>{{ rfp.includeMonthlyFlighting }}</td>
-            <td>{{ rfp.attachments }}</td>
-        </tr>
-            {% if rfp.proposals %}
-            <tr><td></td><td colspan="21">Proposals: {{ rfp.proposals }}</td></tr>
-            {% endif %}
-        {% endfor %}
+        {% include 'components/rfp_line_item_header.html' %}
+        {% for rfp in object_list %}
+            {% include 'components/rfp_line_item.html' %}
         {% endfor %}
     </table>
 

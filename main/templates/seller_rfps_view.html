@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
 
-{% block title %}Buyer - RFPs - View RFP Detail - {{ rfp_id }}{% endblock %}
+{% block title %}Seller - RFPs - View RFP Detail - {{ rfp_id }}{% endblock %}
 
 {% block content %}
 <h3>Campaign info</h3>
@@ -26,4 +26,5 @@
 {% if object.status == "RESPONDED" %}
   <p><a class="btn btn-primary" href="{% url 'buyer_rfps_proposals_list' rfp_id=rfp_id %}">View proposals on this RFP</a></p>
 {% endif %}
+<p><a class="btn btn-primary" href="{% url 'seller_rfps_proposals_create_raw' rfp_id=object.id %}">Send new proposal on this RFP</a></p>
 {% endblock %}

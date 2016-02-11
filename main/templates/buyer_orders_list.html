@@ -28,7 +28,7 @@
             <td>{{ order.id }}</a></td>
             <td>{{ order.agencyId }}</td>
             <td>{{ order.vendorId }}</td>
-            <td><a href="{% url 'buyer_campaigns_detail_view' campaign_id=order.campaignId %}">{{ order.campaignId }}</a></td>
+            <td><a href="{% url 'buyer_campaigns_view' campaign_id=order.campaignId %}">{{ order.campaignId }}</a></td>
             <td>{{ order.lastActivityTime }}</td>
             <td>{{ order.majorVersion }}</td>
             <td>{{ order.orderVersionStatus }}</td>
