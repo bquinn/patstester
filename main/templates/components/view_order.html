@@ -14,20 +14,20 @@
       <tr>
         <th>Event History</th>
         <td>
-<table class="table">
-<tr>
-<th>Timestamp</th>
-<th>Event Type</th>
-<th>Name</th>
-<th>Comment</th>
-<th>Attachments</th>
-<th>Additional info</th>
-</tr>
-    {% for event in order.events %}
-        {% include 'components/event_line_item.html' with event=event order_id=order_id mode=seller %}
-    {% endfor %}
-</table>
-</td>
+            <table class="table">
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Event Type</th>
+                    <th>Name</th>
+                    <th>Comment</th>
+                    <th>Attachments</th>
+                    <th>Additional info</th>
+                </tr>
+                {% for event in order.events %}
+                    {% include 'components/event_line_item.html' with event=event order_id=order_id mode=seller %}
+                {% endfor %}
+            </table>
+        </td>
       </tr>
       <tr>
         <th>Agency Id</th>

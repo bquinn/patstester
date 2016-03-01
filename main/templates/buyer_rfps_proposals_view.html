@@ -44,8 +44,7 @@ None.
             <th>Attachments</th>
             <td>
                 {% for attachment in object.attachments %}
-                    {{ attachment }}
-                    <a href="{% url 'buyer_rfps_proposals_attachment_download' rfp_id=object.rfpId proposal_id=proposal_id attachment_id=attachment %}">Download attachment</a>
+                    {% include 'components/attachment_item.html' with mode='buyer' %}
                 {% endfor %}
             </td>
         </tr>

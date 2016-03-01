@@ -30,7 +30,7 @@
         </tr>
         {% for rfp in object_list %}
         <tr>
-            <td>{{ rfp.id }}</td>
+            <td><a href="{% url 'seller_rfps_view' rfp_id=rfp.id %}">{{ rfp.id }}</a></td>
             <td>{{ rfp.agencyId }}</td>
             <td>{% for media in rfp.media %}{{ media }}<br />{% endfor %}</td>
             <td>{{ rfp.status }}</td>

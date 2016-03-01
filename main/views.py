@@ -323,6 +323,57 @@ class Buyer_RFPDetailView(PATSAPIMixin, DetailView):
         context_data['rfp_id'] = self.rfp_id
         return context_data
 
+class Buyer_ViewRFPAttachmentView(PATSAPIMixin, DetailView):
+    def get_object(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.campaign_id = self.kwargs.get('campaign_id', None)
+        self.rfp_id = self.kwargs.get('rfp_id', None)
+        self.attachment_id = self.kwargs.get('attachment_id', None)
+        rfp_attachment_response = ''
+        try:
+            rfp_attachment_response = buyer_api.get_rfp_attachment(user_id=self.get_agency_user_id(), rfp_id=self.rfp_id, attachment_id=self.attachment_id)
+        except PATSException as error:
+            messages.error(self.request, "Get RFP attachment failed. Error: %s" % error)
+        return rfp_attachment_response
+    
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_ViewRFPAttachmentView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id
+        context_data['rfp_id'] = self.rfp_id
+        context_data['attachment_id'] = self.attachment_id
+        return context_data
+
+class Buyer_DownloadRFPAttachmentView(PATSAPIMixin, DetailView):
+    def get(self, *args, **kwargs):
+        old_response = super(Buyer_DownloadRFPAttachmentView, self).get(*args, **kwargs)
+        file_contents = base64.b64decode(self.rfp_attachment['contents'])
+        http_response = HttpResponse(content_type=self.rfp_attachment['mimeType'])
+        # the "attachment" makes the browser pop up a "do you wish to download?" window
+        http_response['Content-Disposition'] = 'attachment; filename="'+self.rfp_attachment['name']+'"'
+        http_response['Content-Length'] = len(file_contents)
+        http_response.write(file_contents)
+        return http_response
+
+    def get_object(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.campaign_id = self.kwargs.get('campaign_id', None)
+        self.rfp_id = self.kwargs.get('rfp_id', None)
+        self.attachment_id = self.kwargs.get('attachment_id', None)
+        rfp_attachment_response = ''
+        try:
+            rfp_attachment_response = buyer_api.get_rfp_attachment(user_id=self.get_agency_user_id(), rfp_id=self.rfp_id, attachment_id=self.attachment_id)
+            self.rfp_attachment = rfp_attachment_response
+        except PATSException as error:
+            messages.error(self.request, "Get RFP attachment failed. Error: %s" % error)
+        return rfp_attachment_response
+    
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_DownloadRFPAttachmentView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id
+        context_data['rfp_id'] = self.rfp_id
+        context_data['attachment_id'] = self.attachment_id
+        return context_data
+
 class Buyer_ViewOrderAttachmentView(PATSAPIMixin, DetailView):
     def get_object(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
@@ -346,13 +397,11 @@ class Buyer_ViewOrderAttachmentView(PATSAPIMixin, DetailView):
 class Buyer_DownloadOrderAttachmentView(PATSAPIMixin, DetailView):
     def get(self, *args, **kwargs):
         old_response = super(Buyer_DownloadOrderAttachmentView, self).get(*args, **kwargs)
-        # file_contents = self.order_attachment['contents']
         file_contents = base64.b64decode(self.order_attachment['contents'])
         http_response = HttpResponse(content_type=self.order_attachment['mimeType'])
         # the "attachment" version pops up a "do you wish to download?" window
-        # http_response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
-        http_response['Content-Disposition'] = 'filename="somefilename.pdf"'
-        # http_response['Content-Length'] = len(file_contents)
+        http_response['Content-Disposition'] = 'attachment; filename="'+self.order_attachment['name']+'"'
+        http_response['Content-Length'] = len(file_contents)
         http_response.write(file_contents)
         return http_response
 
@@ -376,11 +425,14 @@ class Buyer_DownloadOrderAttachmentView(PATSAPIMixin, DetailView):
         context_data['attachment_id'] = self.attachment_id
         return context_data
 
-class Buyer_DownloadProposalAttachmentView(PATSAPIMixin, DetailView):
+class Buyer_ViewProposalAttachmentView(PATSAPIMixin, DetailView):
     def get_object(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
+        self.campaign_id = self.kwargs.get('campaign_id', None)
+        self.rfp_id = self.kwargs.get('rfp_id', None)
         self.proposal_id = self.kwargs.get('proposal_id', None)
         self.attachment_id = self.kwargs.get('attachment_id', None)
+        order_attachment_response = ''
         try:
             proposal_attachment_response = buyer_api.get_proposal_attachment(user_id=self.get_agency_user_id(), proposal_id=self.proposal_id, attachment_id=self.attachment_id)
         except PATSException as error:
@@ -388,8 +440,40 @@ class Buyer_DownloadProposalAttachmentView(PATSAPIMixin, DetailView):
         return proposal_attachment_response
     
     def get_context_data(self, *args, **kwargs):
-        context_data = super(Buyer_RFPDetailView, self).get_context_data(*args, **kwargs)
+        context_data = super(Buyer_ViewProposalAttachmentView, self).get_context_data(*args, **kwargs)
+        context_data['campaign_id'] = self.campaign_id
         context_data['rfp_id'] = self.rfp_id
+        context_data['proposal_id'] = self.proposal_id
+        context_data['attachment_id'] = self.attachment_id
+        return context_data
+
+class Buyer_DownloadProposalAttachmentView(PATSAPIMixin, DetailView):
+    def get(self, *args, **kwargs):
+        old_response = super(Buyer_DownloadProposalAttachmentView, self).get(*args, **kwargs)
+        file_contents = base64.b64decode(self.proposal_attachment['contents'])
+        http_response = HttpResponse(content_type=self.proposal_attachment['mimeType'])
+        # the "attachment" makes the browser pop up a "do you wish to download?" window
+        http_response['Content-Disposition'] = 'attachment; filename="'+self.proposal_attachment['name']+'"'
+        http_response['Content-Length'] = len(file_contents)
+        http_response.write(file_contents)
+        return http_response
+
+    def get_object(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.rfp_id = self.kwargs.get('rfp_id', None)
+        self.proposal_id = self.kwargs.get('proposal_id', None)
+        self.attachment_id = self.kwargs.get('attachment_id', None)
+        try:
+            proposal_attachment_response = buyer_api.get_proposal_attachment(user_id=self.get_agency_user_id(), proposal_id=self.proposal_id, attachment_id=self.attachment_id)
+            self.proposal_attachment = proposal_attachment_response
+        except PATSException as error:
+            messages.error(self.request, "Get proposal attachment failed. Error: %s" % error)
+        return proposal_attachment_response
+    
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_DownloadProposalAttachmentView, self).get_context_data(*args, **kwargs)
+        context_data['rfp_id'] = self.rfp_id
+        context_data['proposal_id'] = self.proposal_id
         context_data['attachment_id'] = self.attachment_id
         return context_data
 
@@ -648,6 +732,7 @@ class Buyer_ProposalDetailView(PATSAPIMixin, DetailView):
 
     def get_object(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
+        self.rfp_id = self.kwargs.get('rfp_id', None)
         self.proposal_id = self.kwargs.get('proposal_id', None)
         proposal_detail_response = None
         try:
@@ -659,6 +744,7 @@ class Buyer_ProposalDetailView(PATSAPIMixin, DetailView):
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_ProposalDetailView, self).get_context_data(*args, **kwargs)
         context_data['proposal_id'] = self.proposal_id
+        context_data['rfp_id'] = self.rfp_id
         return context_data
 
 class Buyer_OrderStatusView(PATSAPIMixin, DetailView):
@@ -1259,6 +1345,7 @@ class Seller_ProposalDetailView(PATSAPIMixin, DetailView):
 
     def get_object(self, **kwargs):
         seller_api = self.get_seller_api_handle()
+        self.rfp_id = self.kwargs.get('rfp_id', None)
         self.proposal_id = self.kwargs.get('proposal_id', None)
         proposal_detail_response = None
         try:
@@ -1270,6 +1357,7 @@ class Seller_ProposalDetailView(PATSAPIMixin, DetailView):
     def get_context_data(self, *args, **kwargs):
         context_data = super(Seller_ProposalDetailView, self).get_context_data(*args, **kwargs)
         context_data['proposal_id'] = self.proposal_id
+        context_data['rfp_id'] = self.rfp_id
         return context_data
 
 class Seller_CreateProposalRawView(PATSAPIMixin, FormView):
@@ -1476,8 +1564,8 @@ class Seller_DownloadOrderAttachmentView(PATSAPIMixin, DetailView):
         file_contents = base64.b64decode(self.order_attachment['contents'])
         http_response = HttpResponse(content_type=self.order_attachment['mimeType'])
         # the "attachment" version pops up a "do you wish to download?" window
-        # http_response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
-        http_response['Content-Disposition'] = 'filename="somefilename.pdf"'
+        # http_response['Content-Disposition'] = 'attachment; filename="'+self.order_attachment['name']+'"'
+        http_response['Content-Disposition'] = 'filename="'+self.order_attachment['name']+'"'
         # http_response['Content-Length'] = len(file_contents)
         http_response.write(file_contents)
         return http_response
@@ -1502,41 +1590,45 @@ class Seller_DownloadOrderAttachmentView(PATSAPIMixin, DetailView):
         context_data['attachment_id'] = self.attachment_id
         return context_data
 
-#class Seller_OrderHistoryView(PATSAPIMixin, ListView):
-#    order_id = None
-#
-#    def get_queryset(self, **kwargs):
-#        seller_api = self.get_seller_api_handle()
-#        self.order_id = self.kwargs.get('order_id', None)
-#        order_history_response = None
-#        try:
-#            order_history_response = seller_api.view_order_history(order_id=self.order_id, full=False)
-#        except PATSException as error:
-#            messages.error(self.request, "Can't get order history, error: %s" % error)
-#        return order_history_response
-#        
-#    def get_context_data(self, *args, **kwargs):
-#        context_data = super(Seller_OrderHistoryView, self).get_context_data(*args, **kwargs)
-#        context_data['order_id'] = self.order_id
-#        return context_data
+class Seller_ViewProposalAttachmentView(PATSAPIMixin, DetailView):
+    def get_object(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.campaign_id = self.kwargs.get('campaign_id', None)
+        self.rfp_id = self.kwargs.get('rfp_id', None)
+        self.proposal_id = self.kwargs.get('proposal_id', None)
+        self.attachment_id = self.kwargs.get('attachment_id', None)
+        order_attachment_response = ''
+        try:
+            proposal_attachment_response = seller_api.get_proposal_attachment(user_id=self.get_publisher_user(), proposal_id=self.proposal_id, attachment_id=self.attachment_id)
+        except PATSException as error:
+            messages.error(self.request, "Get proposal attachment failed. Error: %s" % error)
+        return proposal_attachment_response
+    
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_ViewProposalAttachmentView, self).get_context_data(*args, **kwargs)
+        context_data['rfp_id'] = self.rfp_id
+        context_data['proposal_id'] = self.proposal_id
+        context_data['attachment_id'] = self.attachment_id
+        return context_data
 
-#class Seller_OrderFullHistoryView(PATSAPIMixin, ListView):
-#    order_id = None
-#
-#    def get_queryset(self, **kwargs):
-#        seller_api = self.get_seller_api_handle()
-#        self.order_id = self.kwargs.get('order_id', None)
-#        order_history_response = None
-#        try:
-#            order_history_response = seller_api.view_order_history(order_id=self.order_id, full=True)
-#        except PATSException as error:
-#            messages.error(self.request, "Can't get order history, error: %s" % error)
-#        return order_history_response
-#        
-#    def get_context_data(self, *args, **kwargs):
-#        context_data = super(Seller_OrderFullHistoryView, self).get_context_data(*args, **kwargs)
-#        context_data['order_id'] = self.order_id
-#        return context_data
+class Seller_DownloadProposalAttachmentView(PATSAPIMixin, DetailView):
+    def get_object(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.rfp_id = self.kwargs.get('rfp_id', None)
+        self.proposal_id = self.kwargs.get('proposal_id', None)
+        self.attachment_id = self.kwargs.get('attachment_id', None)
+        try:
+            proposal_attachment_response = buyer_api.get_proposal_attachment(user_id=self.get_publisher_user(), proposal_id=self.proposal_id, attachment_id=self.attachment_id)
+        except PATSException as error:
+            messages.error(self.request, "Get proposal attachment failed. Error: %s" % error)
+        return proposal_attachment_response
+    
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_DownloadProposalAttachmentView, self).get_context_data(*args, **kwargs)
+        context_data['rfp_id'] = self.rfp_id
+        context_data['proposal_id'] = self.proposal_id
+        context_data['attachment_id'] = self.attachment_id
+        return context_data
 
 class Seller_ListOrderRevisionsView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
@@ -1563,24 +1655,6 @@ class Seller_ListOrderRevisionsView(PATSAPIMixin, ListView):
         context_data['order_id'] = self.order_id
         context_data['version'] = self.version
         return context_data
-
-#class Seller_OrderRevisionStatusView(PATSAPIMixin, DetailView):
-#    order_id = None
-#
-#    def get_object(self, **kwargs):
-#        seller_api = self.get_seller_api_handle()
-#        self.order_id = self.kwargs.get('order_id', None)
-#        order_revision_status = None
-#        try:
-#            order_revision_status = seller_api.view_revision_status_summary(order_id=self.order_id)
-#        except PATSException as error:
-#            messages.error(self.request, "Can't get revision status, error: %s" % error)
-#        return order_revision_status
-#
-#    def get_context_data(self, *args, **kwargs):
-#        context_data = super(Seller_OrderRevisionStatusView, self).get_context_data(*args, **kwargs)
-#        context_data['order_id'] = self.order_id
-#        return context_data
 
 class Seller_OrderRevisionDetailView(PATSAPIMixin, DetailView):
     order_id = None

@@ -24,7 +24,7 @@
 <tr><th>Attachments</th><td>{% for attachment in object.attachments %}{{ attachment }}<br/>{% endfor %}</td></tr>
 </table>
 {% if object.status == "RESPONDED" %}
-  <p><a class="btn btn-primary" href="{% url 'buyer_rfps_proposals_list' rfp_id=rfp_id %}">View proposals on this RFP</a></p>
+  <p><a class="btn btn-primary" href="{% url 'seller_rfps_proposals_list' rfp_id=rfp_id %}">View proposals on this RFP</a></p>
 {% endif %}
 <p><a class="btn btn-primary" href="{% url 'seller_rfps_proposals_create_raw' rfp_id=object.id %}">Send new proposal on this RFP</a></p>
 {% endblock %}

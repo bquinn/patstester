@@ -21,7 +21,16 @@
 <tr><th>Currency</th><td>{{ object.currencyCode }}</td> </tr>
 <tr><th>Comments</th><td>{{ object.comments }}</td></tr>
 <tr><th>Requested products</th><td>{{ objects.requestedProducts }}</td></tr>
-<tr><th>Attachments</th><td>{% for attachment in object.attachments %}{{ attachment }}<br/>{% endfor %}</td></tr>
+<tr><th>Attachments</th><td>
+    {% for attachment in object.attachments %}
+         <li><a href="{% url 'buyer_rfps_attachment_view' rfp_id=rfp_id attachment_id=attachment.id %}">{{ attachment.id }}</a><br />
+             MIME Type: {{ attachment.mimeType }}<br />
+             Name: {{ attachment.name }}<br />
+             <a href="{% url 'buyer_rfps_attachment_download' rfp_id=rfp_id attachment_id=attachment.id %}" class="btn btn-primary">
+               <span class="glyphicon glyphicon-download" aria-hidden="true"></span> Download
+            </a></li>
+    {% endfor %}
+</td></tr>
 </table>
 {% if object.status == "RESPONDED" %}
   <p><a class="btn btn-primary" href="{% url 'buyer_rfps_proposals_list' rfp_id=rfp_id %}">View proposals on this RFP</a></p>
