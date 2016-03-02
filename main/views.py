@@ -789,7 +789,7 @@ class Buyer_CreateCampaignView(PATSAPIMixin, FormView):
         campaign_details = CampaignDetails(
             organisation_id = form.cleaned_data['organisation_id'],
             agency_group_id = form.cleaned_data['agency_group_id'],
-            person_id = form.cleaned_data['person_id'],
+            user_id = form.cleaned_data['user_id'],
             campaign_name = form.cleaned_data['campaign_name'],
             start_date = form.cleaned_data['start_date'],
             end_date = form.cleaned_data['end_date'],
@@ -799,7 +799,7 @@ class Buyer_CreateCampaignView(PATSAPIMixin, FormView):
             digital_campaign = form.cleaned_data['digital_flag'],
             digital_campaign_budget = form.cleaned_data['digital_budget'],
             campaign_budget = form.cleaned_data['campaign_budget'],
-            external_id = form.cleaned_data['campaign_id'],
+            external_id = form.cleaned_data['external_campaign_id'],
         )
         buyer_api = self.get_buyer_api_handle()
         response = ''
@@ -920,12 +920,13 @@ class Buyer_CreateRFPView(PATSAPIMixin, FormView):
     def get_initial(self):
         return {
             'user_id': self.get_agency_user_id(),
+            'publisher_id': self.get_publisher_id()
         }
 
     def form_valid(self, form):
         buyer_api = self.get_buyer_api_handle()
         user_id = form.cleaned_data.get('user_id')
-        campaign_public_id = form.cleaned_data.get('campaign_public_id')
+        campaign_id = form.cleaned_data.get('campaign_id')
         budget_amount = form.cleaned_data.get('budget_amount')
         start_date = form.cleaned_data.get('start_date')
         end_date = form.cleaned_data.get('end_date')
@@ -951,14 +952,14 @@ class Buyer_CreateRFPView(PATSAPIMixin, FormView):
         # take submitted values and call API - raw version
         result = ''
         try:
-            result = buyer_api.submit_rfp(user_id=user_id, campaign_public_id=campaign_public_id, budget_amount=budget_amount, start_date=start_date, end_date=end_date, respond_by_date=respond_by_date, comments=comments, publisher_id=publisher_id, publisher_emails=publisher_emails, media_print=media_print, media_online=media_online, strategy=strategy, requested_products=requested_products, attachments=attachments)
+            rfp_id = buyer_api.send_rfp(user_id=user_id, campaign_id=campaign_id, budget_amount=budget_amount, start_date=start_date, end_date=end_date, respond_by_date=respond_by_date, comments=comments, publisher_id=publisher_id, publisher_emails=publisher_emails, media_print=media_print, media_online=media_online, strategy=strategy, requested_products=requested_products, attachments=attachments)
         except PATSException as error:
             messages.error(self.request, 'Submit RFP failed: %s' % error)
         else:
-            if result[0]['status'] == u'SENT':
-                messages.success(self.request, 'RFP sent successfully! Response is %s' % result)
+            if rfp_id:
+                messages.success(self.request, 'RFP sent successfully! RFP ID is %s' % rfp_id)
             else:
-                messages.error(self.request, 'Submit RFP failed. Response is %s' % result)
+                messages.error(self.request, 'Submit RFP failed, blank response: %s' % rfp_id)
         return super(Buyer_CreateRFPView, self).form_valid(form)
 
     def get_context_data(self, *args, **kwargs):

@@ -25,7 +25,7 @@ class Buyer_CampaignForm(forms.Form):
 
 class Buyer_CreateRFPForm(forms.Form):
     user_id = forms.CharField(label='Buyer User ID', max_length=100)
-    campaign_public_id = forms.CharField(label='Campaign ID', max_length=100)
+    campaign_id = forms.CharField(label='Campaign ID', max_length=100)
     budget_amount = forms.CharField(label='Budget amount', max_length=100)
     start_date = forms.DateField(label='RFP start date', widget=forms.DateInput(attrs={'type':'date'}))
     end_date = forms.DateField(label='RFP end date', widget=forms.DateInput(attrs={'type':'date'}))
@@ -37,7 +37,7 @@ class Buyer_CreateRFPForm(forms.Form):
     media_online = forms.BooleanField(label='Online (digital) component', required=False)
     strategy = forms.CharField(label='Strategy', max_length=100)
     requested_products = forms.CharField(label='Requested products', max_length=100, required=False)
-    attachment = forms.FileField(max_length=100, widget=BootstrapFileInput)
+    attachment = forms.FileField(max_length=100, widget=BootstrapFileInput, required=False)
 
 class Buyer_ReturnProposalForm(forms.Form):
     proposal_id = forms.CharField(label='Proposal Public ID', max_length=50)
