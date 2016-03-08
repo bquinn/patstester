@@ -16,6 +16,7 @@ from .views import (
     Buyer_CreateOrderWithCampaignView,
     Buyer_OrderRevisionDetailView,
     Buyer_ListProductsView,
+    Buyer_CallbackView,
     Seller_GetAgenciesView,
     Seller_ListRFPsView, Seller_RFPDetailView,
     Seller_ListProposalsView, Seller_ProposalDetailView, 
@@ -30,6 +31,9 @@ from .views import (
 )
 
 urlpatterns = [
+    url(r'^api/callback',
+        Buyer_CallbackView.as_view(),
+        name='api_callback'),
     url(r'^buyer/metadata/publishers/(?P<publisher_id>[\w\-]+)/users',
         Buyer_GetPublisherUsersView.as_view(template_name='buyer_metadata_publisher_users.html'),
         name='buyer_metadata_publisher_users'),

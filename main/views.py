@@ -12,6 +12,7 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 from django.views.generic.detail import DetailView
 from django.views.generic import TemplateView
+from oauth2_provider.views.generic import ProtectedResourceView
 
 from pats import PATSBuyer, PATSSeller, PATSException, CampaignDetails
 
@@ -242,6 +243,13 @@ class PATSAPIMixin(object):
         if not hasattr(self, 'example_budget'):
             self.example_budget = random.randint(50000,100000)
         return self.example_budget
+
+class Buyer_CallbackView(ProtectedResourceView):
+    def post(self, request, *args, **kwargs):
+        return HttpResponse('Hello, OAuth2!')
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse('Hello, OAuth2!')
 
 class Buyer_GetPublishersView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):

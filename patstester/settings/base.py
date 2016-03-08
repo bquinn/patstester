@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
+    'oauth2_provider',
     'main'
 )
 
@@ -53,7 +54,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 )
+
+# should change this in future to only allow requests from certain domains (mediaocean.com?)
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'patstester.urls'
 
@@ -147,3 +152,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "../static"),
+)
