@@ -239,7 +239,7 @@ urlpatterns = [
     url(r'^lineitemtester',
         TemplateView.as_view(template_name='lineitemtester.html'),
         name='line_item_tester'),
-    url(r'^',
+    url(r'^$',
         TemplateView.as_view(template_name='home.html'),
         name='home')
 ]
