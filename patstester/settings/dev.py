@@ -23,7 +23,6 @@ INSTALLED_APPS += ( 'debug_toolbar', )
 
 # prepend the template options list with a new context processor
 TEMPLATES[0]['OPTIONS']['context_processors'].insert(0, 'django.template.context_processors.debug')
-TEMPLATES[0]['DIRS'] = [ '/users/brendan/Sites/patstester/templates/' ]
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases

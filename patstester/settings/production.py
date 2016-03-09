@@ -12,6 +12,4 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['apitester.pats.org.uk']
 
-TEMPLATES[0]['DIRS'] = [ '/var/www/apitester.pats.org.uk/patstester/templates/' ]
-
 SECRET_KEY = 'ao(i7!wdcnc*%^oex^hir9cazxu_hbq=20d$8iasdfs&&!s0t^h=($'
