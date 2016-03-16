@@ -4,10 +4,12 @@ import json
 import random
 import re
 import string
-from django.http import HttpResponse
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormView
 from django.views.generic.detail import DetailView
@@ -245,6 +247,11 @@ class PATSAPIMixin(object):
         return self.example_budget
 
 class Buyer_CallbackView(ProtectedResourceView):
+    # disable CSRF checking for this view because it's being called via OAuth, not from a form
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ChromeLoginView, self).dispatch(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         return HttpResponse('Hello, OAuth2!')
 
