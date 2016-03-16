@@ -132,6 +132,11 @@ LOGGING = {
             'propagate': True,
             'level':'DEBUG',
         },
+        'oauth2_provider': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
     }
 }
 
