@@ -19,8 +19,8 @@ class PATSEvent(models.Model):
 
     entity_id = models.CharField(_('entity ID'), max_length=15, blank=True)
     event_date = models.DateTimeField(_('event date'), blank=True)
-    entity_type = models.CharField(_('entity type'), max_length=15, blank=True)
-    subscription_type = models.CharField(_('entity type'), max_length=15, blank=True)
+    entity_type = models.CharField(_('entity type'), max_length=30, blank=True)
+    subscription_type = models.CharField(_('entity type'), max_length=30, blank=True)
     major_version = models.CharField(_('major version'), max_length=5, blank=True)
     minor_version = models.CharField(_('minor version'), max_length=5, blank=True)
 
