@@ -29,3 +29,10 @@ class PATSEvent(models.Model):
 
     # auto-track when this object was last updated
     updated_date = models.DateTimeField(auto_now=True, blank=True, null=True)
+
+    def __str__(self):
+        return "PATS Event: %s %s %s.%s %s at %s" % (
+                self.entity_type, self.entity_id,
+                self.major_version, self.minor_version,
+                self.subscription_type, self.event_date
+            )
