@@ -276,8 +276,10 @@ class Buyer_CallbackView(PATSAPIMixin, ProtectedResourceView):
             event = PATSEvent(
                 entity_id=record.get('entityId',None),
                 event_date=eventDateTime,
-                entity_type=record.get('entityType',None),
-                subscription_type=record.get('subscriptionType',None),
+                # entity_type=record.get('entityType',None),
+                entity_type=record.get('subscriptionType',None),
+                # subscription_type=record.get('subscriptionType',None),
+                subscription_type=record.get('eventType',None),
                 major_version=attributes.get('majorVersion',None),
                 minor_version=attributes.get('minorVersion',None),
             )
