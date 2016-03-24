@@ -137,6 +137,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'main': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        }
     }
 }
 
