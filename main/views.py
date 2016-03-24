@@ -1,12 +1,14 @@
 import base64
 import datetime
 import json
+import logging
 import random
 import re
 import string
+import pytz
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
@@ -27,6 +29,7 @@ from .forms import (
     Seller_OrderRespondForm, Seller_OrderReviseForm,
     ConfigurationForm
 )
+from .models import PATSEvent
 
 # Default values for API buyer/seller parameters
 # buy side
@@ -112,8 +115,13 @@ ADVERTISER_LIST = ADVERTISER_NAMES.keys()
 class PATSAPIMixin(object):
     pats_buyer = None
     pats_seller = None
+    logger = None
     debug_mode = True   # hardcoded for now
     raw_mode = True     # hardcoded for now
+
+    def __init__(self, *args, **kwargs):
+        self.logger = logging.getLogger(__name__)
+        super(PATSAPIMixin, self).__init__(*args, **kwargs)
 
     def get_agency_id(self):
         if 'agency_id' not in self.request.session:
@@ -246,17 +254,39 @@ class PATSAPIMixin(object):
             self.example_budget = random.randint(50000,100000)
         return self.example_budget
 
-class Buyer_CallbackView(ProtectedResourceView):
+class Buyer_CallbackView(PATSAPIMixin, ProtectedResourceView):
     # disable CSRF checking for this view because it's being called via OAuth, not from a form
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
-        return super(ChromeLoginView, self).dispatch(request, *args, **kwargs)
+        return super(Buyer_CallbackView, self).dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        return HttpResponse('Hello, OAuth2!')
+        received_json_data=json.loads(request.body.decode("utf-8"))
+        self.logger.info("event handler: received data:")
+        self.logger.info(received_json_data)
+        if type(received_json_data) is not list:
+            return HttpResponseBadRequest('Data should be a JSON array of objects')
+        tz = pytz.timezone('UTC')
+        for record in received_json_data:
+            eventTime = record.get('eventDateInMillis',None)
+            eventDateTime = None
+            if eventTime:
+                eventDateTime = datetime.datetime.fromtimestamp(eventTime/1000, tz)
+            attributes = record.get('attributes',None)
+            event = PATSEvent(
+                entity_id=record.get('entityId',None),
+                event_date=eventDateTime,
+                entity_type=record.get('entityType',None),
+                subscription_type=record.get('subscriptionType',None),
+                major_version=attributes.get('majorVersion',None),
+                minor_version=attributes.get('minorVersion',None),
+            )
+            event.save()
+
+        return HttpResponse('Event received')
 
     def get(self, request, *args, **kwargs):
-        return HttpResponse('Hello, OAuth2!')
+        return HttpResponseNotAllowed(['POST'], 'Please send data in a JSON payload in a POST request to this endpoint.')
 
 class Buyer_GetPublishersView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
