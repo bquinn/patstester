@@ -4,13 +4,13 @@
 {% block content %}
     <form method="get" action="{% url 'buyer_events_list' %}" class="form-horizontal">
       <div class="form-group">
-        <label for="search_entity_type" class="col-sm-2 control-label">Entity type</label>
+        <label for="search_subscription_type" class="col-sm-2 control-label">Entity type</label>
         <div class="col-sm-6">
-          <select name="search_entity_type" class="form-control">
-            {% for entity_type_code, entity_type_name in entity_types.items %}
-                <option value="{{ entity_type_code }}"
-                    {% if entity_type_code == search_entity_type %}selected{% endif %}
-                    >{{entity_type_name}}</option>
+          <select name="search_subscription_type" class="form-control">
+            {% for subscription_type_code, subscription_type_name in subscription_types.items %}
+                <option value="{{ subscription_type_code }}"
+                    {% if subscription_type_code == search_subscription_type %}selected{% endif %}
+                    >{{subscription_type_name}}</option>
             {% endfor %}
           </select>
         </div>

@@ -276,8 +276,8 @@ class Buyer_CallbackView(PATSAPIMixin, ProtectedResourceView):
             event = PATSEvent(
                 entity_id=record.get('entityId',None),
                 event_date=eventDateTime,
-                entity_type=record.get('subscriptionType',None),
-                subscription_type=record.get('eventType',None),
+                subscription_type=record.get('subscriptionType',None),
+                event_type=record.get('eventType',None),
                 major_version=attributes.get('majorVersion',0),
                 minor_version=attributes.get('minorVersion',0),
             )
@@ -293,14 +293,14 @@ class Buyer_ListEventsView(PATSAPIMixin, ListView):
 
     def get_queryset(self, **kwargs):
         queryset = super(Buyer_ListEventsView, self).get_queryset(**kwargs)
-        self.search_entity_type = self.request.GET.get('search_entity_type', None)
+        self.search_subscription_type = self.request.GET.get('search_subscription_type', None)
         self.search_event_type = self.request.GET.get('search_event_type', None)
         self.search_from_date = self.request.GET.get('search_from_date', None)
         self.search_to_date = self.request.GET.get('search_to_date', None)
-        if self.search_entity_type:
-            queryset = queryset.filter(entity_type = self.search_entity_type)
+        if self.search_subscription_type:
+            queryset = queryset.filter(subscription_type = self.search_subscription_type)
         if self.search_event_type:
-            queryset = queryset.filter(subscription_type = self.search_event_type)
+            queryset = queryset.filter(event_type = self.search_event_type)
         if self.search_from_date:
             queryset = queryset.filter(event_date__gt = self.search_from_date)
         if self.search_to_date:
@@ -310,8 +310,8 @@ class Buyer_ListEventsView(PATSAPIMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_ListEventsView, self).get_context_data(*args, **kwargs)
-        context_data['search_entity_type'] = self.search_entity_type
-        context_data['entity_types'] = { '' : 'None', 'order': 'Order', 'revision' : 'Revision' }
+        context_data['search_subscription_type'] = self.search_subscription_type
+        context_data['subscription_types'] = { '' : 'None', 'order': 'Order', 'revision' : 'Revision' }
         context_data['search_event_type'] = self.search_event_type
         context_data['event_types'] = {
             '' : 'None',

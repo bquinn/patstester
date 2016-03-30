@@ -5,22 +5,24 @@ class PATSEvent(models.Model):
     """
     Order event notification from the Push API looks like
 
-  {
-    "entityId" : "O-XXXX",
-    "eventDateInMillis" : 1438424445000,
-    "entityType" : "Order",
-    "subscriptionType" : "Sent",
-    "attributes" : {
-      "majorVersion" : "0",
-      "minorVersion" : "1"
-    }
-  },
+    [
+        {
+            'subscriptionType': 'Order',
+            'eventType': 'Expired',
+            'entityId': 'O-1MV6',
+            'attributes': {
+                'majorVersion': '4'
+            },
+            'eventDateInMillis': 1459224022554
+        }
+    ]
+    Note that this is different from the docs: logged as PATS-1157.
     """
 
     entity_id = models.CharField(_('entity ID'), max_length=15, blank=True)
     event_date = models.DateTimeField(_('event date'), blank=True)
-    entity_type = models.CharField(_('entity type'), max_length=30, blank=True)
-    subscription_type = models.CharField(_('entity type'), max_length=30, blank=True)
+    subscription_type = models.CharField(_('subscription type'), max_length=30, blank=True)
+    event_type = models.CharField(_('event type'), max_length=30, blank=True)
     major_version = models.CharField(_('major version'), max_length=5, blank=True)
     minor_version = models.CharField(_('minor version'), max_length=5, blank=True)
 
@@ -32,7 +34,7 @@ class PATSEvent(models.Model):
 
     def __str__(self):
         return "PATS Event: %s %s %s.%s %s at %s" % (
-                self.entity_type, self.entity_id,
+                self.subscription_type, self.entity_id,
                 self.major_version, self.minor_version,
-                self.subscription_type, self.event_date
+                self.event_type, self.event_date
             )

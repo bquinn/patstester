@@ -19,6 +19,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='patsevent',
             name='subscription_type',
-            field=models.CharField(max_length=30, verbose_name='entity type', blank=True),
+            field=models.CharField(max_length=30, verbose_name='subscription type', blank=True),
         ),
     ]
