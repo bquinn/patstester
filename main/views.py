@@ -6,6 +6,7 @@ import random
 import re
 import string
 import pytz
+from django.conf import settings
 from django.core.urlresolvers import reverse_lazy
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed
@@ -290,6 +291,7 @@ class Buyer_CallbackView(PATSAPIMixin, ProtectedResourceView):
 
 class Buyer_ListEventsView(PATSAPIMixin, ListView):
     model = PATSEvent
+    paginate_by = settings.RESULTS_PER_PAGE
 
     def get_queryset(self, **kwargs):
         queryset = super(Buyer_ListEventsView, self).get_queryset(**kwargs)

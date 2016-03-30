@@ -168,3 +168,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 STATIC_ROOT = os.path.join(BASE_DIR, '../static')
+
+# for pages with pagination...
+RESULTS_PER_PAGE = 20
