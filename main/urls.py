@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 from .views import (
     Buyer_GetPublishersView, Buyer_GetPublisherUsersView, Buyer_GetAgenciesView,
     Buyer_CreateCampaignView, Buyer_CampaignDetailView, Buyer_UpdateCampaignDetailView,
-    Buyer_CreateRFPView, Buyer_RFPDetailView, Buyer_RFPSearchView, Buyer_DownloadProposalAttachmentView,
+    Buyer_CreateRFPView, Buyer_CreateRFPWithCampaignView, Buyer_RFPDetailView, Buyer_RFPSearchView, Buyer_DownloadProposalAttachmentView,
     Buyer_ListEventsView,
     Buyer_RFPsForCampaignView, Buyer_ListProposalsView, Buyer_ProposalDetailView,
     Buyer_ReturnProposalView, Buyer_ReturnOrderRevisionView, Buyer_RequestOrderRevisionView,
@@ -92,6 +92,9 @@ urlpatterns = [
     url(r'^buyer/rfps/search/(?P<searchquery>[\w]+)?',
         Buyer_RFPSearchView.as_view(template_name='buyer_rfps_search.html'),
         name='buyer_rfps_search'),
+    url(r'^buyer/rfps/create-with-campaign',
+        Buyer_CreateRFPWithCampaignView.as_view(template_name='buyer_rfps_create_with_campaign.html'),
+        name='buyer_rfps_create_with_campaign'),
     url(r'^buyer/rfps/create',
         Buyer_CreateRFPView.as_view(template_name='buyer_rfps_create.html'),
         name='buyer_rfps_create'),

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Buyer - RFPs - Create RFP with Campaign{% endblock %}
+
+{% block content %}
+    <p>Specify a unique Campaign ID and Campaign Name, advertiser (try "AAB" for Ford or "SLO" for Brit Rail), campaign dates, and enter RFP details, to create a new campaign and send an RFP on it -- all in one step.</p>
+    <p>We've provided some random starter values so you can just use those or enter your own.</p>
+    <p>Don't forget that the RFP due dates must be within the campaign dates.</p>
+    <form action="{% url 'buyer_rfps_create_with_campaign' %}" method="post" role="form">
+        {% csrf_token %}
+        {% bootstrap_form_errors form type='non_fields' %}
+        {% bootstrap_form form layout='horizontal' %}
+        {% buttons submit='Submit' reset="Cancel" %}{% endbuttons %}
+    </form>
+{% endblock %}

@@ -2,6 +2,8 @@
 {% block title %}Buyer - RFPs{% endblock %}
 
 {% block content %}
+    <h3><a href="{% url 'buyer_rfps_create_with_campaign' %}">Send RFP with Campaign</a></h3>
+    <p>Helper page that lets you create a campaign and immediately send an RFP on that campaign, all with one form.</p>
     <h3><a href="{% url 'buyer_rfps_create' %}">Create RFP</a></h3>
     <p>Create an RFP for a campaign (you will need the system Campaign ID).</p>
     <p>Doesn't yet include sending attachments.</p>

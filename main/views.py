@@ -23,7 +23,7 @@ from pats import PATSBuyer, PATSSeller, PATSException, CampaignDetails
 
 from .forms import (
     Buyer_CampaignForm,
-    Buyer_CreateRFPForm, Buyer_ReturnProposalForm,
+    Buyer_CreateRFPForm, Buyer_CreateRFPWithCampaignForm, Buyer_ReturnProposalForm,
     Buyer_ReturnOrderRevisionForm, Buyer_RequestOrderRevisionForm,
     Buyer_CreateOrderRawForm, Buyer_CreateOrderForm, Buyer_CreateOrderWithCampaignForm,
     Seller_CreateProposalRawForm,
@@ -269,6 +269,8 @@ class Buyer_CallbackView(PATSAPIMixin, ProtectedResourceView):
             return HttpResponseBadRequest('Data should be a JSON array of objects')
         tz = pytz.timezone('UTC')
         for record in received_json_data:
+            # in 2016.3 this will become "eventTime" and will be ISO date
+            # eventTime = record.get('eventTime',None)
             eventTime = record.get('eventDateInMillis',None)
             eventDateTime = None
             if eventTime:
@@ -1035,7 +1037,7 @@ class Buyer_CreateRFPView(PATSAPIMixin, FormView):
                 'contents': base64.b64encode(file.read())
             }]
         # convert the text string to a json object
-        # take submitted values and call API - raw version
+        # take submitted values and call API
         result = ''
         try:
             rfp_id = buyer_api.send_rfp(user_id=user_id, campaign_id=campaign_id, budget_amount=budget_amount, start_date=start_date, end_date=end_date, respond_by_date=respond_by_date, comments=comments, publisher_id=publisher_id, publisher_emails=publisher_emails, media_print=media_print, media_online=media_online, strategy=strategy, requested_products=requested_products, attachments=attachments)
@@ -1051,6 +1053,128 @@ class Buyer_CreateRFPView(PATSAPIMixin, FormView):
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_CreateRFPView, self).get_context_data(*args, **kwargs)
         context_data['agency_id'] = self.get_agency_id()
+        return context_data
+
+class Buyer_CreateRFPWithCampaignView(PATSAPIMixin, FormView):
+    form_class = Buyer_CreateRFPWithCampaignForm
+    success_url = reverse_lazy('buyer_rfps_create_with_campaign')
+
+    def get(self, *args, **kwargs):
+        # self.clear_curl_history()
+        return super(Buyer_CreateRFPWithCampaignView, self).get(*args, **kwargs)
+
+    def get_initial(self):
+        initial_campaign_start_date = self.get_example_campaign_start_date()
+        initial_campaign_end_date = self.get_example_campaign_end_date()
+        rfp_respond_by_date = self.get_example_respond_by_date()
+        return {
+            'advertiser_code': self.get_example_advertiser_id(),
+            'agency_id': self.get_agency_id(),
+            'agency_group_id': self.get_agency_group_id(),
+            'campaign_start_date':  initial_campaign_start_date,
+            'campaign_end_date':  initial_campaign_end_date,
+            'rfp_start_date':  initial_campaign_start_date,
+            'rfp_end_date':  initial_campaign_end_date,
+            'rfp_respond_by_date':  rfp_respond_by_date,
+            'print_flag': True,
+            'digital_flag': True,
+            'campaign_budget': self.get_example_budget(),
+            'campaign_id': self.get_example_campaign_id(),
+            'campaign_name': self.get_example_campaign_name(),
+            'user_id': self.get_agency_user_id(),
+            'publisher_id': self.get_publisher_id(),
+            'publisher_email': self.get_publisher_user()
+        }
+
+    def form_valid(self, form):
+        organisation_id = form.cleaned_data.get('agency_id')
+        agency_group_id = form.cleaned_data.get('agency_group_id')
+        user_id = form.cleaned_data.get('user_id')
+        publisher_id = form.cleaned_data.get('publisher_id')
+        publisher_email = form.cleaned_data.get('publisher_email')
+        campaign_id = form.cleaned_data.get('campaign_id')
+        # because we use forms.DateField, the dates come through already formatted as datetime objects
+        campaign_start_date = form.cleaned_data.get('campaign_start_date')
+        campaign_end_date = form.cleaned_data.get('campaign_end_date')
+        respond_by_date = form.cleaned_data.get('respond_by_date')
+        rfp_budget_amount = form.cleaned_data.get('rfp_budget_amount')
+        rfp_start_date = form.cleaned_data.get('rfp_start_date')
+        rfp_end_date = form.cleaned_data.get('rfp_end_date')
+        rfp_respond_by_date = form.cleaned_data.get('rfp_respond_by_date')
+        rfp_comments = form.cleaned_data.get('rfp_comments')
+        print_flag = form.cleaned_data.get('print_flag')
+        digital_flag = form.cleaned_data.get('digital_flag')
+        strategy = form.cleaned_data.get('strategy')
+        requested_products = form.cleaned_data.get('requested_products')
+        attachments = []
+        if self.request.FILES:
+            # take uploaded file and convert to JSON
+            file = self.request.FILES['attachment']
+            attachments = [ {
+                'fileName': file._name,
+                'mimeType': file.content_type,
+                'contents': base64.b64encode(file.read())
+            }]
+        result = ''
+        try:
+            campaign_details = CampaignDetails(
+                organisation_id = organisation_id,
+                agency_group_id = agency_group_id,
+                user_id = user_id,
+                campaign_name = form.cleaned_data['campaign_name'],
+                start_date = campaign_start_date,
+                end_date = campaign_end_date,
+                advertiser_code = form.cleaned_data['advertiser_code'],
+                print_campaign = print_flag,
+                print_campaign_budget = form.cleaned_data['print_budget'],
+                digital_campaign = digital_flag,
+                digital_campaign_budget = form.cleaned_data['digital_budget'],
+                campaign_budget = form.cleaned_data['campaign_budget'],
+                external_id = campaign_id
+            )
+        except PATSException as error:
+            messages.error(self.request, 'Create CampaignDetails object failed: %s' % error)
+
+        buyer_api = self.get_buyer_api_handle()
+        pats_campaign_id = None
+
+        # use the campaigndetails object to make a campaign
+        try:
+            pats_campaign_id = buyer_api.create_campaign(campaign_details)
+        except PATSException as error:
+            messages.error(self.request, 'Create Campaign failed: %s' % error)
+        else:
+            messages.success(self.request, 'Create Campaign succeeded: campaign ID is %s' % pats_campaign_id)
+
+            # now that campaign creation was successful, make an RFP
+            try:
+                rfp_id = buyer_api.send_rfp(
+                    user_id=user_id,
+                    campaign_id=pats_campaign_id,
+                    budget_amount=rfp_budget_amount,
+                    start_date=rfp_start_date, end_date=rfp_end_date, respond_by_date=rfp_respond_by_date,
+                    comments=rfp_comments,
+                    publisher_id=publisher_id,
+                    publisher_emails=[publisher_email],
+                    media_print=print_flag, media_online=digital_flag,
+                    strategy=strategy,
+                    requested_products=requested_products,
+                    attachments=attachments
+                )
+            except PATSException as error:
+                messages.error(self.request, 'Submit RFP failed: %s' % error)
+            else:
+                if rfp_id:
+                    messages.success(self.request, 'RFP sent successfully! RFP ID is %s' % rfp_id)
+                else:
+                    messages.error(self.request, 'Submit RFP failed, blank response: %s' % rfp_id)
+        return super(Buyer_CreateRFPWithCampaignView, self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_CreateRFPWithCampaignView, self).get_context_data(*args, **kwargs)
+        context_data['agency_id'] = self.get_agency_id()
+        context_data['agency_group_id'] = self.get_agency_group_id()
+        context_data['agency_user_id'] = self.get_agency_user_id()
         return context_data
 
 class Buyer_CreateOrderRawView(PATSAPIMixin, FormView):
