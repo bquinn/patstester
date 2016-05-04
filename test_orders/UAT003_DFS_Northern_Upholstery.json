@@ -1,0 +1,67 @@
+{
+    "campaign_name": "UAT003 DFS Northern Upholstery",
+    "payload_1": {
+        "mediaType": "Print",
+        "externalId": "CAMPAIGN_ID",
+        "buyer": {
+            "firstName": "Reg",
+            "lastName": "Kemble",
+            "email": "reg.kemble@carat.co.uk"
+        },
+        "vendorId": "PUBLISHER_ID",
+        "recipientEmails": [ "PUBLISHER_EMAIL" ],
+        "notifyEmails": [ "brendan@cluefulmedia.com" ],
+        "respondByDate": "RESPOND_BY_DATE",
+        "currencyCode": "GBP",
+        "additionalInfo": "Please do not rebook to Access one sell as the sales rep has said still not had confirmation from Mediacom on which clients are opting for access one-",
+        "comment": "Please could you place the following order.",
+        "termsAndConditions": { "name": "Terms and Conditions", "content": "None attached" },
+        "printLineItems": [
+           {
+                "packageType": "Standalone",
+                "externalId": "UAT003_P_001",
+                "name": "10cm x 8 columns colour",
+                "freeFormMediaProperty": "The Sunday Times",
+                "buyType": "Newspaper", "buyCategory": "Display - National",
+                "costMethod": "SCC", "unitType": "Columns by cms",
+                "rate": "62.5", "units": "80", "cost": "5000.00",
+                "section": "", "subsection": "", "region": "",
+                "size": { "type": "Columns By-Centimetres", "units": 10, "columns": 8 },
+                "color": "4 colour", "position": "Front Half",
+                "positionGuaranteed": false, "includeInDigitalEdition": false,
+                "coverDate": "CAMPAIGN_START_DATE", "saleDate": "CAMPAIGN_START_DATE",
+                "comments": "PAGE 2 OR 4 GUARANTEED"
+            },
+            {
+                "packageType": "Standalone",
+                "externalId": "UAT003_P_002",
+                "name": "10cm x 8 columns colour",
+                "freeFormMediaProperty": "The Sunday Times",
+                "buyType": "Newspaper", "buyCategory": "Display - National",
+                "costMethod": "SCC", "unitType": "Columns by cms",
+                "rate": "62.5", "units": "80", "cost": "5000.00",
+                "section": "", "subsection": "", "region": "",
+                "size": {"type": "Columns By-Centimetres", "units": 10, "columns": 8 },
+                "color": "4 colour", "position": "N/A",
+                "positionGuaranteed": false, "includeInDigitalEdition": false,
+                "coverDate": "CAMPAIGN_START_DATE", "saleDate": "CAMPAIGN_START_DATE",
+                "comments": "Page 2 or 4 very strongly requested"
+            },
+            {
+                "packageType": "Standalone",
+                "externalId": "UAT003_P_003",
+                "name": "10cm x 8 columns colour",
+                "freeFormMediaProperty": "The Sunday Times",
+                "buyType": "Newspaper", "buyCategory": "Display - National",
+                "costMethod": "SCC", "unitType": "Columns by cms",
+                "rate": "62.5", "units": "80", "cost": "5000.00",
+                "section": "", "subsection": "", "region": "",
+                "size": {"type": "Columns By-Centimetres", "units": 10, "columns": 8 },
+                "color": "4 colour", "position": "N/A",
+                "positionGuaranteed": false, "includeInDigitalEdition": false,
+                "coverDate": "CAMPAIGN_START_DATE", "saleDate": "CAMPAIGN_START_DATE",
+                "comments": "PAGE 2 OR 4 GUARANTEED"
+            }
+        ]
+    }
+}

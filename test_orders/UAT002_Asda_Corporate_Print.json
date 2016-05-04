@@ -1,0 +1,52 @@
+{
+    "campaign_name": "UAT002 Asda Corporate Print",
+    "payload_1": {
+        "mediaType": "Print",
+        "externalId": "CAMPAIGN_ID",
+        "buyer": {
+            "firstName": "Isabel",
+            "lastName": "Cockroft",
+            "email": "isabel.cockroft@carat.co.uk"
+        },
+        "vendorId": "PUBLISHER_ID",
+        "recipientEmails": [ "PUBLISHER_EMAIL" ],
+        "notifyEmails": [ "brendan@cluefulmedia.com" ],
+        "respondByDate": "RESPOND_BY_DATE",
+        "currencyCode": "GBP",
+        "additionalInfo": "",
+        "comment": "Can you run this for Asda please?",
+        "termsAndConditions": { "name": "Terms and Conditions", "content": "None attached" },
+        "printLineItems": [
+           {
+                "packageType": "Standalone",
+                "externalId": "UAT002_P_001",
+                "name": "The Sun 17x7 Asda Corp Delight",
+                "freeFormMediaProperty": "The Sun",
+                "buyType": "Newspaper", "buyCategory": "Display - National",
+                "costMethod": "SCC", "unitType": "Columns by cms",
+                "rate": "75.0", "units": "119", "cost": "8925.00",
+                "section": "", "subsection": "", "region": "",
+                "size": { "type": "Columns By-Centimetres", "columns": 7, "units": 17 },
+                "color": "4 colour", "position": "Front Half",
+                "positionGuaranteed": false, "includeInDigitalEdition": false,
+                "coverDate": "CAMPAIGN_START_DATE", "saleDate": "CAMPAIGN_START_DATE",
+                "comments": "1 of 2 consec pages"
+            },
+            {
+                "packageType": "Standalone",
+                "externalId": "UAT002_P_002",
+                "name": "The Sun 17x7 Asda Corp Delight",
+                "freeFormMediaProperty": "The Sun",
+                "buyType": "Newspaper", "buyCategory": "Display - National",
+                "costMethod": "SCC", "unitType": "Columns by cms",
+                "rate": "75.0", "units": "119", "cost": "8925.00",
+                "section": "", "subsection": "", "region": "",
+                "size": { "type": "Columns By-Centimetres", "columns": 7, "units": 17 },
+                "color": "4 colour", "position": "Front Half",
+                "positionGuaranteed": false, "includeInDigitalEdition": false,
+                "coverDate": "CAMPAIGN_START_DATE", "saleDate": "CAMPAIGN_START_DATE",
+                "comments": "2 of 2 consec pages"
+            }
+        ]
+    }
+}

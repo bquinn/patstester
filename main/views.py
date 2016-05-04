@@ -2,6 +2,7 @@ import base64
 import datetime
 import json
 import logging
+import os
 import random
 import re
 import string
@@ -112,6 +113,8 @@ ADVERTISER_NAMES = {
     'VOT': 'VODKA'
 }
 ADVERTISER_LIST = ADVERTISER_NAMES.keys()
+
+TEST_DATA_PATH = "./test_orders/"
 
 class PATSAPIMixin(object):
     pats_buyer = None
@@ -254,6 +257,36 @@ class PATSAPIMixin(object):
         if not hasattr(self, 'example_budget'):
             self.example_budget = random.randint(50000,100000)
         return self.example_budget
+
+class TestOrdersMixin(object):
+    test_data_id = None
+    test_data = None
+
+    def get_test_files_list(self, force_reload=False):
+        if 0: # 'test_orders' in self.request.session:
+            test_files = self.request.session['test_orders']
+        else:
+            # build up list of test files from disk store
+            files = []; test_files = {}
+            for (dirpath, dirnames, filenames) in os.walk(TEST_DATA_PATH):
+                files.extend(filenames)
+            for filename in files:
+                matches = re.match("([^_]+)_(.*)", filename)
+                file_id = matches.group(1)
+                test_files[file_id] = filename
+            self.request.session['test_orders'] = test_files
+        return test_files
+
+    def load_test_file(self, test_file_id):
+        test_files = self.get_test_files_list()
+        json_test_file_data = None
+        if test_file_id in test_files:
+            filename = test_files[test_file_id]
+            with open(TEST_DATA_PATH+"/"+filename, "r") as file_handle:
+                raw_file = file_handle.read()
+                raw_data = raw_file.decode('utf-8')
+                json_test_file_data = json.loads(raw_data)
+        return json_test_file_data
 
 class Buyer_CallbackView(PATSAPIMixin, ProtectedResourceView):
     # disable CSRF checking for this view because it's being called via OAuth, not from a form
@@ -1222,16 +1255,19 @@ class Buyer_CreateOrderRawView(PATSAPIMixin, FormView):
         context_data['user_id'] = self.get_user_id()
         return context_data
 
-class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView):
+class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView, TestOrdersMixin):
     form_class = Buyer_CreateOrderWithCampaignForm
     success_url = reverse_lazy('buyer_orders_create_with_campaign')
 
-    def get(self, *args, **kwargs):
-        # self.clear_curl_history()
-        return super(Buyer_CreateOrderWithCampaignView, self).get(*args, **kwargs)
-
+    def dispatch(self, *args, **kwargs):
+        self.test_data_id = self.kwargs.get('test_data_id', self.request.GET.get('testfile', None))
+        if self.test_data_id:
+            self.test_data = self.load_test_file(self.test_data_id)
+        self.test_files_list = self.get_test_files_list() # also saves to session
+        return super(Buyer_CreateOrderWithCampaignView, self).dispatch(*args, **kwargs)
+ 
     def get_initial(self):
-        return {
+        initial = {
             'advertiser_code': self.get_example_advertiser_id(),
             'agency_id': self.get_agency_id(),
             'agency_group_id': self.get_agency_group_id(),
@@ -1247,6 +1283,24 @@ class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView):
             'publisher_id': self.get_publisher_id(),
             'publisher_email': self.get_publisher_user()
         }
+        if self.test_data_id:
+            if 'campaign_name' in self.test_data:
+                initial['campaign_name'] = self.test_data['campaign_name'] + " " + self.get_example_campaign_id()
+            if 'payload_1' in self.test_data:
+                initial['payload_1'] = json.dumps(
+                    self.test_data['payload_1'],
+                    sort_keys=True,
+                    indent=4,
+                    separators=(',', ': ')
+                )
+            if 'payload_2' in self.test_data:
+                initial['payload_2'] = json.dumps(
+                    self.test_data['payload_2'],
+                    sort_keys=True,
+                    indent=4,
+                    separators=(',', ': ')
+                )
+        return initial
 
     def form_valid(self, form):
         organisation_id = form.cleaned_data.get('agency_id')
@@ -1321,6 +1375,10 @@ class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView):
 
     def get_context_data(self, *args, **kwargs):
         context_data = super(Buyer_CreateOrderWithCampaignView, self).get_context_data(*args, **kwargs)
+        if self.test_data_id:
+            context_data['test_data_id'] = self.test_data_id
+            context_data['json_test_file_data'] = self.test_data
+        context_data['test_files_list'] = self.test_files_list
         context_data['agency_id'] = self.get_agency_id()
         context_data['agency_group_id'] = self.get_agency_group_id()
         context_data['agency_user_id'] = self.get_agency_user_id()

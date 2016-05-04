@@ -1,0 +1,73 @@
+{
+    "campaign_name": "UAT001 Access One",
+    "payload_1": {
+        "mediaType": "Online",
+        "externalId": "UAT001_LVMH_DIGITAL",
+        "buyer": {
+            "firstName": "Lucy",
+            "lastName": "Hedges",
+            "email": "lucyhedges@krmedia.com"
+        },
+        "vendorId": "PUBLISHER_ID",
+        "recipientEmails": [ "PUBLISHER_EMAIL" ],
+        "notifyEmails": [ "brendan@cluefulmedia.com" ],
+        "respondByDate": "RESPOND_BY_DATE",
+        "currencyCode": "GBP",
+        "additionalInfo": "",
+        "comment": "Please book this as an Access One.",
+        "termsAndConditions": { "name": "Terms and Conditions", "content": "None attached" },
+        "digitalLineItems": [
+            {
+                "packageType": "Standalone",
+                "externalId": "UAT001_D_001",
+                "name": "LVMH Access One - Tablet component",
+                "freeFormMediaProperty": "The Times Tablet",
+                "costMethod": "Flat", "unitType": "N/A",
+                "rate": 5000.00, "units": 1, "cost": 5000.00,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_START_DATE",
+                "section": "ROS", "subsection": "",
+                "dimensions": "1536 x 1890", "position": "Full Page",
+                "creativeType": "Flash", "servedBy": "3rd party",
+                "buyType": "Display", "buyCategory": "Tablet",
+                "comments": "Access One booking. Please join with equivalent print insertion",
+                "supplierPlacementParentRef": "AOne123"
+            }
+        ]
+    },
+    "payload_2": {
+        "mediaType": "Print",
+        "externalId": "UAT001_LVMH_PRINT",
+        "buyer": {
+            "firstName": "Lucy",
+            "lastName": "Hedges",
+            "email": "lucyhedges@krmedia.com"
+        },
+        "vendorId": "PUBLISHER_ID",
+        "recipientEmails": [ "PUBLISHER_EMAIL" ],
+        "notifyEmails": [ "brendan@cluefulmedia.com" ],
+        "respondByDate": "RESPOND_BY_DATE",
+        "currencyCode": "GBP",
+        "additionalInfo": "",
+        "comment": "Please book this as an Access One.",
+        "termsAndConditions": { "name": "Terms and Conditions", "content": "None attached" },
+        "printLineItems": [
+            {
+                "packageType": "Standalone",
+                "externalId": "UAT001_P_001",
+                "name": "LVMH Access One - Print component",
+                "freeFormMediaProperty": "The Times",
+                "buyType": "Newspaper", "buyCategory": "Display - National",
+                "costMethod": "Flat", "unitType": "N/A",
+                "rate": 5000.00, "units": 1, "cost": 5000.00,
+                "coverDate": "CAMPAIGN_START_DATE", "saleDate": "CAMPAIGN_START_DATE",
+                "section": "ROP", "subsection": "", "region": "",
+                "position": "1st Colour, Solus on DPS",
+                "size": { "type": "Full Page" },
+                "color": "4 colour",
+                "positionGuaranteed": false, "includeInDigitalEdition": true,
+                "comments": "Access One booking. Please join with equivalent tablet insertion",
+                "supplierPlacementParentRef": "AOne123"
+            }
+        ]
+    }
+}

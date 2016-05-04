@@ -14,7 +14,25 @@
         <li>CAMPAIGN_START_DATE</li>
         <li>CAMPAIGN_END_DATE</li>
     </ul>
-    <form action="{% url 'buyer_orders_create_with_campaign' %}" method="post" role="form">
+    <p>You can also load a predefined test order: </p>
+        <form action="{% url 'buyer_orders_create_with_campaign' %}" method="GET" role="form">
+            <div class="form-group">
+                <label class="col-md-3 control-label">Choose pre-defined order </label>
+                <div class="col-md-6">
+                    <select name="testfile" class="form-control">
+                    {% for fileid, filename in test_files_list.items %}
+                        {{ filename }}
+                        <option value="{{fileid}}">{{filename}}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    {% buttons submit='Load test order' %}{% endbuttons %}
+                </div>
+            </div>
+        </form>
+    
+    <form action="{% url 'buyer_orders_create_with_campaign' %}" method="POST" role="form">
         {% csrf_token %}
         {% bootstrap_form_errors form type='non_fields' %}
         {% bootstrap_form form layout='horizontal' %}
