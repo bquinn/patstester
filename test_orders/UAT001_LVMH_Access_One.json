@@ -30,7 +30,7 @@
                 "creativeType": "Flash", "servedBy": "3rd party",
                 "buyType": "Display", "buyCategory": "Tablet",
                 "comments": "Access One booking. Please join with equivalent print insertion",
-                "supplierPlacementParentRef": "AOne123"
+                "supplierPlacementParentReference": "AOne123"
             }
         ]
     },
@@ -66,7 +66,7 @@
                 "color": "4 colour",
                 "positionGuaranteed": false, "includeInDigitalEdition": true,
                 "comments": "Access One booking. Please join with equivalent tablet insertion",
-                "supplierPlacementParentRef": "AOne123"
+                "supplierPlacementParentReference": "AOne123"
             }
         ]
     }
