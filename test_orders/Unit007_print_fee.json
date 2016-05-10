@@ -22,10 +22,10 @@
                 "externalId": "Unit007_P_001",
                 "name": "Test print fee line item",
                 "freeFormMediaProperty": "Shift",
-                "section": "Sport", "subsection": "Football", "region": "National",
                 "buyType": "Print Fee", "buyCategory": "Production",
+                "units": 0,
                 "costMethod": "Flat", "unitType": "N/A",
-                "rate": 0, "units": 0, "cost": 10000.00,
+                "cost": 10000.00,
                 "coverDate": "CAMPAIGN_START_DATE",
                 "comments": "Print Fee line item comment"
             }

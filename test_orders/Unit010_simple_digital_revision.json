@@ -25,11 +25,11 @@
                 "costMethod":"Flat","unitType":"Impressions",
                 "units": 130171, "rate": 999.99, "cost": 999.99,
                 "buyType": "Display", "buyCategory": "Standard",
-                "flightStartDate":self.campaign_start_date,"flightEndDate": self.campaign_end_date,
+                "flightStartDate": "CAMPAIGN_START_DATE","flightEndDate": "CAMPAIGN_END_DATE",
                 "dimensions":"468 x 60","position":"Above the Fold", "servedBy": "3rd party",
                 "creativeType": "Flash",
                 "flighting":[
-                    { "year": CAMPAIGN_START_YEAR, "month": CAMPAIGN_START_MONTH, "units": 130171, "cost": 999.99 }
+                    { "year": "CAMPAIGN_START_YEAR", "month": "CAMPAIGN_START_MONTH", "units": 130171, "cost": 999.99 }
                 ],
                 "comments":"Line item 1 comment",
                 "target": "Mac users"

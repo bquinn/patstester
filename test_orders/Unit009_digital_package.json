@@ -24,7 +24,7 @@
                 "packageType": "Roadblock",
                 "costMethod": "CPM", "unitType": "Impressions",
                 "units": 131313, "rate": 19.99, "cost": 2624.95,
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "comments": "Line item 1 comment"
             },
             {
@@ -54,14 +54,14 @@
                 "packageType": "Package",
                 "name": "Even Grander PATS Package B",
                 "freeFormMediaProperty": "Shift Digital", "section": "Sports", "subsection": "Football",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_START_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_START_DATE",
                 "costMethod": "CPM", "unitType": "Impressions",
                 "rate": 7.00, "units": 5000000, "cost": 35000.00,
                 "flighting" : [
                  {
-                    "year" : CAMPAIGN_START_DATE.year,
-                    "month" : CAMPAIGN_START_DATE.month,
-                    "units" : 5000000,
+                    "year" : "CAMPAIGN_START_YEAR",
+                    "month" : "CAMPAIGN_START_MONTH",
+                    "units" : 5000000
                  }
                 ],
                 "comments": "Line item 4 comment"
@@ -95,7 +95,7 @@
                 "buyType": "Display", "buyCategory": "Standard",
                 "costMethod": "CPM", "unitType": "Impressions",
                 "rate": 7.00, "units": 5000000, "cost": 35000.00,
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_START_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_START_DATE",
                 "dimensions": "120 x 60", "position": "Medium Rectangle", "creativeType": "Flash", "servedBy": "3rd party",
                 "comments": "Line item 7 comment"
             }
