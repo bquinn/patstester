@@ -4,6 +4,11 @@
 {% block content %}
     <p>This is used to run manual tests of the PATS platform.</p>
     <p>Use the navigation menu above to choose an API to test on either the buyer or seller side.</p>
+    <h3>Updates on 10 May 2016:</h3>
+    <ul>
+        <li>Added a <a href="{% url 'buyer_events_list' %}">buyer events list</a> to see events coming in over the PATS Push API.</li>
+        <li>Added a helper to the <a href="{% url 'buyer_orders_create_with_campaign' %}">create order with campaign</a> page to send a canned order payload. We have sample orders created from Brendan's unit tests and many of the UAT payloads. More test payloads coming soon.</li>
+    </ul>
     <h3>Updates on 25 April 2016:</h3>
     <ul>
         <li>Added a <a href="{% url 'buyer_rfps_create_with_campaign' %}">"create campaign and RFP"</a> helper page to make sending test RFPs in one shot easier.</li>
