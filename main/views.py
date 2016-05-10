@@ -1379,6 +1379,7 @@ class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView, TestOrdersMixin)
             context_data['test_data_id'] = self.test_data_id
             context_data['json_test_file_data'] = self.test_data
         context_data['test_files_list'] = self.test_files_list
+        context_data['test_file_ids'] = sorted(self.test_files_list.keys())
         context_data['agency_id'] = self.get_agency_id()
         context_data['agency_group_id'] = self.get_agency_group_id()
         context_data['agency_user_id'] = self.get_agency_user_id()

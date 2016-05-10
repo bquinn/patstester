@@ -24,9 +24,9 @@
                 "packageType": "Standalone",
                 "buyType": "Display", "buyCategory": "Standard",
                 "costMethod": "CPM", "unitType": "Impressions",
-                "units": self.units_1, "rate": self.rate_1, "cost": self.cost_1,
+                "units": 10000, "rate": 15, "cost": 150,
                 "dimensions": "120 x 600", "position": "Skyscraper",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "creativeType": "Flash", "servedBy": "3rd party",
                 "comments": "Line item 1 comment",
                 "target": "Line 1 target"
@@ -40,7 +40,7 @@
                 "costMethod": "CPMV", "unitType": "Viewed Impressions",
                 "units": 100000, "rate": 12, "cost": 1200,
                 "dimensions": "250 x 250", "position": "Square Pop-Up",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "creativeType": "Flash", "servedBy": "3rd party",
                 "comments": "comment 2",
                 "target": "Line 2 target"
@@ -54,7 +54,7 @@
                 "costMethod": "dCPM", "unitType": "Impressions",
                 "units": 100000000, "rate": 0.005, "cost": 500,
                 "dimensions": "234 x 60", "position": "Half Banner",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "creativeType": "Flash", "servedBy": "3rd party",
                 "comments": "comment 3",
                 "target": "Line 3 target"
@@ -68,10 +68,10 @@
                 "costMethod": "CPC", "unitType": "Clicks",
                 "units": 1000, "rate": 1, "cost": 1000,
                 "dimensions": "300 x 600", "position": "Half Page Ad",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "creativeType": "Flash", "servedBy": "3rd party",
                 "comments": "comment 4",
-                "target": "Line 4 target",
+                "target": "Line 4 target"
             },
             {
                 "externalId": "Unit005CompDig_5",
@@ -82,7 +82,7 @@
                 "costMethod": "CPA", "unitType": "Actions",
                 "units": 2000, "rate": 1.1, "cost": 2200,
                 "dimensions": "336 x 280", "position": "Large Rectangle",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "creativeType": "Flash", "servedBy": "Site",
                 "comments": "comment 5",
                 "target": "Line 5 target"
@@ -96,7 +96,7 @@
                 "costMethod": "Flat", "unitType": "Clicks",
                 "units": 1000, "rate": 500, "cost": 500,
                 "dimensions": "88 x 31", "position": "Micro Bar",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "creativeType": "Flash", "servedBy": "Other",
                 "comments": "comment 6",
                 "target": "Line 6 target"
@@ -109,9 +109,9 @@
                 "packageType": "Standalone",
                 "buyType": "Display", "buyCategory": "Social",
                 "costMethod": "Free", "unitType": "Actions",
-                "units": 2000, "cost": 0,
+                "units": 2000, "cost": 0, "rate": 0,
                 "dimensions": "125 x 125", "position": "Square Button",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "creativeType": "Flash", "servedBy": "3rd party",
                 "comments": "comment 7",
                 "target": "Line 7 target"
@@ -125,7 +125,7 @@
                 "costMethod": "CPCV", "unitType": "Actions",
                 "units": 1500, "rate": 1, "cost": 1500,
                 "dimensions": "120 x 90", "position": "Button 1",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "creativeType": "Flash", "servedBy": "Site",
                 "comments": "comment 8",
                 "target": "Line 8 target"
@@ -139,7 +139,7 @@
                 "costMethod": "CPE", "unitType": "Actions",
                 "units": 2000, "rate": 1, "cost": 2000,
                 "dimensions": "120 x 90", "position": "Button 1",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_START_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_START_DATE",
                 "creativeType": "Flash", "servedBy": "Other",
                 "comments": "comment 9",
                 "target": "Line 9 target"
@@ -153,7 +153,7 @@
                 "costMethod": "CPI", "unitType": "Actions",
                 "units": 1001, "rate": 0.99, "cost": 990.99,
                 "dimensions": "300 x 100", "position": "3:1 Rectangle",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "creativeType": "Flash", "servedBy": "Site",
                 "comments": "comment 10",
                 "target": "Line 10 target"
@@ -167,7 +167,7 @@
                 "costMethod": "dCPC", "unitType": "Clicks",
                 "units": 2000, "rate": 0.5, "cost": 1000,
                 "dimensions": "728 x 90", "position": "Leaderboard",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "creativeType": "Flash", "servedBy": "Other",
                 "comments": "comment 11",
                 "target": "Line 11 target"
@@ -182,7 +182,7 @@
                 "units": 1000000, "rate": 999.99, "cost": 999.99,
                 "dimensions": "1 x 1", "position": ".",
                 "creativeType": "Other", "servedBy": "Other",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "comments": "comment 12",
                 "target": "Line 12 target"
             },
@@ -196,7 +196,7 @@
                 "units": 1000, "rate": 1, "cost": 1,
                 "dimensions": "1 x 1", "position": "Position",
                 "creativeType": "Other", "servedBy": "Other",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "comments": "comment 13",
                 "target": "Line 13 target"
             },
@@ -207,10 +207,10 @@
                 "packageType": "Standalone",
                 "buyType": "Fee", "buyCategory": "Data",
                 "costMethod": "Free", "unitType": "N/A",
-                "units": 0, "cost": 0,
+                "units": 0, "cost": 0, "rate": 0,
                 "dimensions": "1 x 1", "position": "Position",
                 "creativeType": "Other", "servedBy": "Other",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "comments": "comment 14",
                 "target": "Line 14 target"
             },
@@ -224,7 +224,7 @@
                 "units": 5000, "rate": 0.5, "cost": 2500,
                 "dimensions": "1 x 1", "position": "Position",
                 "creativeType": "Other", "servedBy": "Other",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_START_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_START_DATE",
                 "comments": "comment 15",
                 "target": "Line 15 target"
             },
@@ -238,7 +238,7 @@
                 "units": 500, "rate": 111.11, "cost": 111.11,
                 "dimensions": "1 x 1", "position": "Position",
                 "creativeType": "Other", "servedBy": "Other",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_START_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_START_DATE",
                 "comments": "comment 16",
                 "target": "Line 16 target"
             },
@@ -252,7 +252,7 @@
                 "units": 800, "rate": 222.22, "cost": 222.22,
                 "dimensions": "1 x 1", "position": "Position",
                 "creativeType": "Other", "servedBy": "Other",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_START_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_START_DATE",
                 "comments": "comment 17",
                 "target": "Line 17 target"
             },
@@ -266,7 +266,7 @@
                 "units": 1000, "rate": 333.33, "cost": 333.33,
                 "dimensions": "1 x 1", "position": "Position",
                 "creativeType": "Other", "servedBy": "Other",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_START_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_START_DATE",
                 "comments": "comment 18",
                 "target": "Line 18 target"
             },
@@ -280,7 +280,7 @@
                 "units": 100, "rate": 600, "cost": 600,
                 "dimensions": "1 x 1", "position": "Position",
                 "creativeType": "Other", "servedBy": "Other",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_START_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_START_DATE",
                 "comments": "comment 19",
                 "target": "Line 19 target"
             },
@@ -294,7 +294,7 @@
                 "units": 0, "rate": 500, "cost": 500,
                 "dimensions": "1 x 1", "position": "Position",
                 "creativeType": "Other", "servedBy": "Other",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_START_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_START_DATE",
                 "comments": "comment 20",
                 "target": "Line 20 target"
             },
@@ -308,7 +308,7 @@
                 "units": 0, "rate": 400, "cost": 400,
                 "dimensions": "1 x 1", "position": "Position",
                 "creativeType": "Other", "servedBy": "Other",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_START_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_START_DATE",
                 "comments": "comment 21",
                 "target": "Line 21 target"
             },
@@ -322,7 +322,7 @@
                 "units": 0, "rate": 300, "cost": 300,
                 "dimensions": "1 x 1", "position": "Position",
                 "creativeType": "Other", "servedBy": "Other",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_START_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_START_DATE",
                 "comments": "comment 22",
                 "target": "Line 22 target"
             },
@@ -336,7 +336,7 @@
                 "units": 0, "rate": 200, "cost": 200,
                 "dimensions": "1 x 1", "position": "Position",
                 "creativeType": "Other", "servedBy": "Other",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_START_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_START_DATE",
                 "comments": "comment 23",
                 "target": "Line 23 target"
             },
@@ -350,7 +350,7 @@
                 "units": 0, "rate": 100, "cost": 100,
                 "dimensions": "1 x 1", "position": "Position",
                 "creativeType": "Other", "servedBy": "Other",
-                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_START_DATE,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_START_DATE",
                 "comments": "comment 24 - last line",
                 "target": "Line 24 target"
             }

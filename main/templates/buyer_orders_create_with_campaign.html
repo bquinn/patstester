@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
+{% load main_tags %}
 
 {% block title %}Buyer - Orders - Create Order with Campaign from payload{% endblock %}
 
@@ -20,9 +21,8 @@
                 <label class="col-md-3 control-label">Choose pre-defined order </label>
                 <div class="col-md-6">
                     <select name="testfile" class="form-control">
-                    {% for fileid, filename in test_files_list.items %}
-                        {{ filename }}
-                        <option value="{{fileid}}">{{filename}}</option>
+                    {% for fileid in test_file_ids %}
+                        <option value="{{fileid}}">{{test_files_list|get_item:fileid}}</option>
                     {% endfor %}
                     </select>
                 </div>

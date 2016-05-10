@@ -28,7 +28,7 @@
                 "rate": 1500.00, "units": 0, "cost": 1500.00,
                 "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "servedBy": "Other", "creativeType": "Other",
-                "comments": "Fee line item comment",
+                "comments": "Fee line item comment"
             }
         ]
     }
