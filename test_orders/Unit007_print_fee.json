@@ -16,7 +16,7 @@
         "additionalInfo": "Additional info - test - print fee order",
         "comment": "Automated test - print fee order 1",
         "termsAndConditions": { "name": "Terms and Conditions", "content": "Test Ts and Cs content" },
-        "digitalLineItems": [
+        "printLineItems": [
            {
                 "packageType": "Standalone",
                 "externalId": "Unit007_P_001",

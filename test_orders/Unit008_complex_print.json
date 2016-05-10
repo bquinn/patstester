@@ -16,7 +16,7 @@
         "additionalInfo": "Additional info - test - complex print order",
         "comment": "Automated test - complex print order 1",
         "termsAndConditions": { "name": "Terms and Conditions", "content": "Test Ts and Cs content" },
-        "digitalLineItems": [
+        "printLineItems": [
             {
               "externalId": "Unit008_P1", "name": "1 - SCC cost method",
               "buyType": "Newspaper", "buyCategory": "Display - National",

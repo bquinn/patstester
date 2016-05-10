@@ -16,7 +16,7 @@
         "additionalInfo": "Additional info - test - simple print order",
         "comment": "Automated test - simple print order 1",
         "termsAndConditions": { "name": "Terms and Conditions", "content": "Test Ts and Cs content" },
-        "digitalLineItems": [
+        "printLineItems": [
            {
                 "packageType": "Standalone",
                 "externalId": "Unit006_P_001",
@@ -26,9 +26,9 @@
                 "buyType": "Newspaper", "buyCategory": "Display - National",
                 "costMethod": "SCC", "unitType": "Columns by cms",
                 "rate": 14.95, "units": 100, "cost": 1495.00,
-                "size": { "type": "Columns By-Centimetres", "units": 25", "columns": 4 },
+                "size": { "type": "Columns By-Centimetres", "units": 25, "columns": 4 },
                 "color":"4 colour", "position":"Above the Fold",
-                "positionGuaranteed":False, "includeInDigitalEdition":False,
+                "positionGuaranteed":false, "includeInDigitalEdition":false,
                 "coverDate": "CAMPAIGN_START_DATE", "saleDate": "CAMPAIGN_START_DATE",
                 "comments": "Print line item comment"
             }
