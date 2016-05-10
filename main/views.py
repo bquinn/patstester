@@ -99,6 +99,16 @@ CONFIG_DEFAULTS = {
         'PUBLISHER_ID': '35-49UUMIY-3',
         'PUBLISHER_USER': 'angela.woodhouse@trinitymirror.com'
     },
+    'Adazzle': {
+        'AGENCY_API_KEY': 'm95d2up63susdaxv5qxme4hu',
+        'AGENCY_ID': '35-URIDWNA-4',
+        'AGENCY_USER_ID': 'brenddlo',
+        'AGENCY_GROUP_ID': 'PATS4',
+        'PUBLISHER_API_KEY': 'nz5ta424wv8m2bmg4njbgwya',
+        'PUBLISHER_ID': '35-EEBMG4J-4',
+        'PUBLISHER_USER': 'brendan.quinn@pats.org.uk'
+    },
+ 
 }
 # the default default?!
 CONFIG_DEFAULTS_DEFAULT = 'PATS Media'
