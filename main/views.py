@@ -307,7 +307,7 @@ class Buyer_CallbackView(PATSAPIMixin, ProtectedResourceView):
             if eventTime:
                 # 2016.2 eventDateTime = datetime.datetime.fromtimestamp(eventTime/1000, tz)
                 # 2016.3:
-                eventDateTime = datetime.strptime(eventTime,'%Y-%M-%dT%H:%M:%SZ')
+                eventDateTime = datetime.datetime.strptime(eventTime,'%Y-%m-%dT%H:%M:%SZ')
             attributes = record.get('attributes',None)
             event = PATSEvent(
                 entity_id=record.get('entityId',None),
