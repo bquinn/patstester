@@ -24,3 +24,5 @@ DATABASES = {
 }
 
 SECRET_KEY = 'ao(i7!wdcnc*%^oex^hir9cazxu_hbq=20d$8iasdfs&&!s0t^h=($'
+
+TEST_ORDERS_PATH = '/var/www/apitester.pats.org.uk/patstester/test_orders/'

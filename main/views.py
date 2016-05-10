@@ -114,8 +114,6 @@ ADVERTISER_NAMES = {
 }
 ADVERTISER_LIST = ADVERTISER_NAMES.keys()
 
-TEST_DATA_PATH = "./test_orders/"
-
 class PATSAPIMixin(object):
     pats_buyer = None
     pats_seller = None
@@ -268,7 +266,7 @@ class TestOrdersMixin(object):
         else:
             # build up list of test files from disk store
             files = []; test_files = {}
-            for (dirpath, dirnames, filenames) in os.walk(TEST_DATA_PATH):
+            for (dirpath, dirnames, filenames) in os.walk(settings.TEST_ORDERS_PATH):
                 files.extend(filenames)
             for filename in files:
                 matches = re.match("([^_]+)_(.*)", filename)
@@ -282,7 +280,7 @@ class TestOrdersMixin(object):
         json_test_file_data = None
         if test_file_id in test_files:
             filename = test_files[test_file_id]
-            with open(TEST_DATA_PATH+"/"+filename, "r") as file_handle:
+            with open(settings.TEST_ORDERS_PATH+"/"+filename, "r") as file_handle:
                 raw_file = file_handle.read()
                 raw_data = raw_file.decode('utf-8')
                 json_test_file_data = json.loads(raw_data)
@@ -303,11 +301,13 @@ class Buyer_CallbackView(PATSAPIMixin, ProtectedResourceView):
         tz = pytz.timezone('UTC')
         for record in received_json_data:
             # in 2016.3 this will become "eventTime" and will be ISO date
-            # eventTime = record.get('eventTime',None)
-            eventTime = record.get('eventDateInMillis',None)
+            eventTime = record.get('eventTime',None)
+            # eventTime = record.get('eventDateInMillis',None)
             eventDateTime = None
             if eventTime:
-                eventDateTime = datetime.datetime.fromtimestamp(eventTime/1000, tz)
+                # 2016.2 eventDateTime = datetime.datetime.fromtimestamp(eventTime/1000, tz)
+                # 2016.3:
+                eventDateTime = datetime.strptime(eventTime,'%Y-%M-%dT%H:%M:%SZ')
             attributes = record.get('attributes',None)
             event = PATSEvent(
                 entity_id=record.get('entityId',None),
@@ -1335,9 +1335,9 @@ class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView, TestOrdersMixin)
         original_payload_1 = form.cleaned_data.get('payload_1')
         original_payload_2 = form.cleaned_data.get('payload_2')
         # replace keyword strings
-        replaced_payload_1 = original_payload_1.replace("PUBLISHER_ID", publisher_id).replace("PUBLISHER_EMAIL", publisher_email).replace("CAMPAIGN_ID", campaign_id).replace("CAMPAIGN_START_DATE", campaign_start_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_END_DATE", campaign_end_date.strftime("%Y-%m-%d")).replace("RESPOND_BY_DATE", respond_by_date.strftime("%Y-%m-%d"))
+        replaced_payload_1 = original_payload_1.replace("PUBLISHER_ID", publisher_id).replace("PUBLISHER_EMAIL", publisher_email).replace("CAMPAIGN_ID", campaign_id).replace("CAMPAIGN_START_DATE", campaign_start_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_END_DATE", campaign_end_date.strftime("%Y-%m-%d")).replace("RESPOND_BY_DATE", respond_by_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_START_MONTH", str(campaign_start_date.month)).replace("CAMPAIGN_START_YEAR", str(campaign_start_date.year))
         if original_payload_2:
-            replaced_payload_2 = original_payload_2.replace("PUBLISHER_ID", publisher_id).replace("PUBLISHER_EMAIL", publisher_email).replace("CAMPAIGN_ID", campaign_id).replace("CAMPAIGN_START_DATE", campaign_start_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_END_DATE", campaign_end_date.strftime("%Y-%m-%d")).replace("RESPOND_BY_DATE", respond_by_date.strftime("%Y-%m-%d"))
+            replaced_payload_2 = original_payload_2.replace("PUBLISHER_ID", publisher_id).replace("PUBLISHER_EMAIL", publisher_email).replace("CAMPAIGN_ID", campaign_id).replace("CAMPAIGN_START_DATE", campaign_start_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_END_DATE", campaign_end_date.strftime("%Y-%m-%d")).replace("RESPOND_BY_DATE", respond_by_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_START_MONTH", str(campaign_start_date.month)).replace("CAMPAIGN_START_YEAR", str(campaign_start_date.year))
         try:
             data_1 = json.loads(replaced_payload_1)
         except ValueError as json_error:
