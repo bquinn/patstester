@@ -1,0 +1,104 @@
+{
+    "campaign_name": "Unit009 Digital Package",
+    "payload_1": {
+        "mediaType": "Online",
+        "externalId": "CAMPAIGN_ID",
+        "buyer": {
+            "firstName": "Barbara",
+            "lastName": "Buyer",
+            "email": "barbara.buyer@testagencybuyer.com"
+        },
+        "vendorId": "PUBLISHER_ID",
+        "recipientEmails": [ "PUBLISHER_EMAIL" ],
+        "notifyEmails": [ "brendan@cluefulmedia.com" ],
+        "respondByDate": "RESPOND_BY_DATE",
+        "currencyCode": "GBP",
+        "additionalInfo": "Additional info - test - digital package order",
+        "comment": "Manual test - digital package order 1",
+        "termsAndConditions": { "name": "Terms and Conditions", "content": "Test Ts and Cs content" },
+        "digitalLineItems": [
+            {
+                "externalId": "Unit009_D_1",
+                "name": "Auto 2 skyscraper CPM package A",
+                "freeFormMediaProperty": "Shift Digital", "section": "Run of Site", "subsection": "Football",
+                "packageType": "Roadblock",
+                "costMethod": "CPM", "unitType": "Impressions",
+                "units": 131313, "rate": 19.99, "cost": 2624.95,
+                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "comments": "Line item 1 comment"
+            },
+            {
+                "externalId": "Unit009_D_2",
+                "packageType": "Child", "primaryPlacement": false,
+                "parentExternalId": "Unit009_D_1",
+                "name": "Traffic Driver banners - package A",
+                "freeFormMediaProperty": "Shift Digital", "section": "Sports", "subsection": "Football",
+                "buyType": "Display", "buyCategory": "Standard",
+                "dimensions": "728 x 90", "position": "Leaderboard",
+                "creativeType": "Flash", "servedBy": "3rd party",
+                "comments": "Line item 2 comment"
+            },
+            {
+                "externalId": "Unit009_D_3",
+                "packageType": "Child", "primaryPlacement": true,
+                "parentExternalId": "Unit009_D_1",
+                "name": "PATS Sidekick - package A",
+                "freeFormMediaProperty": "Shift Digital", "section": "Sports", "subsection": "Football",
+                "buyType": "Display", "buyCategory": "Standard",
+                "dimensions": "300 x 600", "position": "Sidekick",
+                "creativeType": "Flash", "servedBy": "3rd party",
+                "comments": "Line item 3 comment"
+            },
+            {
+                "externalId": "Unit009_D_4",
+                "packageType": "Package",
+                "name": "Even Grander PATS Package B",
+                "freeFormMediaProperty": "Shift Digital", "section": "Sports", "subsection": "Football",
+                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_START_DATE,
+                "costMethod": "CPM", "unitType": "Impressions",
+                "rate": 7.00, "units": 5000000, "cost": 35000.00,
+                "flighting" : [
+                 {
+                    "year" : CAMPAIGN_START_DATE.year,
+                    "month" : CAMPAIGN_START_DATE.month,
+                    "units" : 5000000,
+                 }
+                ],
+                "comments": "Line item 4 comment"
+            },
+            {
+                "externalId": "Unit009_D_5",
+                "packageType": "Child",
+                "parentExternalId": "Unit009_D_4",
+                "name": "Traffic Driver banners - package B",
+                "freeFormMediaProperty": "Shift Digital", "section": "Sports",
+                "buyType": "Display", "buyCategory": "Standard",
+                "dimensions": "728 x 90", "position": "Leaderboard",
+                "creativeType": "Flash", "servedBy": "3rd party",
+                "comments": "Line item 5 comment"
+            },
+            {
+                "externalId": "Unit009_D_6",
+                "packageType": "Child",
+                "parentExternalId": "Unit009_D_4",
+                "name": "MPU Video - package B",
+                "freeFormMediaProperty": "Shift Digital", "section": "Sports",
+                "buyType": "Display", "buyCategory": "Standard",
+                "dimensions": "300 x 250", "position": "Medium Rectangle", "creativeType": "Flash", "servedBy": "3rd party",
+                "comments": "Line item 6 comment"
+            },
+            {
+                "externalId": "Unit009_D_7",
+                "packageType": "Standalone",
+                "name": "Button - not in a package",
+                "freeFormMediaProperty": "Shift Digital", "section": "Sports",
+                "buyType": "Display", "buyCategory": "Standard",
+                "costMethod": "CPM", "unitType": "Impressions",
+                "rate": 7.00, "units": 5000000, "cost": 35000.00,
+                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_START_DATE,
+                "dimensions": "120 x 60", "position": "Medium Rectangle", "creativeType": "Flash", "servedBy": "3rd party",
+                "comments": "Line item 7 comment"
+            }
+        ]
+    }
+}

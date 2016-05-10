@@ -1,0 +1,35 @@
+{
+    "campaign_name": "Unit004 Digital Fee",
+    "payload_1": {
+        "mediaType": "Online",
+        "externalId": "CAMPAIGN_ID",
+        "buyer": {
+            "firstName": "Barbara",
+            "lastName": "Buyer",
+            "email": "barbara.buyer@testagencybuyer.com"
+        },
+        "vendorId": "PUBLISHER_ID",
+        "recipientEmails": [ "PUBLISHER_EMAIL" ],
+        "notifyEmails": [ "brendan@cluefulmedia.com" ],
+        "respondByDate": "RESPOND_BY_DATE",
+        "currencyCode": "GBP",
+        "additionalInfo": "Additional info - test - digital fee order",
+        "comment": "Manual test - digital fee order 1",
+        "termsAndConditions": { "name": "Terms and Conditions", "content": "Test Ts and Cs content" },
+        "digitalLineItems": [
+           {
+                "packageType": "Standalone",
+                "externalId": "Unit004_D_001",
+                "name": "Test digital fee line item",
+                "freeFormMediaProperty": "Shift Digital",
+                "section": "Sport", "subsection": "Football", "target": "Mac users",
+                "buyType": "Fee", "buyCategory": "Ad Serving",
+                "costMethod": "Flat", "unitType": "N/A",
+                "rate": 1500.00, "units": 0, "cost": 1500.00,
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
+                "servedBy": "Other", "creativeType": "Other",
+                "comments": "Fee line item comment",
+            }
+        ]
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "campaign_name": "Unit011 Complex Digital Revision CAMPAIGN_ID",
+    "payload_1": {
+        "mediaType": "Online",
+        "externalId": "UNIT011_CAMPAIGN_ID",
+        "buyer": {
+            "firstName": "Barbara",
+            "lastName": "Buyer",
+            "email": "barbara.buyer@testagencybuyer.com"
+        },
+        "vendorId": "PUBLISHER_ID",
+        "recipientEmails": [ "PUBLISHER_EMAIL" ],
+        "notifyEmails": [ "brendan@cluefulmedia.com" ],
+        "respondByDate": "RESPOND_BY_DATE",
+        "currencyCode": "EUR",
+        "additionalInfo": "Additional info - test - complex digital revision order",
+        "comment": "Manual test - complex digital revision order 1",
+        "termsAndConditions": { "name": "Terms and Conditions", "content": "Test Ts and Cs content" },
+        "digitalLineItems": [
+            {
+                "externalId": "Unit019_D_001",
+                "name": Euro order line item 1",
+                "freeFormMediaProperty": "Shift", "section": "Sport", "subsection": "Football",
+                "packageType": "Standalone",
+                "buyType": "Display", "buyCategory": "Standard",
+                "costMethod": "Flat", "unitType": "N/A",
+                "creativeType": "Flash",
+                # for Flat cost type, units = 0 and rate == cost
+                "units": 0, "rate": 1919.19, "cost": 1919.19,
+                "dimensions": "468 x 60", "position": "Above the Fold",
+                "flightStartDate": CAMPAIGN_START_DATE, "flightEndDate": CAMPAIGN_END_DATE,
+                "servedBy": "3rd party",
+                "comments": "Euro line item 1 comment",
+                "target": "Mac users",
+                "flighting": [
+                    { "year": CAMPAIGN_START_YEAR, "month": CAMPAIGN_START_MONTH, "units": 0 }
+                ]
+            }
+        ]
+    }
+}

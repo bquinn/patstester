@@ -1,0 +1,41 @@
+{
+    "campaign_name": "Unit001 Simple Digital",
+    "payload_1": {
+        "mediaType": "Online",
+        "externalId": "CAMPAIGN_ID",
+        "buyer": {
+            "firstName": "Barbara",
+            "lastName": "Buyer",
+            "email": "barbara.buyer@testagencybuyer.com"
+        },
+        "vendorId": "PUBLISHER_ID",
+        "recipientEmails": [ "PUBLISHER_EMAIL" ],
+        "notifyEmails": [ "brendan@cluefulmedia.com" ],
+        "respondByDate": "RESPOND_BY_DATE",
+        "currencyCode": "GBP",
+        "additionalInfo": "Additional info - test - simple digital order",
+        "comment": "Automated test - simple digital order 1",
+        "termsAndConditions": { "name": "Terms and Conditions", "content": "Test Ts and Cs content" },
+        "digitalLineItems": [
+           {
+                "packageType": "Standalone",
+                "externalId": "Unit001_D_001",
+                "name": "Test simple digital line item",
+                "freeFormMediaProperty": "Shift",
+                "section": "Sport", "subsection": "Football", "target": "Mac users",
+                "buyType": "Display", "buyCategory": "Standard",
+                "costMethod": "Flat", "unitType": "N/A",
+                "rate": 8925.00, "units": 0, "cost": 8925.00,
+                "dimensions": "468 x 60",
+                "creativeType": "Flash", "position": "Above the Fold",
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
+                "servedBy": "3rd party",
+                "comments": "Line item 1 comment",
+                "target": "Mac users",
+                "flighting": [
+                    { "year": "CAMPAIGN_START_YEAR", "month": "CAMPAIGN_START_MONTH", "units": 0 }
+                ]
+            }
+        ]
+    }
+}

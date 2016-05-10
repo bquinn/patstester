@@ -1,0 +1,38 @@
+{
+    "campaign_name": "UAT004 Halifax Current Accounts",
+    "payload_1": {
+        "mediaType": "Print",
+        "externalId": "CAMPAIGN_ID",
+        "buyer": {
+            "firstName": "Susanna",
+            "lastName": "Zakarian",
+            "email": "susanna.zakarian@mecglobal.co.uk"
+        },
+        "vendorId": "PUBLISHER_ID",
+        "recipientEmails": [ "PUBLISHER_EMAIL" ],
+        "notifyEmails": [ "brendan@cluefulmedia.com" ],
+        "respondByDate": "RESPOND_BY_DATE",
+        "currencyCode": "GBP",
+        "additionalInfo": "No clash with other LBG on spread, other LBG Current Accounts in issue, other Halifax in issue",
+        "comment": "Please could you place the following order.",
+        "termsAndConditions": { "name": "Terms and Conditions", "content": "None attached" },
+        "printLineItems": [
+           {
+                "packageType": "Standalone",
+                "externalId": "P00012337",
+                "supplierPlacementReference": "P00012337",
+                "name": "10cm x 8 columns colour",
+                "freeFormMediaProperty": "The Times",
+                "buyType": "Newspaper", "buyCategory": "Display - National",
+                "costMethod": "SCC", "unitType": "Columns by cms",
+                "rate": "62.5", "units": "80", "cost": "5000.00",
+                "section": "", "subsection": "", "region": "Ex Scotland",
+                "size": { "type": "Columns By-Centimetres", "units": 10, "columns": 8 },
+                "color": "4 colour", "position": "Front Half",
+                "positionGuaranteed": false, "includeInDigitalEdition": false,
+                "coverDate": "CAMPAIGN_START_DATE", "saleDate": "CAMPAIGN_START_DATE",
+                "comments": "Flex to 21 Feb 2015. 1st format after pg5, 2nd format inc pg5, ex-Scotland. No clash with: other LBG on spread, other LBG Current Accounts in issue, other Halifax in issue."
+            }
+        ]
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "campaign_name": "Unit010 Digital Revision",
+    "payload_1": {
+        "mediaType": "Online",
+        "externalId": "CAMPAIGN_ID",
+        "buyer": {
+            "firstName": "Barbara",
+            "lastName": "Buyer",
+            "email": "barbara.buyer@testagencybuyer.com"
+        },
+        "vendorId": "PUBLISHER_ID",
+        "recipientEmails": [ "PUBLISHER_EMAIL" ],
+        "notifyEmails": [ "brendan@cluefulmedia.com" ],
+        "respondByDate": "RESPOND_BY_DATE",
+        "currencyCode": "GBP",
+        "additionalInfo": "Additional info - test - digital revision order",
+        "comment": "Manual test - digital revision order 1",
+        "termsAndConditions": { "name": "Terms and Conditions", "content": "Test Ts and Cs content" },
+        "digitalLineItems": [
+            {
+                "externalId": "Unit010_D_001",
+                "name": "Line item to be revised",
+                "freeFormMediaProperty": "Shift", "section": "Sport", "subsection": "Football",
+                "packageType": "Standalone",
+                "costMethod":"Flat","unitType":"Impressions",
+                "units": 130171, "rate": 999.99, "cost": 999.99,
+                "buyType": "Display", "buyCategory": "Standard",
+                "flightStartDate":self.campaign_start_date,"flightEndDate": self.campaign_end_date,
+                "dimensions":"468 x 60","position":"Above the Fold", "servedBy": "3rd party",
+                "creativeType": "Flash",
+                "flighting":[
+                    { "year": CAMPAIGN_START_YEAR, "month": CAMPAIGN_START_MONTH, "units": 130171, "cost": 999.99 }
+                ],
+                "comments":"Line item 1 comment",
+                "target": "Mac users"
+            }
+        ]
+    }
+}

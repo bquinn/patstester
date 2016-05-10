@@ -1,0 +1,38 @@
+{
+    "campaign_name": "UAT005 Sky Content",
+    "payload_1": {
+        "mediaType": "Print",
+        "externalId": "CAMPAIGN_ID",
+        "buyer": {
+            "firstName": "Mollie",
+            "lastName": "Maidman",
+            "email": "mollie.maidman@mediacom.co.uk"
+        },
+        "vendorId": "PUBLISHER_ID",
+        "recipientEmails": [ "PUBLISHER_EMAIL" ],
+        "notifyEmails": [ "brendan@cluefulmedia.com" ],
+        "respondByDate": "RESPOND_BY_DATE",
+        "currencyCode": "GBP",
+        "additionalInfo": "These bookings are free of charge.",
+        "comment": "Please could you place the following order.",
+        "termsAndConditions": { "name": "Terms and Conditions", "content": "None attached" },
+        "printLineItems": [
+           {
+                "packageType": "Standalone",
+                "externalId": "ad4290337",
+                "supplierPlacementReference": "ad4290337",
+                "name": "Wrap Around - Colour",
+                "freeFormMediaProperty": "The Times",
+                "buyType": "Newspaper", "buyCategory": "Display - National",
+                "costMethod": "SCC", "unitType": "Columns by cms",
+                "rate": "62.5", "units": "80", "cost": "5000.00",
+                "section": "", "subsection": "", "region": "",
+                "size": { "type": "Columns By-Centimetres", "units": 10, "columns": 8 },
+                "color": "4 colour", "position": "specified",
+                "positionGuaranteed": false, "includeInDigitalEdition": false,
+                "coverDate": "CAMPAIGN_START_DATE", "saleDate": "CAMPAIGN_START_DATE",
+                "comments": "Compensation - Cover Wrap due to error from 15th Aug 2014, agreed between D Carter & A Crow"
+            }
+        ]
+    }
+}

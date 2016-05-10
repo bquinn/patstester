@@ -1,0 +1,69 @@
+{
+    "campaign_name": "Unit011 Complex Digital Revision",
+    "payload_1": {
+        "mediaType": "Online",
+        "externalId": "CAMPAIGN_ID",
+        "buyer": {
+            "firstName": "Barbara",
+            "lastName": "Buyer",
+            "email": "barbara.buyer@testagencybuyer.com"
+        },
+        "vendorId": "PUBLISHER_ID",
+        "recipientEmails": [ "PUBLISHER_EMAIL" ],
+        "notifyEmails": [ "brendan@cluefulmedia.com" ],
+        "respondByDate": "RESPOND_BY_DATE",
+        "currencyCode": "GBP",
+        "additionalInfo": "Additional info - test - complex digital revision order",
+        "comment": "Manual test - complex digital revision order 1",
+        "termsAndConditions": { "name": "Terms and Conditions", "content": "Test Ts and Cs content" },
+        "digitalLineItems": [
+          {
+            "packageType": "Standalone",
+            "externalId":"Unit011_D_001",
+            "name":" ",
+            "costMethod":"Flat", "unitType":"N/A", "units":0,
+            "rate":self.cost_1, "cost":self.cost_1,
+            "freeFormMediaProperty":"Shift Digital", "section":"Sport", "subsection":"Football",
+            "buyType":"Display", "buyCategory":"Standard",
+            "flightStartDate":order_start_date, "flightEndDate":order_end_date,
+            "dimensions":"468 x 60", "position":"Above the Fold",
+            "servedBy":"3rd party",
+            "flighting": [
+                { "year": order_start_date.year, "month": order_end_date.month, "units": 0 }
+            ],
+            "comments":"Line item 1 comment",
+            "creativeType": "Flash", "target":"Mac users",
+            "supplierPlacementParentReference": "A123"
+          }, {
+            "packageType": "Standalone",
+            "externalId":"Unit011_D_002",
+            "name":self.line_item_name+"B",
+            "costMethod":"CPM", "unitType":"Impressions", "units":self.units_2,
+            "rate":self.rate_2, "cost":self.cost_2,
+            "freeFormMediaProperty":"Shift Tablet",
+            "buyType":"Display", "buyCategory":"Tablet",
+            "flightStartDate":self.campaign_start_date, "flightEndDate":self.campaign_end_date,
+            "dimensions":"300 x 250", "position":"MPU",
+            "servedBy":"3rd party",
+            "flighting":[
+                { "year": order_start_date.year, "month": order_end_date.month, "units": self.units_2 }
+            ],
+            "comments":"Line item 2 comment",
+            "creativeType": "Flash", "target":"Windows users"
+          }, {
+            "packageType": "Standalone",
+            "externalId":"Unit011_D_003",
+            "name":self.line_item_name+"C",
+            "costMethod":"Flat", "unitType":"Impressions", "units": self.units_3,
+            "rate": self.cost_3, "cost":self.cost_3,
+            "freeFormMediaProperty":"Shiftorama",
+            "buyType":"Fee", "buyCategory":"Production",
+            "flightStartDate":order_start_date, "flightEndDate":order_end_date,
+            "comments":"Line item 3 comment",
+            "creativeType": "Flash", "target":"Windows users",
+            "dimensions": "1 x 1", "position": "Position",
+            "servedBy":"3rd party"
+          }
+        ]
+    }
+}

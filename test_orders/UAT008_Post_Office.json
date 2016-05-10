@@ -1,0 +1,86 @@
+{
+    "campaign_name": "UAT008 Post Office",
+    "payload_1": {
+        "mediaType": "Print",
+        "externalId": "CAMPAIGN_ID",
+        "buyer": {
+            "firstName": "Alex",
+            "lastName": "Caplan",
+            "email": "alex.caplan@mindshare.co.uk"
+        },
+        "vendorId": "PUBLISHER_ID",
+        "recipientEmails": [ "PUBLISHER_EMAIL" ],
+        "notifyEmails": [ "brendan@cluefulmedia.com" ],
+        "respondByDate": "RESPOND_BY_DATE",
+        "currencyCode": "GBP",
+        "additionalInfo": "",
+        "comment": "Can we get these booked on as well please :)",
+        "termsAndConditions": { "name": "Terms and Conditions", "content": "None attached" },
+        "printLineItems": [
+           {
+                "packageType": "Standalone",
+                "externalId": "P00040261",
+                "supplierPlacementReference": "",
+                "name": "20cm x 3 columns - Colour",
+                "freeFormMediaProperty": "The Times",
+                "section": "Main Book", "subsection": "", "region": "",
+                "buyType": "Newspaper", "buyCategory": "Display - National",
+                "costMethod": "Free", "unitType": "N/A",
+                "rate": "", "units": "1", "cost": "0.00",
+                "size": { "type": "Full Page"},
+                "color": "4 colour", "position": "Front Half",
+                "positionGuaranteed": false, "includeInDigitalEdition": false,
+                "coverDate": "CAMPAIGN_START_DATE", "saleDate": "CAMPAIGN_START_DATE",
+                "comments": ""
+            },
+            {
+                "packageType": "Standalone",
+                "externalId": "P00040262",
+                "supplierPlacementReference": "",
+                "name": "20cm x 3 columns - Colour",
+                "freeFormMediaProperty": "The Times",
+                "section": "Main Book", "subsection": "", "region": "",
+                "buyType": "Newspaper", "buyCategory": "Display - National",
+                "costMethod": "Free", "unitType": "N/A",
+                "rate": "", "units": "1", "cost": "0.00",
+                "size": { "type": "Full Page"},
+                "color": "4 colour", "position": "Front Half",
+                "positionGuaranteed": false, "includeInDigitalEdition": false,
+                "coverDate": "CAMPAIGN_START_DATE", "saleDate": "CAMPAIGN_START_DATE",
+                "comments": ""
+            },
+            {
+                "packageType": "Standalone",
+                "externalId": "P00040264",
+                "supplierPlacementReference": "",
+                "name": "20cm x 3 columns - Colour",
+                "freeFormMediaProperty": "The Times",
+                "section": "Main Book", "subsection": "", "region": "",
+                "buyType": "Newspaper", "buyCategory": "Display - National",
+                "costMethod": "Free", "unitType": "N/A",
+                "rate": "", "units": "1", "cost": "0.00",
+                "size": { "type": "Full Page"},
+                "color": "4 colour", "position": "Front Half",
+                "positionGuaranteed": false, "includeInDigitalEdition": false,
+                "coverDate": "CAMPAIGN_START_DATE", "saleDate": "CAMPAIGN_START_DATE",
+                "comments": ""
+            },
+            {
+                "packageType": "Standalone",
+                "externalId": "P00040265",
+                "supplierPlacementReference": "",
+                "name": "20cm x 3 columns - Colour",
+                "freeFormMediaProperty": "The Times",
+                "buyType": "Newspaper", "buyCategory": "Display - National",
+                "costMethod": "Flat", "unitType": "N/A",
+                "rate": "", "units": "1", "cost": "0.00",
+                "section": "Main Book", "subsection": "", "region": "",
+                "size": { "type": "Full Page"},
+                "color": "4 colour", "position": "Front Half",
+                "positionGuaranteed": false, "includeInDigitalEdition": false,
+                "coverDate": "CAMPAIGN_END_DATE", "saleDate": "CAMPAIGN_END_DATE",
+                "comments": ""
+            }
+     ]
+    }
+}
