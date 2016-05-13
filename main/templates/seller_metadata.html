@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block pagetitle %}Seller - Metadata - {% endblock %}
+{% block title %}Seller - Metadata{% endblock %}
+
+{% block content %}
+    <h3><a href="{% url 'seller_metadata_agencies' %}">Agencies</a></h3>
+    <p>View the details of agencies. Note that the list can be very big so we limit the query if you don't provide any parameters.</p>
+    <h3>Media properties</h3>
+    <p>Coming soon - API docs are being released on Monday 16 May 2016.</p>
+{% endblock %}
+{% block raw %}{% endblock %}

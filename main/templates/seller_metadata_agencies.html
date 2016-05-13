@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Buyer - Get agencies{% endblock %}
+
+{% block content %}
+    <h3>Get agencies: {{ agency_id }}</h3>
+    <form method="get" action="{% url 'buyer_metadata_agencies' %}">
+    <table class="table">
+    <tr><td>Agency ID</td><td><input type="text" name="agency_id" value="{{agency_id}}"/></td></tr>
+    <tr><td>Agency name</td><td><input type="text" name="name" value="{{name}}"/></td></tr>
+    <tr><td>Last updated date</td><td> <input type="date" name="last_updated_date" value="{{last_updated_date}}"/></td></tr>
+    </table>
+    <input type="submit" value="Refresh list"/>
+    </form>
+
+    <table class="table">
+        {% include 'components/agency_details_header.html' %}
+        {% for agency in object_list %}
+            {% include 'components/agency_details_line_item.html' %}
+        {% endfor %}
+    </table>
+{% endblock %}
