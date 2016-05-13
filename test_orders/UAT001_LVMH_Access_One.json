@@ -30,7 +30,15 @@
                 "creativeType": "Flash", "servedBy": "3rd party",
                 "buyType": "Display", "buyCategory": "Tablet",
                 "comments": "Access One booking. Please join with equivalent print insertion",
-                "supplierPlacementParentReference": "AOne123"
+                "supplierPlacementParentReference": "AOne123",
+                "flighting" : [
+                 {
+                    "year" : "CAMPAIGN_START_YEAR",
+                    "month" : "CAMPAIGN_START_MONTH",
+                    "units" : 1,
+                    "serialNumber": "P00039984"
+                 }
+                ]
             }
         ]
     },
@@ -54,6 +62,7 @@
             {
                 "packageType": "Standalone",
                 "externalId": "UAT001_P_001",
+                "serialNumber": "P00039984",
                 "name": "LVMH Access One - Print component",
                 "freeFormMediaProperty": "The Times",
                 "buyType": "Newspaper", "buyCategory": "Display - National",

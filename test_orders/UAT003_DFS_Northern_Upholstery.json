@@ -20,6 +20,7 @@
            {
                 "packageType": "Standalone",
                 "externalId": "UAT003_P_001",
+                "serialNumber": "P00025012",
                 "name": "10cm x 8 columns colour",
                 "freeFormMediaProperty": "The Sunday Times",
                 "buyType": "Newspaper", "buyCategory": "Display - National",
@@ -35,6 +36,7 @@
             {
                 "packageType": "Standalone",
                 "externalId": "UAT003_P_002",
+                "serialNumber": "P00025082",
                 "name": "10cm x 8 columns colour",
                 "freeFormMediaProperty": "The Sunday Times",
                 "buyType": "Newspaper", "buyCategory": "Display - National",
@@ -49,6 +51,7 @@
             },
             {
                 "packageType": "Standalone",
+                "serialNumber": "P00025081",
                 "externalId": "UAT003_P_003",
                 "name": "10cm x 8 columns colour",
                 "freeFormMediaProperty": "The Sunday Times",

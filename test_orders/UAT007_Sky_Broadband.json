@@ -19,6 +19,7 @@
         "printLineItems": [
            {
                 "packageType": "Standalone",
+                "serialNumber": "P01529116",
                 "externalId": "P01529116",
                 "supplierPlacementReference": "",
                 "name": "Full Page - Colour",
@@ -35,6 +36,7 @@
             },
             {
                 "packageType": "Standalone",
+                "serialNumber": "P01529118",
                 "externalId": "P01529118",
                 "supplierPlacementReference": "",
                 "name": "Cover - Inside Front - Colour",
@@ -51,6 +53,7 @@
             },
             {
                 "packageType": "Standalone",
+                "serialNumber": "P01542292",
                 "externalId": "P01542292",
                 "supplierPlacementReference": "",
                 "name": "Cover - Outside Back - Colour",
@@ -67,6 +70,7 @@
             },
             {
                 "packageType": "Standalone",
+                "serialNumber": "P01541431",
                 "externalId": "P01541431",
                 "supplierPlacementReference": "",
                 "name": "Full page - Colour",
@@ -83,6 +87,7 @@
             },
             {
                 "packageType": "Standalone",
+                "serialNumber": "P01541429",
                 "externalId": "P01541429",
                 "supplierPlacementReference": "",
                 "name": "Cover - Outside Back - Colour",
@@ -99,6 +104,7 @@
             },
             {
                 "packageType": "Standalone",
+                "serialNumber": "P01564805",
                 "externalId": "P01564805",
                 "supplierPlacementReference": "",
                 "name": "Cover - Inside Back - will be removed",

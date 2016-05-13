@@ -30,10 +30,11 @@
                 "creativeType": "Flash", "position": "Above the Fold",
                 "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
                 "servedBy": "3rd party",
+                "serialNumber": "D00012345",
                 "comments": "Line item 1 comment",
                 "target": "Mac users",
                 "flighting": [
-                    { "year": "CAMPAIGN_START_YEAR", "month": "CAMPAIGN_START_MONTH", "units": 0 }
+                    { "year": "CAMPAIGN_START_YEAR", "month": "CAMPAIGN_START_MONTH", "units": 0, "serialNumber": "D00012345" }
                 ]
             }
         ]

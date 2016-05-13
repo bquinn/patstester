@@ -25,11 +25,11 @@
             "rate":self.cost_1, "cost":self.cost_1,
             "freeFormMediaProperty":"Shift Digital", "section":"Sport", "subsection":"Football",
             "buyType":"Display", "buyCategory":"Standard",
-            "flightStartDate":order_start_date, "flightEndDate":order_end_date,
+            "flightStartDate":"CAMPAIGN_START_DATE", "flightEndDate":order_end_date,
             "dimensions":"468 x 60", "position":"Above the Fold",
             "servedBy":"3rd party",
             "flighting": [
-                { "year": order_start_date.year, "month": order_end_date.month, "units": 0 }
+                { "year": "CAMPAIGN_START_YEAR", "month": "CAMPAIGN_START_MONTH", "units": 0 }
             ],
             "comments":"Line item 1 comment",
             "creativeType": "Flash", "target":"Mac users",
@@ -46,7 +46,7 @@
             "dimensions":"300 x 250", "position":"MPU",
             "servedBy":"3rd party",
             "flighting":[
-                { "year": order_start_date.year, "month": order_end_date.month, "units": self.units_2 }
+                { "year": "CAMPAIGN_START_YEAR", "month": "CAMPAIGN_START_MONTH", "units": self.units_2 }
             ],
             "comments":"Line item 2 comment",
             "creativeType": "Flash", "target":"Windows users"
@@ -58,7 +58,7 @@
             "rate": self.cost_3, "cost":self.cost_3,
             "freeFormMediaProperty":"Shiftorama",
             "buyType":"Fee", "buyCategory":"Production",
-            "flightStartDate":order_start_date, "flightEndDate":order_end_date,
+            "flightStartDate":"CAMPAIGN_START_DATE", "flightEndDate":order_end_date,
             "comments":"Line item 3 comment",
             "creativeType": "Flash", "target":"Windows users",
             "dimensions": "1 x 1", "position": "Position",
