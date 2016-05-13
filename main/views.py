@@ -266,6 +266,17 @@ class PATSAPIMixin(object):
             self.example_budget = random.randint(50000,100000)
         return self.example_budget
 
+    def replace_template_strings(self, payload):
+        payload.replace("PUBLISHER_ID", publisher_id)
+        payload.replace("PUBLISHER_EMAIL", publisher_email)
+        payload.replace("CAMPAIGN_ID", campaign_id)
+        payload.replace("CAMPAIGN_START_DATE", campaign_start_date.strftime("%Y-%m-%d"))
+        payload.replace("CAMPAIGN_END_DATE", campaign_end_date.strftime("%Y-%m-%d"))
+        payload.replace("RESPOND_BY_DATE", respond_by_date.strftime("%Y-%m-%d"))
+        payload.replace("CAMPAIGN_START_MONTH", str(campaign_start_date.month))
+        payload.replace("CAMPAIGN_START_YEAR", str(campaign_start_date.year))
+        return payload
+
 class TestOrdersMixin(object):
     test_data_id = None
     test_data = None
@@ -374,6 +385,24 @@ class Buyer_ListEventsView(PATSAPIMixin, ListView):
         context_data['search_to_date'] = self.search_to_date
         return context_data
 
+class Buyer_ReprocessEventsView(PATSAPIMixin, TemplateView):
+    since_date = None
+
+    def get(self, *args, **kwargs):
+        self.clear_curl_history()
+        since_date_string = self.request.GET.get('since_date', None)
+        if since_date_string:
+            self.since_date = datetime.datetime.strptime(since_date_string,'%Y-%m-%dT%H:%M')
+            buyer_api = self.get_buyer_api_handle()
+            response = None
+            try:
+                response = buyer_api.reprocess_events(since_date=self.since_date)
+            except PATSException as error:
+                messages.error(self.request, "Reprocess events failed. Error: %s %s" % (error, response))
+            else:
+                messages.success(self.request, "Event reprocessing requested successfully!")
+        return super(Buyer_ReprocessEventsView, self).get(*args, **kwargs)
+
 class Buyer_GetPublishersView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
@@ -424,8 +453,8 @@ class Buyer_GetAgenciesView(PATSAPIMixin, ListView):
         self.search_updated_date = self.request.GET.get('last_updated_date', None)
         agencies_response = None
         try:
-            # agencies_response = buyer_api.get_buyers(user_id=self.get_agency_user_id(), agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
-            agencies_response = buyer_api.get_buyers(user_id='brenddlo@pats3', agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
+            agencies_response = buyer_api.get_buyers(user_id=self.get_agency_user_id(), agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
+            # agencies_response = buyer_api.get_buyers(user_id='brenddlo@pats3', agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
             return agencies_response['payload']
         except PATSException as error:
             messages.error(self.request, "Get agencies failed. Error: %s" % error)
@@ -905,7 +934,7 @@ class Buyer_CreateCampaignView(PATSAPIMixin, FormView):
     success_url = reverse_lazy('buyer_campaigns_create')
 
     def get(self, *args, **kwargs):
-        self.clear_curl_history()
+        # self.clear_curl_history()
         return super(Buyer_CreateCampaignView, self).get(*args, **kwargs)
 
     def get_initial(self):
@@ -1344,10 +1373,9 @@ class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView, TestOrdersMixin)
         # convert the text string to a json object - best to check that the JSON is valid before 
         original_payload_1 = form.cleaned_data.get('payload_1')
         original_payload_2 = form.cleaned_data.get('payload_2')
-        # replace keyword strings
-        replaced_payload_1 = original_payload_1.replace("PUBLISHER_ID", publisher_id).replace("PUBLISHER_EMAIL", publisher_email).replace("CAMPAIGN_ID", campaign_id).replace("CAMPAIGN_START_DATE", campaign_start_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_END_DATE", campaign_end_date.strftime("%Y-%m-%d")).replace("RESPOND_BY_DATE", respond_by_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_START_MONTH", str(campaign_start_date.month)).replace("CAMPAIGN_START_YEAR", str(campaign_start_date.year))
+        replaced_payload_1 = self.replace_template_strings(original_payload_1)
         if original_payload_2:
-            replaced_payload_2 = original_payload_2.replace("PUBLISHER_ID", publisher_id).replace("PUBLISHER_EMAIL", publisher_email).replace("CAMPAIGN_ID", campaign_id).replace("CAMPAIGN_START_DATE", campaign_start_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_END_DATE", campaign_end_date.strftime("%Y-%m-%d")).replace("RESPOND_BY_DATE", respond_by_date.strftime("%Y-%m-%d")).replace("CAMPAIGN_START_MONTH", str(campaign_start_date.month)).replace("CAMPAIGN_START_YEAR", str(campaign_start_date.year))
+            replaced_payload_2 = self.replace_template_strings(original_payload_2)
         try:
             data_1 = json.loads(replaced_payload_1)
         except ValueError as json_error:
@@ -1539,9 +1567,14 @@ class Seller_GetAgenciesView(PATSAPIMixin, ListView):
         self.agency_id = self.request.GET.get('agency_id', self.kwargs.get('agency_id', self.get_agency_id()))
         self.search_name = self.request.GET.get('name', None)
         self.search_updated_date = self.request.GET.get('last_updated_date', None)
+        # if no search params are set, the list can be very long, so limit it to just changes in the last week
+        if not self.search_updated_date and not self.search_name and not self.agency_id:
+            one_week_ago = datetime.datetime.today()-datetime.timedelta(7)
+            self.search_updated_date = one_week_ago.strftime("%Y-%m-%d")
+        self.user_id = self.get_publisher_user()
         agencies_response = ''
         try:
-            agencies_response = seller_api.get_agency_by_id(user_id=self.get_agency_user_id(), agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
+            agencies_response = seller_api.get_buyers(user_id=self.user_id, agency_id=self.agency_id, name=self.search_name, last_updated_date=self.search_updated_date)
         except PATSException as error:
             messages.error(self.request, "Get agencies failed. Error: %s" % error)
         else:
@@ -1763,9 +1796,10 @@ class Seller_OrderVersionsView(PATSAPIMixin, ListView):
         seller_api = self.get_seller_api_handle()
         self.campaign_id = self.kwargs.get('campaign_id', None)
         self.order_id = self.kwargs.get('order_id', None)
+        self.user_id = self.get_publisher_user()
         order_versions_response = None
         try:
-            order_versions_response = seller_api.list_order_versions(user_id=self.get_agency_user_id(), campaign_id=self.campaign_id, order_id=self.order_id)
+            order_versions_response = seller_api.list_order_versions(user_id=self.user_id, campaign_id=self.campaign_id, order_id=self.order_id)
         except PATSException as error:
             messages.error(self.request, 'Couldn''t load order versions: %s' % error)
         return order_versions_response
