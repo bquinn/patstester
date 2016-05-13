@@ -1,0 +1,233 @@
+{
+    "campaign_name": "UAT017 Kenneth Branagh Audience",
+    "payload_1": {
+        "mediaType": "Online",
+        "externalId": "CAMPAIGN_ID",
+        "buyer": {
+            "firstName": "Charlotte",
+            "lastName": "Powers",
+            "email": "charlotte.powers@mediacom.com"
+        },
+        "vendorId": "PUBLISHER_ID",
+        "recipientEmails": [ "PUBLISHER_EMAIL" ],
+        "notifyEmails": [ "brendan@cluefulmedia.com" ],
+        "respondByDate": "RESPOND_BY_DATE",
+        "currencyCode": "GBP",
+        "additionalInfo": "",
+        "comment": "Audience booking",
+        "termsAndConditions": { "name": "GroupM Terms and Conditions", "content": "This Insertion Order (IO) is subject to the terms stated in GroupM_Agency_Publisher_Terms_and_Conditions_v2012.06.29.pdf for the provision of digital media campaign. Such terms are expressly incorporated in the IO to the exclusion of all other terms, provisions and conditions which you may purport to impose on the Agency. By approving the IO or displaying any ad requested on the IO, you are deemed to have accepted these terms." },
+        "digitalLineItems": [
+            {
+                "externalId": "UAT017_D_1",
+                "packageType": "Package",
+                "name": "Stage Takeover",
+                "freeFormMediaProperty": "Guardian", "section": "Arts & Entertainment", "subsection": "Stage",
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
+                "costMethod": "Flat", "unitType": "N/A",
+                "rate": 5000.00, "units": 0, "cost": 5000.00,
+                "flighting" : [
+                 {
+                    "year" : "CAMPAIGN_START_YEAR",
+                    "month" : "CAMPAIGN_END_MONTH",
+                    "units" : 0,
+                    "serialNumber": "D00068005"
+                 },
+                 {
+                    "year" : "CAMPAIGN_END_YEAR",
+                    "month" : "CAMPAIGN_END_MONTH",
+                    "units" : 0,
+                    "serialNumber": "D00068006"
+                 }
+                ],
+                "comments": "comment"
+            },
+            {
+                "externalId": "UAT017_D_2",
+                "packageType": "Child",
+                "parentExternalId": "UAT017_D_1",
+                "name": "Guardian_ArtsEntertainment_Billboard_17 Apr 15",
+                "freeFormMediaProperty": "Guardian", "section": "Arts & Entertainment", "subesction": "Stage",
+                "buyType": "Display", "buyCategory": "Standard",
+                "dimensions": "970 x 250", "position": "Billboard",
+                "creativeType": "Flash", "servedBy": "3rd party",
+                "comments": "Part of package"
+            },
+            {
+                "externalId": "UAT017_D_3",
+                "packageType": "Child",
+                "parentExternalId": "UAT017_D_1",
+                "name": "Guardian_ArtsEntertainment_MPU_17 Apr 15",
+                "freeFormMediaProperty": "Guardian", "section": "Arts & Entertainment", "subesction": "Stage",
+                "buyType": "Display", "buyCategory": "Standard",
+                "dimensions": "300 x 250", "position": "MPU",
+                "creativeType": "Flash", "servedBy": "3rd party",
+                "comments": "Part of package"
+            },
+            {
+                "externalId": "UAT017_D_4",
+                "packageType": "Child",
+                "parentExternalId": "UAT017_D_1",
+                "name": "Guardian_ArtsEntertainment_Page Skin/Wallpaper_17 Apr 15",
+                "freeFormMediaProperty": "Guardian", "section": "Arts & Entertainment", "subesction": "Stage",
+                "buyType": "Display", "buyCategory": "Standard",
+                "dimensions": "1600 x 1200", "position": "Page Skin / Wallpaper",
+                "creativeType": "Flash", "servedBy": "3rd party",
+                "comments": "Part of package"
+            },
+            {
+                "externalId": "UAT017_D_5",
+                "packageType": "Standalone",
+                "buyType": "Display", "buyCategory": "Standard",
+                "name": "Stage Takeover - Value",
+                "freeFormMediaProperty": "Guardian", "section": "Arts & Entertainment", "subsection": "Stage",
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
+                "costMethod": "Flat", "unitType": "N/A",
+                "rate": 0, "units": 0, "cost": 0.00,
+                "dimensions": "0 x 0", "position": "N/A",
+                "creativeType": "Other", "servedBy": "Other",
+                "flighting" : [
+                 {
+                    "year" : "CAMPAIGN_START_YEAR",
+                    "month" : "CAMPAIGN_START_MONTH",
+                    "units" : 0,
+                    "serialNumber": "D00068007"
+                 },
+                 {
+                    "year" : "CAMPAIGN_END_YEAR",
+                    "month" : "CAMPAIGN_END_MONTH",
+                    "units" : 0,
+                    "serialNumber": "D00068008"
+                 }
+                ],
+                "comments": "comment"
+            },
+            {
+                "externalId": "UAT017_D_6",
+                "packageType": "Package",
+                "name": "Kenneth Branagh Keyword Targeting",
+                "freeFormMediaProperty": "Guardian", "section": "Run of Site",
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
+                "costMethod": "CPM", "unitType": "Impressions",
+                "rate": 30.0, "units": 5000, "cost": 150.00,
+                "flighting" : [
+                 {
+                    "year" : "CAMPAIGN_START_YEAR",
+                    "month" : "CAMPAIGN_START_MONTH",
+                    "units" : 2917,
+                    "serialNumber": "D00068009"
+                 },
+                 {
+                    "year" : "CAMPAIGN_END_YEAR",
+                    "month" : "CAMPAIGN_END_MONTH",
+                    "units" : 2083,
+                    "serialNumber": "D00068010"
+                 }
+                ],
+                "comments": "comment"
+            },
+            {
+                "externalId": "UAT017_D_7",
+                "packageType": "Child",
+                "parentExternalId": "UAT017_D_6",
+                "name": "Guardian_ROS_Billboard_17 Apr 15",
+                "freeFormMediaProperty": "Guardian", "section": "Run of Site",
+                "buyType": "Display", "buyCategory": "Standard",
+                "dimensions": "970 x 250", "position": "Billboard",
+                "creativeType": "Flash", "servedBy": "3rd party",
+                "comments": "Part of package"
+            },
+            {
+                "externalId": "UAT017_D_8",
+                "packageType": "Child",
+                "parentExternalId": "UAT017_D_6",
+                "name": "Guardian_ROS_MPU_17 Apr 15",
+                "freeFormMediaProperty": "Guardian", "section": "Arts & Entertainment", "subesction": "Stage",
+                "buyType": "Display", "buyCategory": "Standard",
+                "dimensions": "300 x 250", "position": "MPU",
+                "creativeType": "Flash", "servedBy": "3rd party",
+                "comments": "Part of package"
+            },
+            {
+                "externalId": "UAT017_D_9",
+                "packageType": "Standalone",
+                "buyType": "Display", "buyCategory": "Standard",
+                "name": "Kenneth Branagh Keywords - Value",
+                "freeFormMediaProperty": "Guardian",
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
+                "costMethod": "CPM", "unitType": "Impressions",
+                "rate": 0, "units": 5000, "cost": 0.00,
+                "dimensions": "0 x 0", "position": "N/A",
+                "creativeType": "Other", "servedBy": "Other",
+                "flighting" : [
+                 {
+                    "year" : "CAMPAIGN_START_YEAR",
+                    "month" : "CAMPAIGN_START_MONTH",
+                    "units" : 2917,
+                    "serialNumber": "D00068011"
+                 },
+                 {
+                    "year" : "CAMPAIGN_END_YEAR",
+                    "month" : "CAMPAIGN_END_MONTH",
+                    "units" : 2083,
+                    "serialNumber": "D00068012"
+                 }
+                ],
+                "comments": "comment"
+            },
+            {
+                "externalId": "UAT017_D_10",
+                "packageType": "Standalone",
+                "buyType": "Display", "buyCategory": "Standard",
+                "name": "Run of Culture - September",
+                "freeFormMediaProperty": "Guardian", "section": "Culture",
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
+                "costMethod": "CPM", "unitType": "Impressions",
+                "rate": 30.0, "units": 25000, "cost": 750.00,
+                "dimensions": "0 x 0", "position": "N/A",
+                "creativeType": "Other", "servedBy": "Other",
+                "flighting" : [
+                 {
+                    "year" : "CAMPAIGN_START_YEAR",
+                    "month" : "CAMPAIGN_START_MONTH",
+                    "units" : 14583,
+                    "serialNumber": "D00068013"
+                 },
+                 {
+                    "year" : "CAMPAIGN_END_YEAR",
+                    "month" : "CAMPAIGN_END_MONTH",
+                    "units" : 10417,
+                    "serialNumber": "D00068014"
+                 }
+                ],
+                "comments": "comment"
+            },
+            {
+                "externalId": "UAT017_D_11",
+                "packageType": "Standalone",
+                "buyType": "Display", "buyCategory": "Standard",
+                "name": "Run of Culture - Value",
+                "freeFormMediaProperty": "Guardian", "section": "Arts & Entertainment", "subsection": "Stage",
+                "flightStartDate": "CAMPAIGN_START_DATE", "flightEndDate": "CAMPAIGN_END_DATE",
+                "costMethod": "CPM", "unitType": "Impressions",
+                "rate": 0, "units": 25000, "cost": 0.00,
+                "dimensions": "0 x 0", "position": "N/A",
+                "creativeType": "Other", "servedBy": "Other",
+                "flighting" : [
+                 {
+                    "year" : "CAMPAIGN_START_YEAR",
+                    "month" : "CAMPAIGN_START_MONTH",
+                    "units" : 14583,
+                    "serialNumber": "D00068015"
+                 },
+                 {
+                    "year" : "CAMPAIGN_END_YEAR",
+                    "month" : "CAMPAIGN_END_MONTH",
+                    "units" : 10417,
+                    "serialNumber": "D00068016"
+                 }
+                ],
+                "comments": "comment"
+            }
+        ]
+    }
+}
