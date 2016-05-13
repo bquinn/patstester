@@ -266,15 +266,17 @@ class PATSAPIMixin(object):
             self.example_budget = random.randint(50000,100000)
         return self.example_budget
 
-    def replace_template_strings(self, payload):
-        payload.replace("PUBLISHER_ID", publisher_id)
-        payload.replace("PUBLISHER_EMAIL", publisher_email)
-        payload.replace("CAMPAIGN_ID", campaign_id)
-        payload.replace("CAMPAIGN_START_DATE", campaign_start_date.strftime("%Y-%m-%d"))
-        payload.replace("CAMPAIGN_END_DATE", campaign_end_date.strftime("%Y-%m-%d"))
-        payload.replace("RESPOND_BY_DATE", respond_by_date.strftime("%Y-%m-%d"))
-        payload.replace("CAMPAIGN_START_MONTH", str(campaign_start_date.month))
-        payload.replace("CAMPAIGN_START_YEAR", str(campaign_start_date.year))
+    def replace_template_strings(self, payload, publisher_id, publisher_email, user_id, campaign_id, campaign_start_date, campaign_end_date, respond_by_date):
+        payload = payload.replace("PUBLISHER_ID", publisher_id)
+        payload = payload.replace("PUBLISHER_EMAIL", publisher_email)
+        payload = payload.replace("CAMPAIGN_ID", campaign_id)
+        payload = payload.replace("CAMPAIGN_START_DATE", campaign_start_date.strftime("%Y-%m-%d"))
+        payload = payload.replace("CAMPAIGN_END_DATE", campaign_end_date.strftime("%Y-%m-%d"))
+        payload = payload.replace("RESPOND_BY_DATE", respond_by_date.strftime("%Y-%m-%d"))
+        payload = payload.replace("CAMPAIGN_START_MONTH", str(campaign_start_date.month))
+        payload = payload.replace("CAMPAIGN_START_YEAR", str(campaign_start_date.year))
+        payload = payload.replace("CAMPAIGN_END_MONTH", str(campaign_end_date.month))
+        payload = payload.replace("CAMPAIGN_END_YEAR", str(campaign_end_date.year))
         return payload
 
 class TestOrdersMixin(object):
@@ -1373,9 +1375,9 @@ class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView, TestOrdersMixin)
         # convert the text string to a json object - best to check that the JSON is valid before 
         original_payload_1 = form.cleaned_data.get('payload_1')
         original_payload_2 = form.cleaned_data.get('payload_2')
-        replaced_payload_1 = self.replace_template_strings(original_payload_1)
+        replaced_payload_1 = self.replace_template_strings(payload=original_payload_1, publisher_id=publisher_id, publisher_email=publisher_email, user_id=user_id, campaign_id=campaign_id, campaign_start_date=campaign_start_date, campaign_end_date=campaign_end_date, respond_by_date=respond_by_date)
         if original_payload_2:
-            replaced_payload_2 = self.replace_template_strings(original_payload_2)
+            replaced_payload_2 = self.replace_template_strings(payload=original_payload_2, publisher_id=publisher_id, publisher_email=publisher_email, user_id=user_id, campaign_id=campaign_id, campaign_start_date=campaign_start_date, campaign_end_date=campaign_end_date, respond_by_date=respond_by_date)
         try:
             data_1 = json.loads(replaced_payload_1)
         except ValueError as json_error:
