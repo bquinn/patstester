@@ -2,7 +2,7 @@
 
 {% load bootstrap3 %}
 
-{% block bootstrap3_title %}PATS API Test Helper{% endblock %}
+{% block bootstrap3_title %}{% block pagetitle %}{% endblock %}PATS API Test Helper{% endblock %}
 
 {% block bootstrap3_content %}
 <nav class="navbar navbar-default">
@@ -23,11 +23,13 @@
             <li><a href="{% url 'buyer_campaigns' %}">Campaigns</a></li>
             <li><a href="{% url 'buyer_rfps' %}">RFPs</a></li>
             <li><a href="{% url 'buyer_orders' %}">Orders</a></li>
+            <li><a href="{% url 'buyer_events' %}">Events</a></li>
           </ul>
         </li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Seller APIs <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
+            <li><a href="{% url 'seller_metadata' %}">Metadata</a></li>
             <li><a href="{% url 'seller_rfps' %}">RFPs</a></li>
             <li><a href="{% url 'seller_orders' %}">Orders</a></li>
           </ul>

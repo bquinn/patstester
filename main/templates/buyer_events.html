@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block pagetitle %}Buyer - Events - {% endblock %}
+{% block title %}Buyer - Events{% endblock %}
+
+{% block content %}
+    <h3><a href="{% url 'buyer_events_list' %}">List all recent events</a></h3>
+    <p>Show all "Push API" events received by the callback API.</p>
+    <h3><a href="{% url 'buyer_events_reprocess' %}">Reprocess events</a></h3>
+    <p>New in 2016.3, this lets you request events to be replayed through the Push API.</p>
+{% endblock %}
+{% block raw %}{% endblock %}

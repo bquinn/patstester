@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load bootstrap3 %}
-{% block title %}Buyer - PATS Events{% endblock %}
+{% block pagetitle %}Buyer Events Activity - {% endblock %}
+{% block title %}Buyer - Events Activity{% endblock %}
 {% block content %}
     <form method="get" action="{% url 'buyer_events_list' %}" class="form-horizontal">
       <div class="form-group">
