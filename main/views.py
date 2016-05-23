@@ -97,7 +97,7 @@ CONFIG_DEFAULTS = {
         'AGENCY_GROUP_ID': 'PATS3',
         'PUBLISHER_API_KEY': 'nz5ta424wv8m2bmg4njbgwya',
         'PUBLISHER_ID': '35-49UUMIY-3',
-        'PUBLISHER_USER': 'angela.woodhouse@trinitymirror.com'
+        'PUBLISHER_USER': 'markc.turner@trinitymirror.com'
     },
     'Adazzle': {
         'AGENCY_API_KEY': 'm95d2up63susdaxv5qxme4hu',
@@ -411,7 +411,7 @@ class Buyer_GetPublishersView(PATSAPIMixin, ListView):
         publishers_response = None
         response = None
         try:
-            publishers_response = buyer_api.get_sellers(user_id='brenddlo@pats3')
+            publishers_response = buyer_api.get_sellers(user_id=self.get_agency_user_id())
         except PATSException as error:
             messages.error(self.request, "Get publishers failed. Error: %s %s" % (error, publishers_response))
         else:
@@ -430,8 +430,8 @@ class Buyer_GetPublisherUsersView(PATSAPIMixin, ListView):
         self.vendor_id = self.kwargs.get('publisher_id', None)
         publisher_users_response = {}
         try:
-            # publisher_users_response = buyer_api.get_users_for_seller(user_id=self.get_agency_user_id(), vendor_id=self.vendor_id)
-            publisher_users_response = buyer_api.get_users_for_seller(user_id='brenddlo@pats3', vendor_id=self.vendor_id)
+            publisher_users_response = buyer_api.get_users_for_seller(user_id=self.get_agency_user_id(), vendor_id=self.vendor_id)
+            # publisher_users_response = buyer_api.get_users_for_seller(user_id='brenddlo@pats3', vendor_id=self.vendor_id)
             # publisher emails list is actually the "payload" component of the dict
             return publisher_users_response['payload']['emails']
         except PATSException as error:
@@ -2122,6 +2122,36 @@ class Seller_OrderReviseView(PATSAPIMixin, FormView):
         context_data['order_id'] = self.order_id
         context_data['version'] = self.version
         context_data['object'] = self.order_detail
+        return context_data
+
+class Seller_GetMediaPropertiesView(PATSAPIMixin, TemplateView):
+    media_property_details = None
+
+    def get(self, *args, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.publisher_id = self.get_publisher_id()
+        self.media_property_details = seller_api.get_media_property_details(organisation_id=self.publisher_id)
+        return super(Seller_GetMediaPropertiesView, self).get(*args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_GetMediaPropertiesView, self).get_context_data(*args, **kwargs)
+        context_data['media_properties'] = self.media_property_details
+        context_data['publisher_id'] = self.publisher_id
+        return context_data
+
+class Seller_GetProductsView(PATSAPIMixin, TemplateView):
+    products = None
+
+    def get(self, *args, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.publisher_id = self.get_publisher_id()
+        self.products = seller_api.get_products(organisation_id=self.publisher_id)
+        return super(Seller_GetProductsView, self).get(*args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_GetProductsView, self).get_context_data(*args, **kwargs)
+        context_data['products'] = self.products
+        context_data['publisher_id'] = self.publisher_id
         return context_data
 
 

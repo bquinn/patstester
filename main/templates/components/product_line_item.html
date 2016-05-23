@@ -1,0 +1,22 @@
+<tr>
+  <td>{{ product.id }}</td>
+  <td>{{ product.status }}</td>
+  <td>{{ product.productId }}</td>
+  <td>{{ product.mediaType }}</td>
+  <td>{{ product.name }}</td>
+  <td>{{ product.mediaPropertyId|default_if_none:"" }}</td>
+  <td>{{ product.clientId|default_if_none:"" }}</td>
+  <td>{{ product.attributes.buyType }}</td>
+  <td>{{ product.attributes.buyCategory }}</td>
+  <td>{% if product.mediaType == "DIGITAL" %}{{ product.attributes.dimensions }}{% else %}{{ product.attributes.size }}{% endif %}</td>
+  <td>{{ product.attributes.costMethod }}</td>
+  <td>{{ product.attributes.unitType }}</td>
+  <td>{{ product.currencyCode }}</td>
+  <td>{{ product.attributes.rate|default_if_none:"" }}</td>
+  <td>{{ product.attributes.units|default_if_none:"" }}</td>
+  <td>{{ product.attributes.cost|default_if_none:"" }}</td>
+  <td>{{ product.attributes.section }}</td>
+  <td>{{ product.attributes.subsection }}</td>
+  <td>{{ product.attributes.positionGuaranteed|default_if_none:"" }}</td>
+  <td>{{ product.attributes.comments }}</td>
+</tr>

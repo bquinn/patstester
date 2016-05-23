@@ -18,7 +18,6 @@ from .views import (
     Buyer_OrderRevisionDetailView,
     Buyer_ListProductsView,
     Buyer_CallbackView,
-    Seller_GetAgenciesView,
     Seller_ListRFPsView, Seller_RFPDetailView,
     Seller_ListProposalsView, Seller_ProposalDetailView, 
     Seller_CreateProposalRawView, Seller_DownloadRFPAttachmentView,
@@ -28,6 +27,7 @@ from .views import (
     Seller_ViewOrderAttachmentView, Seller_DownloadOrderAttachmentView,
     Seller_ViewProposalAttachmentView, Seller_DownloadProposalAttachmentView,
     Seller_OrderVersionsView,
+    Seller_GetAgenciesView, Seller_GetMediaPropertiesView, Seller_GetProductsView,
     ConfigurationView
 )
 
@@ -159,6 +159,12 @@ urlpatterns = [
     url(r'^seller/metadata/agencies/(?P<agency_id>[\w\-\.]+)?',
         Seller_GetAgenciesView.as_view(template_name='seller_metadata_agencies.html'),
         name='seller_metadata_agencies'),
+    url(r'^seller/metadata/mediaproperties',
+        Seller_GetMediaPropertiesView.as_view(template_name='seller_metadata_mediaproperties.html'),
+        name='seller_metadata_mediaproperties'),
+    url(r'^seller/metadata/products',
+        Seller_GetProductsView.as_view(template_name='seller_metadata_products.html'),
+        name='seller_metadata_products'),
     url(r'^seller/metadata',
         TemplateView.as_view(template_name='seller_metadata.html'),
         name='seller_metadata'),
