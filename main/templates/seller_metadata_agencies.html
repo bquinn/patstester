@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Buyer - Get agencies{% endblock %}
+{% block title %}Seller - Get agencies{% endblock %}
 
 {% block content %}
     <h3>Get agencies: {{ agency_id }}</h3>
-    <form method="get" action="{% url 'buyer_metadata_agencies' %}">
+    <form method="get" action="{% url 'seller_metadata_agencies' %}">
     <table class="table">
     <tr><td>Agency ID</td><td><input type="text" name="agency_id" value="{{agency_id}}"/></td></tr>
     <tr><td>Agency name</td><td><input type="text" name="name" value="{{name}}"/></td></tr>
