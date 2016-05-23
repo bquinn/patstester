@@ -11,6 +11,10 @@
         <tr>
             <td>{{ user_email }}</td>
         </tr>
+        {% empty %}
+        <tr>
+            <td>No users defined for this publisher.</td>
+        </tr>
         {% endfor %}
     </table>
 
