@@ -4,6 +4,10 @@
 {% block content %}
     <p>This is used to run manual tests of the PATS platform.</p>
     <p>Use the navigation menu above to choose an API to test on either the buyer or seller side.</p>
+    <h3>Updates on 18 May 2016:</h3>
+    <ul>
+        <li>Added <a href="{% url 'seller_metadata' %}">seller-side metadata</a> page including "<a href="{% url 'seller_metadata_agencies' %}">view agencies</a>" from seller side and the new "<a href="{% url 'seller_metadata_mediaproperties' %}">view media property details</a>" metadata call.</li>
+    </ul>
     <h3>Updates on 10 May 2016:</h3>
     <ul>
         <li>Added a <a href="{% url 'buyer_events_list' %}">buyer events list</a> to see events coming in over the PATS Push API.</li>
