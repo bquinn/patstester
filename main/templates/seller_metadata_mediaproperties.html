@@ -4,7 +4,7 @@
 
 {% block content %}
     {% for media_property in media_properties %}
-        <h2>ID: {{ media_property.mediaPropertyId }}</h2>
+        <h2>Media Property: {{ media_property.mediaPropertyName }} (ID: {{ media_property.mediaPropertyId }})</h2>
         <p>Field families:
         <ul>
         {% for field_family in media_property.fieldFamilies %}
