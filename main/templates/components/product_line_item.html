@@ -1,5 +1,9 @@
 <tr>
-  <td>{{ product.id }}</td>
+  <td>
+    {% if mode == "seller" %}<a href="{% url 'seller_metadata_products_update' product.id %}">{% endif %}
+        {{ product.id }}
+    {% if mode == "seller" %}</a>{% endif %}
+  </td>
   <td>{{ product.status }}</td>
   <td>{{ product.productId }}</td>
   <td>{{ product.mediaType }}</td>

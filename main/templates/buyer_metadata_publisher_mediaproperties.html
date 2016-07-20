@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block pagetitle %}Buyer - View media properties for publisher {{ publisher_id }}{% endblock %}
+{% block title %}Buyer - View media properties for publisher {{ publisher_id }}{% endblock %}
+
+{% block content %}
+    {% for media_property in media_properties %}
+        <h2>Media Property: {{ media_property.mediaPropertyName }} (ID: {{ media_property.mediaPropertyId }})</h2>
+        <p>Field families:
+        <ul>
+        {% for field_family in media_property.fieldFamilies %}
+            <li>{{ field_family.name }} (allow free-form: {{ field_family.allowFreeFormText }})
+              <ul>
+            {% for field in field_family.fields %}
+                {% include 'components/media_property_field_line_item.html' %}
+            {% endfor %}
+              </ul>
+            </li>
+        {% endfor %}
+        </ul>
+        </p>
+    {% endfor %}
+{% endblock %}

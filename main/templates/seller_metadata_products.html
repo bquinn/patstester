@@ -6,7 +6,7 @@
     <table class="table">
     {% include 'components/product_line_item_header.html' %}
     {% for product in products %}
-        {% include 'components/product_line_item.html' %}
+        {% include 'components/product_line_item.html' with mode="seller" %}
     {% endfor %}
     </table>
 {% endblock %}

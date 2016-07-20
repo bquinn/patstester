@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block pagetitle %}Buyer - View products for publisher {{ publisher_id }}{% endblock %}
+{% block title %}Buyer - View products  for publisher {{ publisher_id }}{% endblock %}
+
+{% block content %}
+    <table class="table">
+    {% include 'components/product_line_item_header.html' %}
+    {% for product in object_list %}
+        {% include 'components/product_line_item.html' %}
+    {% endfor %}
+    </table>
+{% endblock %}

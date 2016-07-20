@@ -20,7 +20,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic import TemplateView
 from oauth2_provider.views.generic import ProtectedResourceView
 
-from pats import PATSBuyer, PATSSeller, PATSException, CampaignDetails
+from pats import PATSBuyer, PATSSeller, PATSException, CampaignDetails, Product
 
 from .forms import (
     Buyer_CampaignForm,
@@ -29,6 +29,7 @@ from .forms import (
     Buyer_CreateOrderRawForm, Buyer_CreateOrderForm, Buyer_CreateOrderWithCampaignForm,
     Seller_CreateProposalRawForm,
     Seller_OrderRespondForm, Seller_OrderReviseForm,
+    Seller_ProductForm,
     ConfigurationForm
 )
 from .models import PATSEvent
@@ -442,6 +443,22 @@ class Buyer_GetPublisherUsersView(PATSAPIMixin, ListView):
         context_data = super(Buyer_GetPublisherUsersView, self).get_context_data(*args, **kwargs)
         context_data['vendor_id'] = self.vendor_id
         return context_data
+
+class Buyer_GetPublisherMediaPropertiesView(PATSAPIMixin, TemplateView):
+    media_property_details = None
+
+    def get(self, *args, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.publisher_id = self.get_publisher_id()
+        self.media_property_details = seller_api.get_media_property_details(organisation_id=self.publisher_id)
+        return super(Buyer_GetPublisherMediaPropertiesView, self).get(*args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_GetPublisherMediaPropertiesView, self).get_context_data(*args, **kwargs)
+        context_data['media_properties'] = self.media_property_details
+        context_data['publisher_id'] = self.publisher_id
+        return context_data
+
 
 class Buyer_GetAgenciesView(PATSAPIMixin, ListView):
     agency_id = None
@@ -1541,22 +1558,21 @@ class Buyer_ListProposalsView(PATSAPIMixin, ListView):
         context_data['rfp_id'] = self.rfp_id
         return context_data
 
-class Buyer_ListProductsView(PATSAPIMixin, ListView):
+class Buyer_ListPublisherProductsView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()
         self.vendor_id = self.kwargs.get('publisher_id', None)
         product_catalogue_response = {}
         try:
-            # product_catalogue_response = buyer_api.list_products(vendor_id=self.vendor_id, user_id=self.get_agency_user_id())
-            product_catalogue_response = buyer_api.list_products(vendor_id=self.vendor_id, user_id='brenddlo@pats3')
-            return product_catalogue_response['products']
+            product_catalogue_response = buyer_api.list_products(vendor_id=self.vendor_id, user_id=self.get_agency_user_id())
+            return product_catalogue_response
         except PATSException as error:
             messages.error(self.request, "List products failed. Error: %s" % error)
         return
 
     def get_context_data(self, *args, **kwargs):
-        context_data = super(Buyer_ListProductsView, self).get_context_data(*args, **kwargs)
-        context_data['vendor_id'] = self.vendor_id
+        context_data = super(Buyer_ListPublisherProductsView, self).get_context_data(*args, **kwargs)
+        context_data['publisher_id'] = self.vendor_id
         return context_data
 
 class Seller_GetAgenciesView(PATSAPIMixin, ListView):
@@ -2139,21 +2155,112 @@ class Seller_GetMediaPropertiesView(PATSAPIMixin, TemplateView):
         context_data['publisher_id'] = self.publisher_id
         return context_data
 
-class Seller_GetProductsView(PATSAPIMixin, TemplateView):
+class Seller_ListProductsView(PATSAPIMixin, TemplateView):
     products = None
 
     def get(self, *args, **kwargs):
         seller_api = self.get_seller_api_handle()
         self.publisher_id = self.get_publisher_id()
-        self.products = seller_api.get_products(organisation_id=self.publisher_id)
-        return super(Seller_GetProductsView, self).get(*args, **kwargs)
+        self.products = seller_api.list_products(organisation_id=self.publisher_id)
+        return super(Seller_ListProductsView, self).get(*args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
-        context_data = super(Seller_GetProductsView, self).get_context_data(*args, **kwargs)
+        context_data = super(Seller_ListProductsView, self).get_context_data(*args, **kwargs)
         context_data['products'] = self.products
         context_data['publisher_id'] = self.publisher_id
         return context_data
 
+class Seller_UpdateProductView(PATSAPIMixin, FormView):
+    product_id = None
+    form_class = Seller_ProductForm
+
+    def form_valid(self, form, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        product = Product(
+            productId = form.cleaned_data['external_product_id'],
+            status = form.cleaned_data['status'],
+            mediaType = form.cleaned_data['media_type'],
+            name = form.cleaned_data['name'],
+            mediaPropertyId = form.cleaned_data['media_property_id'],
+            currencyCode = form.cleaned_data['currency_code'],
+            agencyEnabled = form.cleaned_data['agency_enabled'],
+            clientId = form.cleaned_data['client_id'],
+            buyType = form.cleaned_data['buy_type'],
+            buyCategory = form.cleaned_data['buy_category'],
+            size = form.cleaned_data['size'],
+            position = form.cleaned_data['position'],
+            dimensions = form.cleaned_data['dimensions'],
+            costMethod = form.cleaned_data['cost_method'],
+            unitType = form.cleaned_data['unit_type'],
+            rate = form.cleaned_data['rate'],
+            units = form.cleaned_data['units'],
+            cost = form.cleaned_data['cost'],
+            section = form.cleaned_data['section'],
+            subsection = form.cleaned_data['subsection'],
+            positionGuaranteed = form.cleaned_data['position_guaranteed'],
+            comments = form.cleaned_data['comments']
+        )
+        result = ''
+        try:
+            response = seller_api.update_product(product_id=self.product_id, product=product)
+        except PATSException as error:
+            messages.error(self.request, 'Update product failed: %s' % error)
+        else:
+            messages.success(self.request, 'Product updated!')
+        return super(Seller_UpdateProductView, self).form_valid(form)
+
+    def get_initial(self):
+        object = self.get_object()
+        print_flag = False; digital_flag = False
+        print_budget = 0; digital_budget = 0
+
+        return {
+            # "id": "3465316d-1b09-4b0c-b171-f453693ced9b",
+            'external_product_id': object.get('productId', None),
+            'status': object.get('status', None),
+            'name': object.get('name', None),
+            'media_property_id': object.get('mediaPropertyId', None),
+            'product_id': object.get('productId', None),
+            'agency_enabled': object.get('agencyEnabled', None),
+            'media_type': object.get('mediaType', None),
+            'currency_code': object.get('currencyCode', None),
+            'buy_type': object['attributes'].get('buyType', None),
+            'buy_category': object['attributes'].get('buyCategory', None),
+            'rate': object['attributes'].get('rate', None),
+            'units': object['attributes'].get('units', None),
+            'cost': object['attributes'].get('cost', None),
+            'cost_method': object['attributes'].get('costMethod', None),
+            'unit_type': object['attributes'].get('unitType', None),
+            'size': object['attributes'].get('size', None),
+            'position': object['attributes'].get('position', None),
+            'dimensions': object['attributes'].get('dimensions', None),
+            'section': object['attributes'].get('section', None),
+            'subsection': object['attributes'].get('subsection', None),
+            'position_guaranteed': object['attributes'].get('positionGuaranteed', None),
+            'comments': object['attributes'].get('comments', None)
+        }
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_lazy('seller_metadata_products_update', kwargs={'product_id':self.product_id})
+
+    def get_object(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        self.product_id = self.kwargs.get('product_id', None)
+        products_list = None
+        try:
+            products_list = seller_api.list_products(user_id=self.get_publisher_user(), organisation_id=self.get_publisher_id())
+        except PATSException as error:
+            messages.error(self.request, 'Couldn''t load products: %s' % error)
+        # now find the one we want, or return nothing
+        for product in products_list:
+            if product['id'] == self.product_id:
+                return product
+        return None
+        
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_UpdateProductView, self).get_context_data(*args, **kwargs)
+        context_data['product_id'] = self.product_id
+        return context_data
 
 class ConfigurationView(PATSAPIMixin, FormView):
     form_class = ConfigurationForm
