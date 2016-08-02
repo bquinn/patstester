@@ -89,14 +89,14 @@ class Buyer_ReturnOrderRevisionForm(forms.Form):
 
 class Buyer_CreateOrderForm(forms.Form):
     agency_id = forms.CharField(label='Buyer Agency ID', max_length=100)
-    company_id = forms.CharField(label='Buyer Company ID', max_length=100)
-    person_id = forms.CharField(label='Buyer Person ID', max_length=100)
+    agency_group_id = forms.CharField(label='Buyer Agency Group ID', max_length=100)
+    user_id = forms.CharField(label='Buyer User ID', max_length=100)
     payload = forms.CharField(label='Payload', max_length=999999, widget=forms.Textarea)
 
 class Buyer_CreateOrderRawForm(forms.Form):
     agency_id = forms.CharField(label='Buyer Agency ID', max_length=100)
-    company_id = forms.CharField(label='Buyer Company ID', max_length=100)
-    person_id = forms.CharField(label='Buyer Person ID', max_length=100)
+    agency_group_id = forms.CharField(label='Buyer Agency Group ID', max_length=100)
+    user_id = forms.CharField(label='Buyer User ID', max_length=100)
     payload = forms.CharField(label='Payload', max_length=999999, widget=forms.Textarea)
 
 class Buyer_CreateOrderWithCampaignForm(forms.Form):
@@ -135,6 +135,29 @@ class Seller_OrderReviseForm(forms.Form):
     order_id = forms.CharField(label='Seller Order ID', max_length=100)
     payload = forms.CharField(label='Payload', max_length=999999, widget=forms.Textarea)
 
+class Seller_MediaPropertyForm(forms.Form):
+    """
+    Request looks like /vendors/35-EEBMG4J-4/mediaproperties/RXQKYC2-7/sections
+    """
+    FIELD_CHOICES = (
+        ('sections', 'Sections'),
+        ('inclsdigitaleditions', 'Include in Digital Edition'),
+        ('servedbys', 'Served By'),
+        ('positions', 'Position'),
+        ('colors', 'Colours'),
+        ('sizes', 'Sizes'),
+        ('dimensions', 'Dimensions'),
+        ('costmethods', 'Cost Methods'),
+        ('guaranteed', 'Position Guaranteed'),
+        ('buytypes', 'Buy Types'),
+        ('regions', 'Regions')
+    )
+    user_id = forms.CharField(label='Seller User ID', max_length=100)
+    vendor_id = forms.CharField(label='Vendor (publisher) ID', max_length=100)
+    media_property_id = forms.CharField(label='Media Property ID', max_length=100)
+    field_id = forms.ChoiceField(label='Field', choices=FIELD_CHOICES)
+    payload = forms.CharField(label='Payload', max_length=999999, widget=forms.Textarea)
+
 class Seller_ProductForm(forms.Form):
     external_product_id = forms.CharField(label='External Product ID', max_length=100, required=True)
     status = forms.CharField(label='Status', max_length=100, required=True)
@@ -158,7 +181,7 @@ class Seller_ProductForm(forms.Form):
     subsection = forms.CharField(label='Subsection', max_length=100, required=False)
     position_guaranteed = forms.CharField(label='Position Guaranteed (Yes or No)', required=False)
     comments = forms.CharField(label='Comments', max_length=100, required=False)
-        
+
 class ConfigurationForm(forms.Form):
     agency_api_key = forms.CharField(label='Agency API Key', max_length=100)
     agency_id = forms.CharField(label='Agency ID', max_length=100)

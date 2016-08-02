@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block pagetitle %}Buyer - Create Order from revision{% endblock %}
+{% block title %}Buyer - Orders - Create Order from revision{% endblock %}
+
+{% block content %}
+    <h3>Create Order</h3>
+
+    <form action="{% url 'buyer_orders_create_from_revision' campaign_id=campaign_id order_id=order_id version=version revision=revision %}" method="post" role="form">
+        {% csrf_token %}
+        {% bootstrap_form_errors form type='non_fields' %}
+        {% bootstrap_form form layout='horizontal' %}
+        {% buttons submit='Submit' reset="Cancel" %}{% endbuttons %}
+    </form>
+{% endblock %}

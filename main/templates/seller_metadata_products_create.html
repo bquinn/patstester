@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block title %}Seller - Products - Create Product{% endblock %}
+
+{% block content %}
+    <h3>Create Product</h3>
+
+    <p>Note that this form (and the API) doesn't validate the product choice against your field validation rules. This means you can upload invalid products. Beware!</p>
+    <form action="{% url 'seller_metadata_products_update' product_id=product_id %}" method="post" role="form">
+        {% csrf_token %}
+        {% bootstrap_form_errors form type='non_fields' %}
+        {% bootstrap_form form layout='horizontal'%}
+        {% buttons submit='Submit' reset="Cancel" %}{% endbuttons %}
+    </form>
+{% endblock %}

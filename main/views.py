@@ -29,7 +29,7 @@ from .forms import (
     Buyer_CreateOrderRawForm, Buyer_CreateOrderForm, Buyer_CreateOrderWithCampaignForm,
     Seller_CreateProposalRawForm,
     Seller_OrderRespondForm, Seller_OrderReviseForm,
-    Seller_ProductForm,
+    Seller_ProductForm, Seller_MediaPropertyForm,
     ConfigurationForm
 )
 from .models import PATSEvent
@@ -757,7 +757,7 @@ class Buyer_RequestOrderRevisionView(PATSAPIMixin, FormView):
         except PATSException as error:
             messages.error(self.request, "Request order revision failed: %s" % error)
         else:
-            messages.success(self.request, "Order revision requested successfully." % response)
+            messages.success(self.request, "Order revision requested successfully.")
         return super(Buyer_RequestOrderRevisionView, self).form_valid(form)
 
     def get_context_data(self, *args, **kwargs):
@@ -1310,7 +1310,73 @@ class Buyer_CreateOrderRawView(PATSAPIMixin, FormView):
         context_data = super(Buyer_CreateOrderRawView, self).get_context_data(*args, **kwargs)
         context_data['agency_id'] = self.get_agency_id()
         context_data['agency_group_id'] = self.get_agency_group_id()
-        context_data['user_id'] = self.get_user_id()
+        context_data['user_id'] = self.get_agency_user_id()
+        return context_data
+
+class Buyer_CreateOrderFromRevisionView(PATSAPIMixin, FormView):
+    form_class = Buyer_CreateOrderRawForm
+    success_url = reverse_lazy('buyer_orders_create_from_revision')
+    campaign_id = None
+    order_id = None
+    version = None
+    revision = None
+
+    def get(self, *args, **kwargs):
+        # self.clear_curl_history()
+        if 'campaign_id' in self.kwargs:
+            self.campaign_id = self.kwargs.get('campaign_id', None)
+        if 'order_id' in self.kwargs:
+            self.order_id = self.kwargs.get('order_id', None)
+        if 'version' in self.kwargs:
+            self.version = self.kwargs.get('version', None)
+        if 'revision' in self.kwargs:
+            self.revision = self.kwargs.get('revision', None)
+        return super(Buyer_CreateOrderFromRevisionView, self).get(*args, **kwargs)
+
+    def get_initial(self):
+        payload = {
+            "blah": "mypayload to be filled in"
+        }
+        return {
+            'seller_email': self.get_publisher_user(),
+            'agency_id': self.get_agency_id(),
+            'agency_group_id': self.get_agency_group_id(),
+            'user_id': self.get_agency_user_id(),
+            'payload': payload
+        }
+
+    def form_valid(self, form):
+        buyer_api = self.get_buyer_api_handle()
+        agency_group_id = form.cleaned_data.get('agency_group_id')
+        user_id = form.cleaned_data.get('user_id')
+        # convert the text string to a json object
+        try:
+            data = json.loads(form.cleaned_data.get('payload'))
+        except ValueError as json_error:
+            messages.error(self.request, 'Problem with JSON payload: %s <br />Try using jsonlint.com to fix it!' % json_error)
+        else:    
+            # take submitted values and call API - raw version
+            result = ''
+            try:
+                result = buyer_api.send_order_raw(agency_id=agency_id, agency_group_id=agency_group_id, user_id=user_id, data=data)
+            except PATSException as error:
+                messages.error(self.request, 'Submit Order failed: %s' % error)
+            else:
+                if result['status'] == u'SUCCESSFUL':
+                    messages.success(self.request, 'Order sent successfully! ID %s, version %s' % (result[u'publicId'], result[u'version']))
+                else:
+                    messages.error(self.request, 'Submit Order failed: %s' % error)
+        return super(Buyer_CreateOrderFromRevisionView, self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_CreateOrderFromRevisionView, self).get_context_data(*args, **kwargs)
+        context_data['agency_id'] = self.get_agency_id()
+        context_data['agency_group_id'] = self.get_agency_group_id()
+        context_data['user_id'] = self.get_agency_user_id()
+        context_data['campaign_id'] = self.campaign_id or ''
+        context_data['order_id'] = self.order_id or ''
+        context_data['version'] = self.version or ''
+        context_data['revision'] = self.revision or ''
         return context_data
 
 class Buyer_CreateOrderWithCampaignView(PATSAPIMixin, FormView, TestOrdersMixin):
@@ -2168,6 +2234,110 @@ class Seller_ListProductsView(PATSAPIMixin, TemplateView):
         context_data = super(Seller_ListProductsView, self).get_context_data(*args, **kwargs)
         context_data['products'] = self.products
         context_data['publisher_id'] = self.publisher_id
+        return context_data
+
+class Seller_CreateProductView(PATSAPIMixin, FormView):
+    product_id = None
+    form_class = Seller_ProductForm
+
+    def form_valid(self, form, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        product = Product(
+            productId = form.cleaned_data['external_product_id'],
+            status = form.cleaned_data['status'],
+            mediaType = form.cleaned_data['media_type'],
+            name = form.cleaned_data['name'],
+            mediaPropertyId = form.cleaned_data['media_property_id'],
+            currencyCode = form.cleaned_data['currency_code'],
+            agencyEnabled = form.cleaned_data['agency_enabled'],
+            clientId = form.cleaned_data['client_id'],
+            buyType = form.cleaned_data['buy_type'],
+            buyCategory = form.cleaned_data['buy_category'],
+            size = form.cleaned_data['size'],
+            position = form.cleaned_data['position'],
+            dimensions = form.cleaned_data['dimensions'],
+            costMethod = form.cleaned_data['cost_method'],
+            unitType = form.cleaned_data['unit_type'],
+            rate = form.cleaned_data['rate'],
+            units = form.cleaned_data['units'],
+            cost = form.cleaned_data['cost'],
+            section = form.cleaned_data['section'],
+            subsection = form.cleaned_data['subsection'],
+            positionGuaranteed = form.cleaned_data['position_guaranteed'],
+            comments = form.cleaned_data['comments']
+        )
+        result = ''
+        try:
+            response = seller_api.create_product(product=product)
+        except PATSException as error:
+            messages.error(self.request, 'Create product failed: %s' % error)
+        else:
+            messages.success(self.request, 'Product Created!')
+        return super(Seller_CreateProductView, self).form_valid(form)
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_lazy('seller_metadata_products_update', kwargs={'product_id':self.product_id})
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_CreateProductView, self).get_context_data(*args, **kwargs)
+        context_data['product_id'] = self.product_id
+        return context_data
+
+class Seller_UpdateMediaPropertiesView(PATSAPIMixin, FormView):
+    form_class = Seller_MediaPropertyForm
+    def form_valid(self, form, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        payload = form.cleaned_data.get('payload', '')
+        user_id = form.cleaned_data.get('user_id', '')
+        vendor_id = form.cleaned_data.get('vendor_id', '')
+        media_property_id = form.cleaned_data.get('media_property_id', '')
+        field_id = form.cleaned_data.get('field_id', '')
+        try:
+            data = json.loads(form.cleaned_data.get('payload'))
+        except ValueError as json_error:
+            messages.error(self.request, 'Problem with JSON payload: %s <br />Try using jsonlint.com to fix it!' % json_error)
+        try:
+            response = seller_api.update_media_property_fields(user_id=user_id, organisation_id=vendor_id, media_property_id=media_property_id, field_family=field_id, payload=data)
+        except PATSException as error:
+            messages.error(self.request, 'Update media property fields failed: %s' % error)
+        else:
+            messages.success(self.request, 'Media property fields updated!')
+        return super(Seller_UpdateMediaPropertiesView, self).form_valid(form)
+
+    def get_initial(self):
+        object = self.get_object()
+        self.media_property_id = self.kwargs.get('media_property_id', None)
+        self.field_id = self.kwargs.get('field_id', None)
+
+        return {
+            'media_property_id': self.media_property_id,
+            'user_id': self.get_publisher_user(),
+            'vendor_id': self.get_publisher_id(),
+            'field_id': self.field_id,
+            'payload': ''
+        }
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_lazy('seller_metadata_mediaproperties_update', kwargs={'media_property_id':self.media_property_id, 'field_id':self.field_id})
+
+    def get_object(self, **kwargs):
+        seller_api = self.get_seller_api_handle()
+        #self.product_id = self.kwargs.get('product_id', None)
+        #products_list = None
+        #try:
+        #    products_list = seller_api.list_products(user_id=self.get_publisher_user(), organisation_id=self.get_publisher_id())
+        #except PATSException as error:
+        #    messages.error(self.request, 'Couldn''t load products: %s' % error)
+        ## now find the one we want, or return nothing
+        #for product in products_list:
+        #    if product['id'] == self.product_id:
+        #        return product
+        return None
+        
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Seller_UpdateMediaPropertiesView, self).get_context_data(*args, **kwargs)
+        context_data['media_property_id'] = self.media_property_id
+        context_data['field_id'] = self.field_id
         return context_data
 
 class Seller_UpdateProductView(PATSAPIMixin, FormView):

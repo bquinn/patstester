@@ -9,10 +9,25 @@
         <ul>
         {% for field_family in media_property.fieldFamilies %}
             <li>{{ field_family.name }} (allow free-form: {{ field_family.allowFreeFormText }})
+              <a class="btn btn-primary" href="{% url 'seller_metadata_mediaproperties_update' media_property_id=media_property.mediaPropertyId field_id=field_family.name %}">Edit these media properties</a>
               <ul>
-            {% for field in field_family.fields %}
-                {% include 'components/media_property_field_line_item.html' %}
-            {% endfor %}
+                {% for field in field_family.fields %}
+                 <li>Field name: {{ field.name }}
+                        (ID: {{ field.fieldKey.id }},
+                         media type: {{ field.fieldKey.mediaType }},
+                         field type: {{ field.fieldKey.fieldType }},
+                         default: {{ field.default }},
+                         enabled: {{ field.enabled }},
+                         custom: {{ field.fieldKey.custom }})
+                 {% if field.childFields %}
+                  <br/>
+                  Child fields:
+                   <ul>
+                        <li>{{ field.childFields }}</li> 
+                   </ul>
+                 {% endif %}
+                 </li>
+                {% endfor %}
               </ul>
             </li>
         {% endfor %}

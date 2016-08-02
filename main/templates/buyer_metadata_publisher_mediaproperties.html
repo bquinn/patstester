@@ -11,7 +11,24 @@
             <li>{{ field_family.name }} (allow free-form: {{ field_family.allowFreeFormText }})
               <ul>
             {% for field in field_family.fields %}
-                {% include 'components/media_property_field_line_item.html' %}
+
+ <li>Field name: {{ field.name }}
+        (ID: {{ field.fieldKey.id }},
+         media type: {{ field.fieldKey.mediaType }},
+         field type: {{ field.fieldKey.fieldType }},
+         default: {{ field.default }},
+         enabled: {{ field.enabled }},
+         custom: {{ field.fieldKey.custom }})
+ {% if field.childFields %}
+  <br/>
+  Child fields:
+ <ul>
+   {# for child_field in field.childFields #}
+        {# include 'components/media_property_field_line_item.html' with field=child_field #}
+   {# endfor #}
+ </ul>
+ {% endif %}
+ </li>
             {% endfor %}
               </ul>
             </li>
