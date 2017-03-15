@@ -70,6 +70,10 @@ class Buyer_ReturnProposalForm(forms.Form):
     comments = forms.CharField(label='Comments', max_length=5000, widget=forms.Textarea)
     # TODO - attachments
 
+class Buyer_LinkProposalForm(forms.Form):
+    proposal_id = forms.CharField(label='Proposal Public ID', max_length=50)
+    campaign_id = forms.CharField(label='Campaign Public ID', max_length=50)
+    
 class Buyer_RequestOrderRevisionForm(forms.Form):
     order_id = forms.CharField(label='Order Public ID', max_length=50)
     user_id = forms.CharField(label='Sender User ID', max_length=50)
