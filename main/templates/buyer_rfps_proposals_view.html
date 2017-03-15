@@ -7,6 +7,11 @@
         <tr> <th>Proposal external ID</th> <td>{{ object.externalId }}</td> </tr>
         <tr> <th>Proposal Version</th> <td>{{ object.proposalVersion }}</td> </tr>
         <tr> <th>RFP ID</th> <td>{{ object.rfpId }}</td> </tr>
+        <tr> <th>Campaign ID</th> <td>{{ object.campaignId }}
+{% if object.campaignId == None %}
+&nbsp;<a href="{% url 'buyer_rfps_proposals_link' proposal_id=proposal_id %}" class="btn btn-primary">Link this seller-initiated proposal to a campaign</a>
+{% endif %}
+</td> </tr>
         <tr> <th>Vendor ID</th> <td>{{ object.vendorId }}</td> </tr>
         <tr> <th>Status</th> <td>{{ object.status }}</td> </tr>
         <tr> <th>Comments</th> <td>{{ object.comments }}</td> </tr>
