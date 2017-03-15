@@ -25,6 +25,7 @@ from pats import PATSBuyer, PATSSeller, PATSException, CampaignDetails, Product
 from .forms import (
     Buyer_CampaignForm,
     Buyer_CreateRFPForm, Buyer_CreateRFPWithCampaignForm, Buyer_ReturnProposalForm,
+    Buyer_LinkProposalForm,
     Buyer_ReturnOrderRevisionForm, Buyer_RequestOrderRevisionForm,
     Buyer_CreateOrderRawForm, Buyer_CreateOrderForm, Buyer_CreateOrderWithCampaignForm,
     Seller_CreateProposalRawForm,
@@ -347,6 +348,45 @@ class Buyer_CallbackView(PATSAPIMixin, ProtectedResourceView):
 
     def get(self, request, *args, **kwargs):
         return HttpResponseNotAllowed(['POST'], 'Please send data in a JSON payload in a POST request to this endpoint.')
+
+class Buyer_DataCallbackView(PATSAPIMixin, ProtectedResourceView):
+    # disable CSRF checking for this view because it's being called via OAuth, not from a form
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(Buyer_DataCallbackView, self).dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        received_json_data=json.loads(request.body.decode("utf-8"))
+        self.logger.info("event handler: received data:")
+        self.logger.info(received_json_data)
+        if type(received_json_data) is not list:
+            return HttpResponseBadRequest('Data should be a JSON array of objects')
+        tz = pytz.timezone('UTC')
+        #for record in received_json_data:
+        #    # in 2016.3 this will become "eventTime" and will be ISO date
+        #    eventTime = record.get('eventTime',None)
+        #    # eventTime = record.get('eventDateInMillis',None)
+        #    eventDateTime = None
+        #    if eventTime:
+        #        # 2016.2 eventDateTime = datetime.datetime.fromtimestamp(eventTime/1000, tz)
+        #        # 2016.3:
+        #        eventDateTime = datetime.datetime.strptime(eventTime,'%Y-%m-%dT%H:%M:%SZ')
+        #    attributes = record.get('attributes',None)
+        #    event = PATSEvent(
+        #        entity_id=record.get('entityId',None),
+        #        event_date=eventDateTime,
+        #        subscription_type=record.get('subscriptionType',None),
+        #        event_type=record.get('eventType',None),
+        #        major_version=attributes.get('majorVersion',0),
+        #        minor_version=attributes.get('minorVersion',0),
+        #    )
+        #    event.save()
+
+        return HttpResponse('Event received')
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponseNotAllowed(['POST'], 'Please send data in a JSON payload in a POST request to this endpoint.')
+
 
 class Buyer_ListEventsView(PATSAPIMixin, ListView):
     model = PATSEvent
@@ -925,6 +965,46 @@ class Buyer_ProposalDetailView(PATSAPIMixin, DetailView):
         context_data['proposal_id'] = self.proposal_id
         context_data['rfp_id'] = self.rfp_id
         return context_data
+
+class Buyer_LinkProposalView(PATSAPIMixin, FormView):
+    proposal_id = None
+    form_class = Buyer_LinkProposalForm
+
+    def get(self, *args, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+        self.proposal_id = self.kwargs.get('proposal_id', None)
+        return super(Buyer_LinkProposalView, self).get(*args, **kwargs)
+
+    def get_initial(self):
+        # populate the form with the proposal ID which we already know
+        return {
+            'proposal_id': self.proposal_id
+        }
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_LinkProposalView, self).get_context_data(*args, **kwargs)
+        context_data['proposal_id'] = self.proposal_id
+        return context_data
+
+    def form_valid(self, form):
+        if 'proposal_id' in self.kwargs:
+            proposal_id = self.kwargs['proposal_id']
+        campaign_id = form.cleaned_data.get('campaign_id', None)
+        buyer_api = self.get_buyer_api_handle()
+        response = ''
+        try:
+            response = self.pats_buyer.link_proposal_to_campaign(
+                campaign_id=campaign_id,
+                proposal_id=proposal_id
+            )
+        except PATSException as error:
+            messages.error(self.request, 'Link Campaign to Proposal failed: %s' % error)
+        else:
+            messages.success(self.request, 'Link Campaign to Proposal succeeded: response is %s' % response)
+        return super(Buyer_LinkProposalView, self).form_valid(form)
+
+    def get_success_url(self, *args, **kwargs):
+        return reverse_lazy('buyer_rfps_proposals_link', kwargs={'proposal_id':self.proposal_id})
 
 class Buyer_OrderStatusView(PATSAPIMixin, DetailView):
     order_id = None
