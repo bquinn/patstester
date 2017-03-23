@@ -11,7 +11,7 @@
             <li>{{ field_family.name }} (allow free-form: {{ field_family.allowFreeFormText }})
               <a class="btn btn-primary" href="{% url 'seller_metadata_mediaproperties_update' media_property_id=media_property.mediaPropertyId field_id=field_family.name %}">Edit these media properties</a>
               <ul>
-                {% for field in field_family.fields %}
+                {% for field in field_family.fieldConfigs %}
                  <li>Field name: {{ field.name }}
                         (ID: {{ field.fieldKey.id }},
                          media type: {{ field.fieldKey.mediaType }},
