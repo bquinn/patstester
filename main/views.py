@@ -1704,6 +1704,37 @@ class Buyer_ListProposalsView(PATSAPIMixin, ListView):
         context_data['rfp_id'] = self.rfp_id
         return context_data
 
+class Buyer_ListSellerInitiatedProposalsView(PATSAPIMixin, ListView):
+    search_since_date = None
+
+    def get_queryset(self, **kwargs):
+        buyer_api = self.get_buyer_api_handle()
+
+        self.search_since_date = self.request.GET.get('search_since_date', None)
+
+        buyer_proposals_response = None
+        if not self.search_since_date:
+            one_week_ago = datetime.datetime.today()-datetime.timedelta(7)
+            self.search_since_date = one_week_ago.strftime("%Y-%m-%d")
+        try:
+            buyer_proposals_response = buyer_api.list_all_proposals(
+                # for SIPs, we use "since date" but there's no end/to date
+                start_date=datetime.datetime.strptime(self.search_since_date, "%Y-%m-%d")
+            )
+        except PATSException as error:
+            messages.error(self.request, 'Couldn''t get list of proposals: %s' % (error))
+        # We have a list of ALL proposals, now limit it to the seller-initiated ones
+        buyer_proposals_response = [
+            prop for prop in buyer_proposals_response if not prop['campaignId']
+        ]
+        
+        return buyer_proposals_response
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(Buyer_ListSellerInitiatedProposalsView, self).get_context_data(*args, **kwargs)
+        context_data['search_since_date'] = self.search_since_date
+        return context_data
+
 class Buyer_ListPublisherProductsView(PATSAPIMixin, ListView):
     def get_queryset(self, **kwargs):
         buyer_api = self.get_buyer_api_handle()

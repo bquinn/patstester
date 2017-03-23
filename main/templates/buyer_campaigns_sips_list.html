@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Buyer - Campaigns - Current Seller-Initiated Proposals{% endblock %}
+
+{% block content %}
+    <table class="table">
+        {% include 'components/rfp_line_item_header.html' %}
+        {% for rfp in object_list %}
+            {% include 'components/rfp_line_item.html' %}
+        {% endfor %}
+    </table>
+
+{% endblock %}
