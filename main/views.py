@@ -8,7 +8,7 @@ import re
 import string
 import pytz
 from django.conf import settings
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed
 from django.shortcuts import render
@@ -472,7 +472,6 @@ class Buyer_GetPublisherUsersView(PATSAPIMixin, ListView):
         publisher_users_response = {}
         try:
             publisher_users_response = buyer_api.get_users_for_seller(user_id=self.get_agency_user_id(), vendor_id=self.vendor_id)
-            # publisher_users_response = buyer_api.get_users_for_seller(user_id='brenddlo@pats3', vendor_id=self.vendor_id)
             # publisher emails list is actually the "payload" component of the dict
             return publisher_users_response['payload']['emails']
         except PATSException as error:
@@ -1725,7 +1724,7 @@ class Buyer_ListSellerInitiatedProposalsView(PATSAPIMixin, ListView):
             messages.error(self.request, 'Couldn''t get list of proposals: %s' % (error))
         # We have a list of ALL proposals, now limit it to the seller-initiated ones
         buyer_proposals_response = [
-            prop for prop in buyer_proposals_response if not prop['campaignId']
+            prop for prop in buyer_proposals_response if not ('campaignId' in prop and prop['campaignId'])
         ]
         
         return buyer_proposals_response

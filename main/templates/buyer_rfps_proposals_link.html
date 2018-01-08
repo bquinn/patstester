@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+{% block title %}Buyer - Proposals - Link Proposal {{ proposal_id }} to campaign{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-7">
+            <h3>Set values individually</h3>
+            <form action="{% url 'buyer_rfps_proposals_link' proposal_id=proposal_id %}" method="post" role="form">
+                {% csrf_token %}
+                {% bootstrap_form_errors form type='non_fields' %}
+                {% bootstrap_form form layout='horizontal' %}
+                {% buttons submit='Submit' reset="Cancel" %}{% endbuttons %}
+            </form>
+        </div>
+</form>
+{% endblock %}
+{% block raw %}{% endblock %}

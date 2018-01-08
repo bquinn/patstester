@@ -1,0 +1,13 @@
+        <tr>
+            <td><a href="{% url 'buyer_rfps_proposals_view' proposal.id %}">{{ proposal.id }}</a></td>
+            <td>{% if proposal.campaignId %}<a href="{% url 'buyer_campaigns_view' proposal.campaignId %}">{{ proposal.campaignId }}</a>{% endif %}</td>
+            <td>{{ proposal.agencyId }}</td>
+            <td>{% for media in proposal.media %}{{ media }}<br />{% endfor %}</td>
+            <td>{{ proposal.status }}</td>
+            <td>{{ proposal.startDate }}</td>
+            <td>{{ proposal.endDate }}</td>
+            <td>{{ proposal.responseDueDate }}</td>
+            <td>{{ proposal.buyerName }}</td>
+            <td>{{ proposal.comments }}</td>
+            <td>{{ proposal.strategy }}</td>
+        </tr>

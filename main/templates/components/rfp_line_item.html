@@ -1,6 +1,6 @@
         <tr>
             <td><a href="{% url 'buyer_rfps_view' rfp.id %}">{{ rfp.id }}</a></td>
-            <td><a href="{% url 'buyer_campaigns_view' rfp.campaignId %}">{{ rfp.campaignId }}</a></td>
+            <td>{% if rfp.campaignId %}<a href="{% url 'buyer_campaigns_view' rfp.campaignId %}">{{ rfp.campaignId }}</a>{% endif %}</td>
             <td>{{ rfp.agencyId }}</td>
             <td>{% for media in rfp.media %}{{ media }}<br />{% endfor %}</td>
             <td>{{ rfp.status }}</td>
