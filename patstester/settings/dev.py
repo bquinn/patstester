@@ -13,7 +13,7 @@ SECRET_KEY = 'ao(i7!wdcnc*%^oex^hir9cazxu_hbq=20d$8is&&!s0t^h=($'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['patstester-dev.cluefulmedia.com']
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -21,8 +21,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 INSTALLED_APPS += ( 'debug_toolbar', )
 
+MIDDLEWARE += ( 'debug_toolbar.middleware.DebugToolbarMiddleware', )
+
 # prepend the template options list with a new context processor
-TEMPLATES[0]['OPTIONS']['context_processors'].insert(0, 'django.template.context_processors.debug')
+# TEMPLATES[0]['OPTIONS']['context_processors'].insert(0, 'django.template.context_processors.debug')
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases

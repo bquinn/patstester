@@ -1,3 +1,6 @@
+django
+psycopg2
 django-bootstrap3
 django-oauth-toolkit
 django-cors-headers
+git+https://github.com/bquinn/pats-api-python.git
